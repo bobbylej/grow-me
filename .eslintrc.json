@@ -42,6 +42,7 @@
         "tsx": "never"
       }
    ],
+   "import/order": ["error", {"groups": ["builtin", "external", "parent", "sibling", "index"]}],
     "jsx-quotes": ["error", "prefer-double"],
     "no-unused-vars": "warn",
     "max-len": [
