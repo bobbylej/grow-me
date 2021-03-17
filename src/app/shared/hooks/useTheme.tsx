@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import defaultTheme from 'app/shared/constants/theme';
 
-function useTheme(): Theme {
+const useTheme = (): Theme => {
   const prefersDarkMode = useMediaQuery(
     '(prefers-color-scheme: dark)',
   );
@@ -21,6 +21,6 @@ function useTheme(): Theme {
       }),
     [prefersDarkMode],
   );
-}
+};
 
 export default useTheme;
