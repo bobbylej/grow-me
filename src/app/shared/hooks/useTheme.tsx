@@ -8,7 +8,7 @@ import defaultTheme from 'app/shared/constants/theme';
 
 const useTheme = (): Theme => {
   const prefersDarkMode = useMediaQuery(
-    '(prefers-color-scheme: dark)',
+    '(prefers-color-scheme: light)',
   );
 
   return React.useMemo(
