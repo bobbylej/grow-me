@@ -1,0 +1,11 @@
+{
+    "source_language": "EN",
+    "target_languages": [
+        "PL",
+        "DE"
+    ],
+    "interpolation": "polyglot",
+    "input_path": "./src/app/shared/translations/en.json",
+    "output_path": "./src/app/shared/translations/$locale.json",
+    "auth_key": "AUTH_KEY"
+}
