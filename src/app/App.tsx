@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@material-ui/styles';
 import { IntlProvider } from 'react-intl';
@@ -12,10 +12,16 @@ import useIntlProvider from 'app/shared/hooks/useIntlProvider';
 import PageOne from 'app/views/PageOne/PageOne';
 import { AppProvider } from 'app/shared/context/AppContext/AppContext';
 import { Links } from 'app/shared/components/Links';
+import { Surveys } from 'app/views/Surveys/Surveys';
 
 const App = (): ReactElement => {
   const theme = useTheme();
   const intlProvider = useIntlProvider();
+
+  useEffect(() => {
+    document.body.style.backgroundColor =
+      theme.palette.background.default;
+  }, [theme]);
 
   return (
     <IntlProvider
@@ -32,10 +38,12 @@ const App = (): ReactElement => {
         <ThemeProvider theme={theme}>
           <Router>
             <Switch>
-              <Route path="/page-one">
+              <Route path="/surveys">
+                <Surveys />
+              </Route>
+              <Route path="/">
                 <PageOne />
               </Route>
-              <Route path="/">Home</Route>
             </Switch>
             <Links />
           </Router>

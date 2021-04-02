@@ -1,8 +1,10 @@
 {
-  "GLOBAL.LABEL.PRIMARY_BUTTON": "Primary Button",
-  "GLOBAL.LABEL.SECONDARY_BUTTON": "Secondary Button",
+  "GLOBAL.NAVIGATION.HOME": "Home",
+  "GLOBAL.NAVIGATION.PAGE_ONE": "Page one",
+  "GLOBAL.NAVIGATION.SURVEYS": "Surveys",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Add new item",
   "PAGE_ONE.LABEL.ITEM": "Item",
   "PAGE_ONE.LABEL.ITEMS": "Items",
-  "PAGE_ONE.TITLE": "Page one"
+  "PAGE_ONE.TITLE": "Page one",
+  "SURVEYS.TITLE": "Surveys"
 }

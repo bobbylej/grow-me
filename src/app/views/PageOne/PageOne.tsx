@@ -17,7 +17,7 @@ let counter = 0;
 const PageOne = (): ReactElement => {
   const intl = useIntl();
   const styles = usePageOneStyles();
-  const { content } = useLayoutStyles();
+  const { root, content } = useLayoutStyles();
   const { state, dispatch } = useContext(AppContext);
   const { items } = state;
 
@@ -50,7 +50,7 @@ const PageOne = (): ReactElement => {
   ));
 
   return (
-    <div className={styles.root}>
+    <div className={root}>
       <HeaderTitle
         title={intl.formatMessage({
           id: 'PAGE_ONE.TITLE',

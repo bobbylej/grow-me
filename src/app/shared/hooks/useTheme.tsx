@@ -8,7 +8,7 @@ import { darkTheme, lightTheme } from 'app/shared/constants/theme';
 
 const useTheme = (): Theme => {
   const prefersDarkMode = useMediaQuery(
-    '(prefers-color-scheme: dark)',
+    '(prefers-color-scheme: light)',
   );
 
   const theme = prefersDarkMode ? darkTheme : lightTheme;

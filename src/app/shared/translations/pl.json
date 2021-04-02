@@ -1,8 +1,10 @@
 {
-  "GLOBAL.LABEL.PRIMARY_BUTTON": "Przycisk główny",
-  "GLOBAL.LABEL.SECONDARY_BUTTON": "Przycisk pomocniczy",
+  "GLOBAL.NAVIGATION.HOME": "Strona główna",
+  "GLOBAL.NAVIGATION.PAGE_ONE": "Strona pierwsza",
+  "GLOBAL.NAVIGATION.SURVEYS": "Ankiety",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Dodaj nową pozycję",
   "PAGE_ONE.LABEL.ITEM": "Pozycja",
   "PAGE_ONE.LABEL.ITEMS": "Pozycje",
-  "PAGE_ONE.TITLE": "Strona pierwsza"
+  "PAGE_ONE.TITLE": "Strona pierwsza",
+  "SURVEYS.TITLE": "Ankiety"
 }

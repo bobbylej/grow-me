@@ -1,8 +1,10 @@
 {
-  "GLOBAL.LABEL.PRIMARY_BUTTON": "Primäre Taste",
-  "GLOBAL.LABEL.SECONDARY_BUTTON": "Sekundäre Schaltfläche",
+  "GLOBAL.NAVIGATION.HOME": "Startseite",
+  "GLOBAL.NAVIGATION.PAGE_ONE": "Seite eins",
+  "GLOBAL.NAVIGATION.SURVEYS": "Umfragen",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Neues Element hinzufügen",
   "PAGE_ONE.LABEL.ITEM": "Artikel",
   "PAGE_ONE.LABEL.ITEMS": "Artikel",
-  "PAGE_ONE.TITLE": "Seite eins"
+  "PAGE_ONE.TITLE": "Seite eins",
+  "SURVEYS.TITLE": "Umfragen"
 }
