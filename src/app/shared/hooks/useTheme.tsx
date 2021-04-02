@@ -4,22 +4,26 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import React from 'react';
-import defaultTheme from 'app/shared/constants/theme';
+import { darkTheme, lightTheme } from 'app/shared/constants/theme';
 
 const useTheme = (): Theme => {
   const prefersDarkMode = useMediaQuery(
-    '(prefers-color-scheme: light)',
+    '(prefers-color-scheme: dark)',
   );
+
+  const theme = prefersDarkMode ? darkTheme : lightTheme;
 
   return React.useMemo(
     () =>
       createMuiTheme({
         palette: {
-          ...defaultTheme.palette,
-          type: prefersDarkMode ? 'dark' : 'light',
+          ...theme.palette,
+        },
+        typography: {
+          ...theme.typography,
         },
       }),
-    [prefersDarkMode],
+    [theme],
   );
 };
 

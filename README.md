@@ -35,6 +35,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `yarn extract`
+
+Extract translations from React components. Use simpleen package to generate translations for additional locales.
+Make sure to rename `simpleen.config.template.json` file to `simpleen.config.json` and fill `auth_key` with proper value.
+
 ### `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**

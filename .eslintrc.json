@@ -27,7 +27,7 @@
   "rules": {
     "prettier/prettier": ["error"],
     "import/order": [
-      "error",
+      "warn",
       {
         "groups": [
           "builtin",
