@@ -12,4 +12,8 @@ export const useHeaderTitleStyles = makeStyles((theme: Theme) => ({
     width: pxToRem(40),
     height: pxToRem(40),
   },
+  headerItem: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
