@@ -1,11 +1,11 @@
 import { useIntl } from 'react-intl';
-import React, { ReactElement, useContext } from 'react';
 import {
   Button,
   Grid,
   IconButton,
   Typography,
 } from '@material-ui/core';
+import React, { ReactElement, useContext } from 'react';
 import { AppContext } from 'app/shared/context/AppContext/AppContext';
 import { AppContextActionType } from 'app/shared/context/AppContext/AppContext.actions';
 import useLayoutStyles from 'app/shared/styles/layout.styles';

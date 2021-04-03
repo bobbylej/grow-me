@@ -30,7 +30,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "extract": "formatjs extract 'src/app/**/*.ts*' --out-file src/app/shared/translations/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]' --format simple && simpleen translate",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -64,19 +65,14 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^5.1.3",
+    "husky": ">=6",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "simpleen": "^0.4.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "eslint --quiet --fix"
+      "eslint --cache --fix"
     ],
     "*.{json,md,html}": [
       "prettier --write"
