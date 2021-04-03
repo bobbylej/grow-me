@@ -11,8 +11,9 @@ import useTheme from 'app/shared/hooks/useTheme';
 import useIntlProvider from 'app/shared/hooks/useIntlProvider';
 import PageOne from 'app/views/PageOne/PageOne';
 import { AppProvider } from 'app/shared/context/AppContext/AppContext';
-import { Links } from 'app/shared/components/Links';
 import { Surveys } from 'app/views/Surveys/Surveys';
+import { PageWrapper } from 'app/shared/components/PageWrapper/PageWrapper';
+import { PageProvider } from 'app/shared/context/PageContext/PageContext';
 
 const App = (): ReactElement => {
   const theme = useTheme();
@@ -37,15 +38,18 @@ const App = (): ReactElement => {
         </Helmet>
         <ThemeProvider theme={theme}>
           <Router>
-            <Switch>
-              <Route path="/surveys">
-                <Surveys />
-              </Route>
-              <Route path="/">
-                <PageOne />
-              </Route>
-            </Switch>
-            <Links />
+            <PageProvider>
+              <PageWrapper>
+                <Switch>
+                  <Route path="/surveys">
+                    <Surveys />
+                  </Route>
+                  <Route path="/">
+                    <PageOne />
+                  </Route>
+                </Switch>
+              </PageWrapper>
+            </PageProvider>
           </Router>
         </ThemeProvider>
       </AppProvider>

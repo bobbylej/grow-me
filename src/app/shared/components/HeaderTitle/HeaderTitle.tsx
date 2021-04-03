@@ -1,29 +1,79 @@
-import React, { ReactElement } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Drawer,
+  Grid,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import { useIntl } from 'react-intl';
 import logo from 'assets/images/logo.png';
 import useLayoutStyles from 'app/shared/styles/layout.styles';
 import { useHeaderTitleStyles } from 'app/shared/components/HeaderTitle/HeaderTitle.styles';
+import { Navigation } from 'app/shared/components/Navigation/Navigation';
+import { NavigationItem } from 'app/shared/interfaces/navigationItem';
 
 export interface HeaderTitleProps {
   title: string;
 }
 
-export const HeaderTitle = ({
+export const HeaderTitle: React.FC<HeaderTitleProps> = ({
   title,
-}: HeaderTitleProps): ReactElement => {
+}: HeaderTitleProps) => {
+  const intl = useIntl();
   const { content } = useLayoutStyles();
-  const { header, headerIcon } = useHeaderTitleStyles();
+  const { header, headerIcon, headerItem } = useHeaderTitleStyles();
+  const [open, setOpen] = useState(false);
+
+  const navigation: NavigationItem[] = [
+    {
+      route: '/',
+      text: intl.formatMessage({
+        id: 'GLOBAL.NAVIGATION.PAGE_ONE',
+        defaultMessage: 'Page one',
+      }),
+    },
+    {
+      route: '/surveys',
+      text: intl.formatMessage({
+        id: 'GLOBAL.NAVIGATION.SURVEYS',
+        defaultMessage: 'Surveys',
+      }),
+    },
+  ];
+
+  const toggleDrawer = (isOpen: boolean): void => {
+    setOpen(isOpen);
+  };
+  console.log(title);
 
   return (
     <div className={header}>
       <Grid className={content} container spacing={2}>
-        <Grid item>
+        <Grid item className={headerItem}>
           <img src={logo} className={headerIcon} alt="logo" />
         </Grid>
-        <Grid item>
+        <Grid item className={headerItem}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => toggleDrawer(!open)}
+            edge="start"
+          >
+            <MenuIcon />
+          </IconButton>
+        </Grid>
+        <Grid item className={headerItem}>
           <Typography variant="h3">{title}</Typography>
         </Grid>
       </Grid>
+      <Drawer
+        anchor="left"
+        open={open}
+        onClose={() => toggleDrawer(false)}
+      >
+        <Navigation navigation={navigation} />
+      </Drawer>
     </div>
   );
 };
