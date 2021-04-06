@@ -1,25 +1,19 @@
-import { useIntl } from 'react-intl';
 import React, { ReactElement } from 'react';
-import { Grid } from '@material-ui/core';
-import useLayoutStyles from 'app/shared/styles/layout.styles';
-import { usePageTitle } from 'app/shared/hooks/usePageTitle';
+import { Route, Switch, useRouteMatch } from 'react-router';
+import { CreateSurvey } from 'app/views/Surveys/CreateSurvey/CreateSurvey';
+import { SurveysList } from 'app/views/Surveys/SurveysList/SurveysList';
 
 export const Surveys = (): ReactElement => {
-  const intl = useIntl();
-  const { content } = useLayoutStyles();
-
-  usePageTitle(
-    intl.formatMessage({
-      id: 'SURVEYS.TITLE',
-      defaultMessage: 'Surveys',
-    }),
-  );
+  const { path } = useRouteMatch();
 
   return (
-    <Grid className={content} container spacing={2}>
-      <Grid item xs={12}>
-        TODO: Content
-      </Grid>
-    </Grid>
+    <Switch>
+      <Route exact path={path}>
+        <SurveysList />
+      </Route>
+      <Route path={`${path}/new`}>
+        <CreateSurvey />
+      </Route>
+    </Switch>
   );
 };

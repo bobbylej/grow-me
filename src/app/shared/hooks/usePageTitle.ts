@@ -3,18 +3,18 @@ import { PageContext } from 'app/shared/context/PageContext/PageContext';
 import { PageContextActionType } from 'app/shared/context/PageContext/PageContext.actions';
 
 export const usePageTitle = (title: string): void => {
-  const pageContext = useContext(PageContext);
+  const { dispatch } = useContext(PageContext);
 
   useEffect(() => {
     const setPageTitle = () => {
-      pageContext.dispatch({
+      dispatch({
         type: PageContextActionType.setTitle,
         payload: title,
       });
     };
 
     const cleanPageTitle = () => {
-      pageContext.dispatch({
+      dispatch({
         type: PageContextActionType.setTitle,
         payload: undefined,
       });
@@ -24,5 +24,5 @@ export const usePageTitle = (title: string): void => {
     return () => {
       cleanPageTitle();
     };
-  }, [title, pageContext]);
+  }, [title, dispatch]);
 };
