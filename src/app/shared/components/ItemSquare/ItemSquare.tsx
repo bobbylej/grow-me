@@ -17,21 +17,20 @@ export const ItemSquare = ({
 }: ItemSquareProps): ReactElement => {
   const {
     squareContainer,
-    itemsSquereContainer,
+    itemSquareContainer,
     descriptionSquareTemplate,
     descriptionSquareSurvey,
-    itemSquereTemplate,
-    itemSquereSurvey,
+    itemSquareTemplate,
+    itemSquareSurvey,
   } = useItemSquareStyles();
 
   return (
     <div>
       <Grid className={squareContainer}>
         <Grid
-          id={id}
           className={
-            itemsSquereContainer &&
-            (itemSquereSurvey || itemSquereTemplate)
+            itemSquareContainer &&
+            (itemSquareSurvey || itemSquareTemplate)
           }
           onClick={handleSquareClick}
         ></Grid>

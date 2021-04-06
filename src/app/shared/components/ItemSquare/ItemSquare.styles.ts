@@ -8,7 +8,7 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
     height: pxToRem(50),
     padding: '10%',
   },
-  itemsSquereContainer: {
+  itemSquareContainer: {
     display: 'flex',
     width: '90%',
     height: '90%',
@@ -21,14 +21,14 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.primary.light,
   },
   descriptionSquareSurvey: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.contrastText,
     backgroundColor: theme.palette.secondary.light,
   },
-  itemSquereTemplate: {
+  itemSquareTemplate: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
   },
-  itemSquereSurvey: {
+  itemSquareSurvey: {
     color: theme.palette.secondary.main,
     borderColor: theme.palette.secondary.main,
   },

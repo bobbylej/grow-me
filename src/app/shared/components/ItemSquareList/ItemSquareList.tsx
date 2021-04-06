@@ -4,7 +4,7 @@ import { SquareItem } from '../../interfaces/squareItem';
 import { useItemSquareListStyles } from './ItemSquareList.styles';
 
 export interface ItemSquareListParams {
-  square: SquareItem[];
+  square: SquareItem;
 }
 
 export const ItemSquareList = ({
@@ -16,24 +16,22 @@ export const ItemSquareList = ({
     itemSquareSurvay,
   } = useItemSquareListStyles();
 
-  const items = square.map((item) => (
+  return (
     <Grid
       className={
         itemSquare && (itemSquareTemplate || itemSquareSurvay)
       }
-      key={item.id}
+      key={square.name}
     >
       <Typography>
-        {item.groupsNumber} {item.name}
+        {square.groupsNumber} {square.name}
       </Typography>
       <Typography>
-        {item.sectionsNumber} {item.name}
+        {square.sectionsNumber} {square.name}
       </Typography>
       <Typography>
-        {item.questionsNumber} {item.name}
+        {square.questionsNumber} {square.name}
       </Typography>
     </Grid>
-  ));
-
-  return <div>{items}</div>;
+  );
 };
