@@ -15,7 +15,6 @@ export const ItemSquare = ({
   handleSquareClick,
 }: ItemSquareProps): ReactElement => {
   const {
-    squareContainer,
     itemSquareContainer,
     descriptionSquareTemplate,
     descriptionSquareSurvey,
@@ -25,7 +24,7 @@ export const ItemSquare = ({
 
   return (
     <div>
-      <Grid className={squareContainer}>
+      <Grid spacing={2}>
         <Grid
           className={
             itemSquareContainer &&

@@ -1,18 +1,11 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { pxToRem } from '../../utils/stylesUtils';
 
 export const useItemSquareStyles = makeStyles((theme: Theme) => ({
-  squareContainer: {
-    width: pxToRem(50),
-    height: pxToRem(50),
-    padding: '10%',
-  },
   itemSquareContainer: {
     display: 'flex',
     position: 'relative',
-    width: '90%',
-    height: '90%',
+    height: '100%',
     flexDirection: 'column',
     alignItems: 'center',
     border: '1px solid',
