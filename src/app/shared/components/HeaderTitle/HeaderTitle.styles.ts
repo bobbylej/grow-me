@@ -1,6 +1,5 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { pxToRem } from 'app/shared/utils/stylesUtils';
 
 export const useHeaderTitleStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -9,8 +8,8 @@ export const useHeaderTitleStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.contrastText,
   },
   headerIcon: {
-    width: pxToRem(40),
-    height: pxToRem(40),
+    width: theme.typography.pxToRem(40),
+    height: theme.typography.pxToRem(40),
   },
   headerItem: {
     display: 'flex',

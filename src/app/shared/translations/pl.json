@@ -3,6 +3,8 @@
   "GLOBAL.LABEL.GROUPS": "Grupy",
   "GLOBAL.LABEL.QUESTIONS": "Pytania",
   "GLOBAL.LABEL.SECTIONS": "Sekcje",
+  "FORM.LABEL.DESCRIPTION": "Opis",
+  "FORM.LABEL.TITLE": "Tytuł",
   "GLOBAL.NAVIGATION.PAGE_ONE": "Strona pierwsza",
   "GLOBAL.NAVIGATION.SURVEYS": "Ankiety",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Dodaj nową pozycję",

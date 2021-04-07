@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Avatar } from '@material-ui/core';
-import { useCircleStyles } from './Circle.styles';
+import { useCircleStyles } from 'app/shared/components/Circle/Circle.styles';
 
 export interface CircleProps {
   text?: string;
