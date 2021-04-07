@@ -1,18 +1,17 @@
 import React, { ReactElement } from 'react';
 import { Grid } from '@material-ui/core';
+import { Circle } from '../Circle/Circle';
+import { ItemSquareList } from '../ItemSquareList/ItemSquareList';
 import { useItemSquareStyles } from './ItemSquare.styles';
+import { SquareItem } from 'app/shared/interfaces/squareItem';
 
 export interface ItemSquareProps {
-  id: string;
-  name: string;
-  badge: { total: number; amount?: number };
-  handleSquareClick: () => { return: string };
+  square: SquareItem;
+  handleSquareClick: () => void;
 }
 
 export const ItemSquare = ({
-  id,
-  name,
-  badge,
+  square,
   handleSquareClick,
 }: ItemSquareProps): ReactElement => {
   const {
@@ -33,14 +32,15 @@ export const ItemSquare = ({
             (itemSquareSurvey || itemSquareTemplate)
           }
           onClick={handleSquareClick}
-        ></Grid>
+        >
+          <Circle />
+          <ItemSquareList square={square} />
+        </Grid>
         <Grid
           className={
             descriptionSquareTemplate || descriptionSquareSurvey
           }
-        >
-          {name}
-        </Grid>
+        ></Grid>
       </Grid>
     </div>
   );

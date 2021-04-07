@@ -4,4 +4,5 @@ export interface SquareItem {
   groupsNumber: number;
   sectionsNumber: number;
   questionsNumber: number;
+  badge: { total: number; amount?: number };
 }
