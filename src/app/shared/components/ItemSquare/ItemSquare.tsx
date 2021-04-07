@@ -39,7 +39,9 @@ export const ItemSquare = ({
           className={
             descriptionSquareTemplate || descriptionSquareSurvey
           }
-        ></Grid>
+        >
+          {square.name}
+        </Grid>
       </Grid>
     </div>
   );

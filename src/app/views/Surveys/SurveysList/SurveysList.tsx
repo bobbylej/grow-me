@@ -59,18 +59,16 @@ export const SurveysList = (): ReactElement => {
   ];
 
   const handleSquareClick = () => {
-    console.log('dziala');
+    console.log('item clicked');
   };
 
-  const itemsSquareList = itemsSquare.map((item) => {
-    return (
-      <ItemSquare
-        key={item.name}
-        square={item}
-        handleSquareClick={handleSquareClick}
-      />
-    );
-  });
+  const itemsSquareList = itemsSquare.map((item) => (
+    <ItemSquare
+      key={item.id}
+      square={item}
+      handleSquareClick={handleSquareClick}
+    />
+  ));
 
   return (
     <Grid className={content} container spacing={2}>
