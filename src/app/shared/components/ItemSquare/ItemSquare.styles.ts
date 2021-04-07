@@ -10,6 +10,7 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
   },
   itemSquareContainer: {
     display: 'flex',
+    position: 'relative',
     width: '90%',
     height: '90%',
     flexDirection: 'column',
