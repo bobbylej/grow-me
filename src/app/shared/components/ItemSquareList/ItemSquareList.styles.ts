@@ -3,12 +3,11 @@ import { makeStyles } from '@material-ui/styles';
 
 export const useItemSquareListStyles = makeStyles((theme: Theme) => ({
   itemSquare: {
-    width: '100%',
-  },
-  itemSquareTemplate: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     color: theme.palette.primary.main,
-  },
-  itemSquareSurvay: {
-    color: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.contrastText,
+    border: `1px solid ${theme.palette.primary.light}`,
   },
 }));

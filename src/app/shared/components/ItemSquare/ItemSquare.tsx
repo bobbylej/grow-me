@@ -1,5 +1,10 @@
 import React, { ReactElement } from 'react';
-import { Grid } from '@material-ui/core';
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+} from '@material-ui/core';
 import { Circle } from '../Circle/Circle';
 import { ItemSquareList } from '../ItemSquareList/ItemSquareList';
 import { useItemSquareStyles } from './ItemSquare.styles';
@@ -16,33 +21,41 @@ export const ItemSquare = ({
 }: ItemSquareProps): ReactElement => {
   const {
     itemSquareContainer,
+    itemSquareWrap,
     descriptionSquareTemplate,
     descriptionSquareSurvey,
-    itemSquareTemplate,
-    itemSquareSurvey,
+    circleSurvey,
   } = useItemSquareStyles();
 
   return (
-    <div>
-      <Grid spacing={2}>
+    <>
+      <Grid
+        className={itemSquareContainer}
+        container
+        spacing={2}
+        direction="row"
+      >
         <Grid
-          className={
-            itemSquareContainer &&
-            (itemSquareSurvey || itemSquareTemplate)
-          }
+          className={itemSquareWrap}
+          item
+          xs={2}
           onClick={handleSquareClick}
         >
-          <Circle />
-          <ItemSquareList square={square} />
-        </Grid>
-        <Grid
-          className={
-            descriptionSquareTemplate || descriptionSquareSurvey
-          }
-        >
-          {square.name}
+          <div className={circleSurvey}>
+            <Circle />
+          </div>
+          <Card>
+            <ItemSquareList square={square} />
+            <CardContent
+              className={
+                descriptionSquareTemplate || descriptionSquareSurvey
+              }
+            >
+              <Typography variant="body1">{square.name}</Typography>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };

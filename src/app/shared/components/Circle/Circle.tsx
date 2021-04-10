@@ -12,7 +12,7 @@ export const Circle = ({ text, icon }: CircleProps): ReactElement => {
 
   return (
     <div>
-      <Avatar className={circle}>{text || icon}</Avatar>;
+      <Avatar className={circle}>{text || icon}</Avatar>
     </div>
   );
 };

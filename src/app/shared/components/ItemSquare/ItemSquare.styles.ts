@@ -4,11 +4,12 @@ import { makeStyles } from '@material-ui/styles';
 export const useItemSquareStyles = makeStyles((theme: Theme) => ({
   itemSquareContainer: {
     display: 'flex',
+    flexDirection: 'row',
+    margin: '1rem',
+    padding: '0.5rem',
+  },
+  itemSquareWrap: {
     position: 'relative',
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    border: '1px solid',
   },
   descriptionSquareTemplate: {
     color: theme.palette.primary.contrastText,
@@ -25,5 +26,10 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
   itemSquareSurvey: {
     color: theme.palette.secondary.main,
     borderColor: theme.palette.secondary.main,
+  },
+  circleSurvey: {
+    position: 'absolute',
+    top: '0',
+    right: '0',
   },
 }));
