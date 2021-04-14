@@ -1,6 +1,8 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { pxToRem } from 'app/shared/utils/stylesUtils';
 
+export const maxContentWidth = '1140px';
+
 export const defaultTheme = createMuiTheme({
   typography: {
     h1: {

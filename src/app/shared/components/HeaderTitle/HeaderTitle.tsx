@@ -45,7 +45,6 @@ export const HeaderTitle: React.FC<HeaderTitleProps> = ({
   const toggleDrawer = (isOpen: boolean): void => {
     setOpen(isOpen);
   };
-  console.log(title);
 
   return (
     <div className={header}>
@@ -58,7 +57,6 @@ export const HeaderTitle: React.FC<HeaderTitleProps> = ({
             color="inherit"
             aria-label="open drawer"
             onClick={() => toggleDrawer(!open)}
-            edge="start"
           >
             <MenuIcon />
           </IconButton>

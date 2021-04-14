@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { maxContentWidth } from 'app/shared/constants/theme';
 
 const useLayoutStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -7,7 +8,7 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   content: {
-    maxWidth: '1140px',
+    maxWidth: maxContentWidth,
     margin: 'auto',
   },
 }));
