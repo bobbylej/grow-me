@@ -12,7 +12,7 @@ import { FabContainer } from 'app/shared/components/FabContainer/FabContainer';
 
 export const SurveysList = (): ReactElement => {
   const intl = useIntl();
-  const { content } = useLayoutStyles();
+  const { content, surveyContainer } = useLayoutStyles();
   const { fab } = useFabStyles();
   const { url } = useRouteMatch();
 
@@ -64,6 +64,7 @@ export const SurveysList = (): ReactElement => {
 
   const itemsSquareList = itemsSquare.map((item) => (
     <ItemSquare
+      theme="survey"
       key={item.id}
       square={item}
       handleSquareClick={handleSquareClick}
@@ -72,7 +73,7 @@ export const SurveysList = (): ReactElement => {
 
   return (
     <Grid className={content} container spacing={2}>
-      <Grid item xs={12}>
+      <Grid className={surveyContainer} item xs={12}>
         {itemsSquareList}
       </Grid>
       <Grid item xs={12}>

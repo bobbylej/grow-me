@@ -11,6 +11,10 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
     maxWidth: maxContentWidth,
     margin: 'auto',
   },
+  surveyContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
 }));
 
 export default useLayoutStyles;

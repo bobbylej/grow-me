@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 
 export const useItemSquareStyles = makeStyles((theme: Theme) => ({
   itemSquareContainer: {
-    display: 'flex',
-    flexDirection: 'row',
+    // display: 'flex',
+    width: '20%',
+    // flexDirection: 'row',
     margin: '1rem',
     padding: '0.5rem',
   },
@@ -13,11 +14,11 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
   },
   descriptionSquareTemplate: {
     color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
   },
   descriptionSquareSurvey: {
     color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.secondary.main,
   },
   itemSquareTemplate: {
     color: theme.palette.primary.main,
@@ -31,5 +32,6 @@ export const useItemSquareStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: '0',
     right: '0',
+    fontSize: '1rem',
   },
 }));

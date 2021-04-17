@@ -12,11 +12,13 @@ import { SquareItem } from 'app/shared/interfaces/squareItem';
 
 export interface ItemSquareProps {
   square: SquareItem;
+  theme: 'survey' | 'template';
   handleSquareClick: () => void;
 }
 
 export const ItemSquare = ({
   square,
+  theme,
   handleSquareClick,
 }: ItemSquareProps): ReactElement => {
   const {
@@ -26,6 +28,14 @@ export const ItemSquare = ({
     descriptionSquareSurvey,
     circleSurvey,
   } = useItemSquareStyles();
+
+  const getCircleText = (badge: {
+    total: number;
+    amount?: number;
+  }): string => {
+    const { amount, total } = badge;
+    return amount ? `${amount}/${total}` : `${total}`;
+  };
 
   return (
     <>
@@ -38,17 +48,26 @@ export const ItemSquare = ({
         <Grid
           className={itemSquareWrap}
           item
-          xs={2}
+          xs={12}
           onClick={handleSquareClick}
         >
           <div className={circleSurvey}>
-            <Circle />
+            <Circle
+              theme="survey"
+              text={getCircleText({
+                total: 12,
+                amount: 4,
+              })}
+            />
           </div>
           <Card>
-            <ItemSquareList square={square} />
+            <ItemSquareList theme="survey" square={square} />
             <CardContent
+              style={{ padding: '10px' }}
               className={
-                descriptionSquareTemplate || descriptionSquareSurvey
+                theme === 'template'
+                  ? descriptionSquareTemplate
+                  : descriptionSquareSurvey
               }
             >
               <Typography variant="body1">{square.name}</Typography>
