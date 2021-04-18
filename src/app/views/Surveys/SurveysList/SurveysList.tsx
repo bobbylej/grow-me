@@ -23,48 +23,19 @@ export const SurveysList = (): ReactElement => {
     }),
   );
 
-  const itemsSquare: SquareItem[] = [
-    {
-      id: 'test1',
-      name: 'test1',
-      groupsNumber: 1,
-      sectionsNumber: 1,
-      questionsNumber: 1,
-      badge: { total: 1, amount: 1 },
-    },
-    {
-      id: 'test2',
-      name: 'test2',
-      groupsNumber: 2,
-      sectionsNumber: 2,
-      questionsNumber: 2,
-      badge: { total: 2, amount: 2 },
-    },
-    {
-      id: 'test3',
-      name: 'test3',
-      groupsNumber: 3,
-      sectionsNumber: 3,
-      questionsNumber: 3,
-      badge: { total: 3, amount: 3 },
-    },
-    {
-      id: 'test4',
-      name: 'test4',
-      groupsNumber: 4,
-      sectionsNumber: 4,
-      questionsNumber: 4,
-      badge: { total: 4, amount: 4 },
-    },
-    {
-      id: 'test5',
-      name: 'test5',
-      groupsNumber: 5,
-      sectionsNumber: 5,
-      questionsNumber: 5,
-      badge: { total: 5, amount: 5 },
-    },
-  ];
+  const itemsSquare: SquareItem[] = new Array(10)
+    .fill({})
+    .map((item, index) => ({
+      id: `test${index}`,
+      name: `Test ${index}`,
+      groupsNumber: index,
+      sectionsNumber: index,
+      questionsNumber: index,
+      badge: {
+        total: index,
+        amount: Math.floor(Math.random() * index),
+      },
+    }));
 
   const handleSquareClick = () => {
     console.log('item clicked');
@@ -84,7 +55,7 @@ export const SurveysList = (): ReactElement => {
     <Grid
       className={`${content} ${listContainer}`}
       container
-      spacing={2}
+      spacing={3}
     >
       {itemsSquareList}
       <Grid item xs={12}>

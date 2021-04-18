@@ -34,7 +34,7 @@ export const ItemSquare = ({
     amount?: number;
   }): string => {
     const { amount, total } = badge;
-    return amount ? `${amount}/${total}` : `${total}`;
+    return amount !== undefined ? `${amount}/${total}` : `${total}`;
   };
 
   return (
@@ -48,8 +48,8 @@ export const ItemSquare = ({
         <Circle
           theme="survey"
           text={getCircleText({
-            total: 12,
-            amount: 4,
+            total: square.badge.total,
+            amount: square.badge.amount,
           })}
         />
       </div>
