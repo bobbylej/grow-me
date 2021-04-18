@@ -12,7 +12,7 @@ import { FabContainer } from 'app/shared/components/FabContainer/FabContainer';
 
 export const SurveysList = (): ReactElement => {
   const intl = useIntl();
-  const { content, surveyContainer } = useLayoutStyles();
+  const { content, listContainer } = useLayoutStyles();
   const { fab } = useFabStyles();
   const { url } = useRouteMatch();
 
@@ -56,6 +56,14 @@ export const SurveysList = (): ReactElement => {
       questionsNumber: 4,
       badge: { total: 4, amount: 4 },
     },
+    {
+      id: 'test5',
+      name: 'test5',
+      groupsNumber: 5,
+      sectionsNumber: 5,
+      questionsNumber: 5,
+      badge: { total: 5, amount: 5 },
+    },
   ];
 
   const handleSquareClick = () => {
@@ -63,19 +71,22 @@ export const SurveysList = (): ReactElement => {
   };
 
   const itemsSquareList = itemsSquare.map((item) => (
-    <ItemSquare
-      theme="survey"
-      key={item.id}
-      square={item}
-      handleSquareClick={handleSquareClick}
-    />
+    <Grid item xs={2} key={item.id}>
+      <ItemSquare
+        theme="survey"
+        square={item}
+        handleSquareClick={handleSquareClick}
+      />
+    </Grid>
   ));
 
   return (
-    <Grid className={content} container spacing={2}>
-      <Grid className={surveyContainer} item xs={12}>
-        {itemsSquareList}
-      </Grid>
+    <Grid
+      className={`${content} ${listContainer}`}
+      container
+      spacing={2}
+    >
+      {itemsSquareList}
       <Grid item xs={12}>
         <FabContainer>
           <Link className={`link--button ${fab}`} to={`${url}/new`}>

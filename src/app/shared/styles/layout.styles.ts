@@ -11,9 +11,9 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
     maxWidth: maxContentWidth,
     margin: 'auto',
   },
-  surveyContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
+  listContainer: {
+    marginTop: '2rem',
+    marginBottom: '2rem',
   },
 }));
 

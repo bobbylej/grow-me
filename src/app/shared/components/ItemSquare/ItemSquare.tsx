@@ -22,8 +22,8 @@ export const ItemSquare = ({
   handleSquareClick,
 }: ItemSquareProps): ReactElement => {
   const {
-    itemSquareContainer,
     itemSquareWrap,
+    descriptionSquare,
     descriptionSquareTemplate,
     descriptionSquareSurvey,
     circleSurvey,
@@ -38,43 +38,33 @@ export const ItemSquare = ({
   };
 
   return (
-    <>
-      <Grid
-        className={itemSquareContainer}
-        container
-        spacing={2}
-        direction="row"
-      >
-        <Grid
-          className={itemSquareWrap}
-          item
-          xs={12}
-          onClick={handleSquareClick}
+    <Grid
+      className={itemSquareWrap}
+      item
+      xs={12}
+      onClick={handleSquareClick}
+    >
+      <div className={circleSurvey}>
+        <Circle
+          theme="survey"
+          text={getCircleText({
+            total: 12,
+            amount: 4,
+          })}
+        />
+      </div>
+      <Card>
+        <ItemSquareList theme="survey" square={square} />
+        <CardContent
+          className={`${descriptionSquare} ${
+            theme === 'template'
+              ? descriptionSquareTemplate
+              : descriptionSquareSurvey
+          }`}
         >
-          <div className={circleSurvey}>
-            <Circle
-              theme="survey"
-              text={getCircleText({
-                total: 12,
-                amount: 4,
-              })}
-            />
-          </div>
-          <Card>
-            <ItemSquareList theme="survey" square={square} />
-            <CardContent
-              style={{ padding: '10px' }}
-              className={
-                theme === 'template'
-                  ? descriptionSquareTemplate
-                  : descriptionSquareSurvey
-              }
-            >
-              <Typography variant="body1">{square.name}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </>
+          <Typography variant="body1">{square.name}</Typography>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };

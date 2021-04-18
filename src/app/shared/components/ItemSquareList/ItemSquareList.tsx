@@ -1,9 +1,8 @@
 import { CardContent, Typography } from '@material-ui/core';
-import { SquareItem } from 'app/shared/interfaces/squareItem';
 import React, { ReactElement } from 'react';
 import { useIntl } from 'react-intl';
-
-import { useItemSquareListStyles } from './ItemSquareList.styles';
+import { SquareItem } from 'app/shared/interfaces/squareItem';
+import { useItemSquareListStyles } from 'app/shared/components/ItemSquareList/ItemSquareList.styles';
 
 export interface ItemSquareListParams {
   square: SquareItem;
