@@ -30,14 +30,14 @@ export const lightTheme = createMuiTheme({
     type: 'light',
     primary: {
       main: '#009688',
-      light: 'rgb(51, 171, 159)',
-      dark: 'rgb(0, 105, 95)',
+      light: '#80cbc4',
+      dark: '#00695c',
       contrastText: '#fff',
     },
     secondary: {
       main: '#f50057',
-      light: 'rgb(247, 51, 120)',
-      dark: 'rgb(171, 0, 60)',
+      light: '#ff4081',
+      dark: '#c51162',
       contrastText: '#fff',
     },
     text: {

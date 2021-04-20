@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { Route, Switch, useRouteMatch } from 'react-router';
 import useLayoutStyles from 'app/shared/styles/layout.styles';
@@ -34,6 +34,11 @@ export const CreateSurvey = (): ReactElement => {
       url: `${url}/markdown`,
     },
   ];
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    markdown: '',
+  });
 
   usePageTitle(
     intl.formatMessage({
@@ -44,10 +49,26 @@ export const CreateSurvey = (): ReactElement => {
 
   const onChangeTitle = (title: string): void => {
     console.log(title);
+    setForm({
+      ...form,
+      title,
+    });
   };
 
   const onChangeDescription = (description: string): void => {
     console.log(description);
+    setForm({
+      ...form,
+      description,
+    });
+  };
+
+  const onChangeMarkdown = (markdown: string): void => {
+    console.log(markdown);
+    setForm({
+      ...form,
+      markdown,
+    });
   };
 
   return (
@@ -59,6 +80,8 @@ export const CreateSurvey = (): ReactElement => {
       <Grid item xs={12} className={surveySection}>
         <FormHeader
           editMode
+          title={form.title}
+          description={form.description}
           onChangeTitle={onChangeTitle}
           onChangeDescription={onChangeDescription}
         />
@@ -72,7 +95,10 @@ export const CreateSurvey = (): ReactElement => {
             <SurveyGraphicEditor />
           </Route>
           <Route path={`${path}/markdown`}>
-            <SurveyMarkdown />
+            <SurveyMarkdown
+              markdown={form.markdown}
+              onChangeMarkdown={onChangeMarkdown}
+            />
           </Route>
         </Switch>
       </Grid>
