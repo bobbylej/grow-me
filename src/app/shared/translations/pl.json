@@ -5,6 +5,8 @@
   "GLOBAL.LABEL.SECTIONS": "Sekcje",
   "FORM.LABEL.DESCRIPTION": "Opis",
   "FORM.LABEL.TITLE": "Tytuł",
+  "GLOBAL.LABEL.GRAPHIC_EDITOR": "Edytor graficzny",
+  "GLOBAL.LABEL.MARKDOWN": "Markdown",
   "GLOBAL.NAVIGATION.PAGE_ONE": "Strona pierwsza",
   "GLOBAL.NAVIGATION.SURVEYS": "Ankiety",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Dodaj nową pozycję",

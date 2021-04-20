@@ -17,7 +17,7 @@ export const Navigation = ({
     <List className={styles.navigation}>
       {navigation?.map((link) => (
         <NavLink
-          exact={true}
+          exact
           to={link.route}
           key={link.route}
           className={styles.link}
