@@ -5,7 +5,6 @@ import { SurveysList } from 'app/views/Surveys/SurveysList/SurveysList';
 
 export const Surveys = (): ReactElement => {
   const { path } = useRouteMatch();
-
   return (
     <Switch>
       <Route exact path={path}>

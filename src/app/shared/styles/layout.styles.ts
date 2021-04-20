@@ -11,6 +11,10 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
     maxWidth: maxContentWidth,
     margin: 'auto',
   },
+  listContainer: {
+    marginTop: '2rem',
+    marginBottom: '2rem',
+  },
 }));
 
 export default useLayoutStyles;

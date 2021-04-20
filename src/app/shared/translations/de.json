@@ -1,5 +1,8 @@
 {
   "CREATE_SURVEY.TITLE": "Umfrage erstellen",
+  "GLOBAL.LABEL.GROUPS": "Gruppen",
+  "GLOBAL.LABEL.QUESTIONS": "Fragen",
+  "GLOBAL.LABEL.SECTIONS": "Abschnitte",
   "GLOBAL.NAVIGATION.PAGE_ONE": "Seite eins",
   "GLOBAL.NAVIGATION.SURVEYS": "Umfragen",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Neues Element hinzufügen",
