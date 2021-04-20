@@ -3,6 +3,8 @@
   "GLOBAL.LABEL.GROUPS": "Gruppen",
   "GLOBAL.LABEL.QUESTIONS": "Fragen",
   "GLOBAL.LABEL.SECTIONS": "Abschnitte",
+  "FORM.LABEL.DESCRIPTION": "Beschreibung",
+  "FORM.LABEL.TITLE": "Titel",
   "GLOBAL.NAVIGATION.PAGE_ONE": "Seite eins",
   "GLOBAL.NAVIGATION.SURVEYS": "Umfragen",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Neues Element hinzufügen",
