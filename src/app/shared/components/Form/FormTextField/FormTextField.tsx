@@ -6,10 +6,11 @@ export interface FormTextFieldProps {
   inputSize?: 'small' | 'medium' | 'h2' | 'h3';
 }
 
-export const FormTextField = (
-  props: FormTextFieldProps & TextFieldProps,
-): ReactElement => {
-  const { textField } = useFormTextFieldStyles(props);
+export const FormTextField = ({
+  inputSize,
+  ...props
+}: FormTextFieldProps & TextFieldProps): ReactElement => {
+  const { textField } = useFormTextFieldStyles({ inputSize });
   return (
     <TextField
       {...props}

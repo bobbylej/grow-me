@@ -34,8 +34,6 @@ const PageContextReducer = (
 ): PageContextState => {
   switch (action.type) {
     case PageContextActionType.setTitle:
-      console.log(action, state);
-
       return {
         ...state,
         title: action.payload ?? initialContext.state.title,
@@ -56,7 +54,6 @@ export const PageProvider = ({
   );
 
   const pageState = { state, dispatch };
-  console.log(pageState);
 
   return (
     <PageContext.Provider value={{ ...pageState }}>
