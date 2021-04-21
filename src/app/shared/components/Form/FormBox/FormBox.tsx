@@ -15,6 +15,7 @@ export interface FormBoxProps {
   color?: Color;
   headerVariant?: BackgroundVariant;
   contentVariant?: BackgroundVariant;
+  contentClassName?: string;
 }
 
 export const FormBox = ({
@@ -23,6 +24,7 @@ export const FormBox = ({
   color = 'primary',
   headerVariant = 'contained',
   contentVariant = 'outlined',
+  contentClassName,
   children,
 }: React.PropsWithChildren<FormBoxProps>): React.ReactElement => {
   const styles = useFormBoxStyles();
@@ -50,7 +52,7 @@ export const FormBox = ({
   };
 
   return (
-    <div>
+    <>
       <Grid
         container
         className={`${styles.header} ${headerColorClasses[color]} ${headerVariantClasses[headerVariant]}`}
@@ -63,12 +65,12 @@ export const FormBox = ({
       </Grid>
       <Grid
         container
-        className={`${styles.content} ${contentColorClasses[color]} ${contentVariantClasses[contentVariant]}`}
+        className={`${styles.content} ${contentColorClasses[color]} ${contentVariantClasses[contentVariant]} ${contentClassName}`}
       >
         <Grid item xs={12}>
           {children}
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };

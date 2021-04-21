@@ -14,4 +14,8 @@ export interface MarkdownRuleDocumentation {
   name: string;
   syntax: string;
   description: string;
+  defaultValue?: string;
+  children?: Partial<
+    Record<MarkdownRuleType, MarkdownRuleDocumentation>
+  >;
 }

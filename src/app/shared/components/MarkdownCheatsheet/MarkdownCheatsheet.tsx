@@ -1,53 +1,79 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { useMarkdownCheatsheetDocs } from 'app/shared/hooks/useMarkdownCheatsheetDocs';
-import { Markdown } from 'app/shared/constants/markdown';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
-import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
+import { MarkdownRuleDocumentation } from 'app/shared/interfaces/markdownRule.interface';
+import { useMarkdownCheatsheetStyles } from 'app/shared/components/MarkdownCheatsheet/MarkdownCheatsheet.styles';
+import { removeBlankLines } from 'app/shared/utils/textUtils';
+
+const generateMarkdownRuleKey = (
+  markdownRuleKey: string,
+  parentKey?: string,
+): string => {
+  return `${parentKey ? `${parentKey}-` : ''}${markdownRuleKey}`;
+};
 
 export const MarkdownCheatsheet = (): React.ReactElement => {
   const intl = useIntl();
+  const styles = useMarkdownCheatsheetStyles();
   const markdownCheatsheetDocs = useMarkdownCheatsheetDocs();
 
   const getMarkdownRuleElement = (
-    markdownRule: MarkdownRule,
-    parent?: MarkdownRule,
+    key: MarkdownRuleType,
+    markdownRule: MarkdownRuleDocumentation,
+    nestLevel = 0,
+    parentKey?: string,
   ): React.ReactNode => {
-    const markdownRuleDocs = markdownCheatsheetDocs[markdownRule.id];
-
     return (
-      <TableRow key={markdownRule.id}>
-        <TableCell>
-          <span className="code">{markdownRuleDocs.syntax}</span>
-        </TableCell>
-        <TableCell align="right">
-          {markdownRuleDocs.description}
-        </TableCell>
-      </TableRow>
+      <tr
+        key={generateMarkdownRuleKey(key, parentKey)}
+        className={`${styles.markdownRow} ${styles.markdownRuleRow}`}
+      >
+        <td className={styles.markdownCell}>
+          <span
+            className="code"
+            style={{ paddingLeft: `${nestLevel}rem` }}
+          >
+            {removeBlankLines(markdownRule.syntax)}
+          </span>
+        </td>
+        <td className={styles.markdownCell}>
+          {markdownRule.description}.&nbsp;
+          {markdownRule.defaultValue && (
+            <span className={styles.markdownRuleDefaultValue}>
+              ({markdownRule.defaultValue})
+            </span>
+          )}
+        </td>
+      </tr>
     );
   };
 
   const getMarkdownRulesElement = (
-    markdownRules: Partial<Record<MarkdownRuleType, MarkdownRule>>,
-    parent?: MarkdownRule,
+    markdownRules: Partial<
+      Record<MarkdownRuleType, MarkdownRuleDocumentation>
+    >,
+    nestLevel = 0,
+    parentKey?: string,
   ): React.ReactNode =>
-    Object.values(markdownRules).map(
-      (markdownRule) =>
+    Object.entries<MarkdownRuleDocumentation>(markdownRules).map(
+      ([key, markdownRule]) =>
         markdownRule && (
-          <React.Fragment>
-            {getMarkdownRuleElement(markdownRule, parent)}
+          <React.Fragment
+            key={`${generateMarkdownRuleKey(key, parentKey)}-rules`}
+          >
+            {getMarkdownRuleElement(
+              key as MarkdownRuleType,
+              markdownRule,
+              nestLevel,
+              parentKey,
+            )}
             {markdownRule.children &&
               getMarkdownRulesElement(
                 markdownRule.children,
-                markdownRule,
+                nestLevel + 1,
+                generateMarkdownRuleKey(key, parentKey),
               )}
           </React.Fragment>
         ),
@@ -61,26 +87,13 @@ export const MarkdownCheatsheet = (): React.ReactElement => {
       })}
       size="small"
       contentVariant="contained"
+      contentClassName={styles.markdownContent}
     >
-      <Table size="small" padding="none">
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              {intl.formatMessage({
-                id: 'GLOBAL.LABEL.MARKDOWN_SYNTAX',
-                defaultMessage: 'Markdown syntax',
-              })}
-            </TableCell>
-            <TableCell align="right">
-              {intl.formatMessage({
-                id: 'GLOBAL.LABEL.DESCRIPTION',
-                defaultMessage: 'Description',
-              })}
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{getMarkdownRulesElement(Markdown)}</TableBody>
-      </Table>
+      <table>
+        <tbody>
+          {getMarkdownRulesElement(markdownCheatsheetDocs)}
+        </tbody>
+      </table>
     </FormBox>
   );
 };

@@ -44,6 +44,7 @@ export const SurveyMarkdown = (
           id: 'GLOBAL.LABEL.MARKDOWN_ABBREVIATION',
           defaultMessage: 'MC',
         })}
+        size="medium"
       >
         <MarkdownCheatsheet />
       </FabPopper>
