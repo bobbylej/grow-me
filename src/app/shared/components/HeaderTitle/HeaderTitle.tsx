@@ -11,7 +11,7 @@ import logo from 'assets/images/logo.png';
 import useLayoutStyles from 'app/shared/styles/layout.styles';
 import { useHeaderTitleStyles } from 'app/shared/components/HeaderTitle/HeaderTitle.styles';
 import { Navigation } from 'app/shared/components/Navigation/Navigation';
-import { NavigationItem } from 'app/shared/interfaces/navigationItem';
+import { NavigationItem } from 'app/shared/interfaces/navigationItem.interface';
 
 export interface HeaderTitleProps {
   title: string;

@@ -1,4 +1,4 @@
-import { ContextAction } from 'app/shared/interfaces/context';
+import { ContextAction } from 'app/shared/interfaces/context.interface';
 
 export enum AppContextActionType {
   addItem = 'addItem',

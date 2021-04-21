@@ -1,4 +1,4 @@
-export type MarkdownElementType =
+export type MarkdownRuleType =
   | 'group'
   | 'section'
   | 'questionSingle'

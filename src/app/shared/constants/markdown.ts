@@ -1,7 +1,8 @@
-import { MarkdownElementType } from 'app/shared/types/markdown-element.type';
-import { MarkdownRule } from 'app/shared/interfaces/markdown-rule';
+import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
+import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
 
 export const MarkdownGroupRule: MarkdownRule = {
+  id: 'group',
   regex: /\*# (.*)/g,
   selector: {
     start: '*#',
@@ -10,6 +11,7 @@ export const MarkdownGroupRule: MarkdownRule = {
 };
 
 export const MarkdownSectionRule: MarkdownRule = {
+  id: 'section',
   regex: /\*## (.*)/g,
   selector: {
     start: '*##',
@@ -18,6 +20,7 @@ export const MarkdownSectionRule: MarkdownRule = {
 };
 
 export const MarkdownWeightRule: MarkdownRule = {
+  id: 'weight',
   regex: /\[(\d+)\]/g,
   selector: {
     start: '[',
@@ -26,6 +29,7 @@ export const MarkdownWeightRule: MarkdownRule = {
 };
 
 export const MarkdownRadioButtonRule: MarkdownRule = {
+  id: 'radioButton',
   regex: /() (.*)/g,
   selector: {
     start: '()',
@@ -37,6 +41,7 @@ export const MarkdownRadioButtonRule: MarkdownRule = {
 };
 
 export const MarkdownCheckBoxRule: MarkdownRule = {
+  id: 'checkBox',
   regex: /[] (.*)/g,
   selector: {
     start: '[]',
@@ -48,6 +53,7 @@ export const MarkdownCheckBoxRule: MarkdownRule = {
 };
 
 export const MarkdownTextInputRule: MarkdownRule = {
+  id: 'textInput',
   regex: /... (.*)/g,
   selector: {
     start: '...',
@@ -59,6 +65,7 @@ export const MarkdownTextInputRule: MarkdownRule = {
 };
 
 export const MarkdownTextareaInputRule: MarkdownRule = {
+  id: 'textareaInput',
   regex: /.... (.*)/g,
   selector: {
     start: '....',
@@ -70,6 +77,7 @@ export const MarkdownTextareaInputRule: MarkdownRule = {
 };
 
 export const MarkdownQuestionSentenceRule: MarkdownRule = {
+  id: 'questionSentence',
   regex: /### (.*)/g,
   selector: {
     start: '###',
@@ -81,6 +89,7 @@ export const MarkdownQuestionSentenceRule: MarkdownRule = {
 };
 
 export const MarkdownQuestionSingleRule: MarkdownRule = {
+  id: 'questionSingle',
   regex: /^\*`([^\*`]*)^\*`/gm,
   selector: {
     start: '*`\n',
@@ -96,6 +105,7 @@ export const MarkdownQuestionSingleRule: MarkdownRule = {
 };
 
 export const MarkdownQuestionGroupRule: MarkdownRule = {
+  id: 'questionGroup',
   regex: /^\*```([^\*`]*)^\*```/gm,
   selector: {
     start: '*```\n',
@@ -111,7 +121,7 @@ export const MarkdownQuestionGroupRule: MarkdownRule = {
 };
 
 export const Markdown: Partial<
-  Record<MarkdownElementType, MarkdownRule>
+  Record<MarkdownRuleType, MarkdownRule>
 > = {
   group: MarkdownGroupRule,
   section: MarkdownSectionRule,

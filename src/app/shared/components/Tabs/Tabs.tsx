@@ -2,7 +2,7 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import React from 'react';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import { useTabsStyles } from 'app/shared/components/Tabs/Tabs.styles';
-import { Tab } from 'app/shared/interfaces/tab';
+import { Tab } from 'app/shared/interfaces/tab.interface';
 
 export interface TabsProps {
   tabs: Tab[];
