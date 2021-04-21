@@ -7,6 +7,8 @@
   "FORM.LABEL.TITLE": "Tytuł",
   "GLOBAL.LABEL.GRAPHIC_EDITOR": "Edytor graficzny",
   "GLOBAL.LABEL.MARKDOWN": "Markdown",
+  "GLOBAL.LABEL.MARKDOWN_ABBREVIATION": "MC",
+  "GLOBAL.LABEL.MARKDOWN_CHEATSHEET": "Markdown Cheatsheet",
   "GLOBAL.NAVIGATION.PAGE_ONE": "Strona pierwsza",
   "GLOBAL.NAVIGATION.SURVEYS": "Ankiety",
   "PAGE_ONE.ACTION.ADD_NEW_ITEM": "Dodaj nową pozycję",
