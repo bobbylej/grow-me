@@ -2,7 +2,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core';
 import React, { ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavigationStyles } from 'app/shared/components/Navigation/Navigation.styles';
-import { NavigationItem } from 'app/shared/interfaces/navigationItem';
+import { NavigationItem } from 'app/shared/interfaces/navigationItem.interface';
 
 export interface NavigationParams {
   navigation: NavigationItem[];

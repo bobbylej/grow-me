@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import { noContextProviderWarning } from 'app/shared/utils/contextUtils';
-import { ContextModel } from 'app/shared/interfaces/context';
+import { ContextModel } from 'app/shared/interfaces/context.interface';
 import {
   AppContextActions,
   AppContextActionType,

@@ -47,6 +47,7 @@ export const useFormBoxStyles = makeStyles(
       borderBottomRightRadius: defaultValues.borderRadius,
       borderBottomLeftRadius: defaultValues.borderRadius,
       borderColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.background.default,
       padding: theme.spacing(2),
     },
     contentPrimary: {

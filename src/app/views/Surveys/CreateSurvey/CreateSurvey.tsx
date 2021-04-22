@@ -7,7 +7,7 @@ import { usePageTitle } from 'app/shared/hooks/usePageTitle';
 import { FormHeader } from 'app/shared/components/Form/FormHeader/FormHeader';
 import { useCreateSurveyStyles } from 'app/views/Surveys/CreateSurvey/CreateSurvey.styles';
 import { Tabs } from 'app/shared/components/Tabs/Tabs';
-import { Tab } from 'app/shared/interfaces/tab';
+import { Tab } from 'app/shared/interfaces/tab.interface';
 import { SurveyGraphicEditor } from 'app/views/Surveys/CreateSurvey/SurveyGraphicEditor/SurveyGraphicEditor';
 import { SurveyMarkdown } from 'app/views/Surveys/CreateSurvey/SurveyMarkdown/SurveyMarkdown';
 
