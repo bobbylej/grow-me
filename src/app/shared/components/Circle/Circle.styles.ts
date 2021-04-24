@@ -12,4 +12,12 @@ export const useCircleStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.primary.dark,
     fontSize: '1rem',
   },
+  circleActive: {
+    backgroundColor: theme.palette.primary.contrastText,
+    border: `5px solid ${theme.palette.primary.main}`,
+  },
+  circleInActive: {
+    backgroundColor: theme.palette.primary.contrastText,
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
 }));
