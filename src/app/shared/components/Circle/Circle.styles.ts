@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { pxToRem } from 'app/shared/utils/stylesUtils';
 
 export const useCircleStyles = makeStyles((theme: Theme) => ({
   circleSurvey: {
@@ -19,5 +20,13 @@ export const useCircleStyles = makeStyles((theme: Theme) => ({
   circleInActive: {
     backgroundColor: theme.palette.primary.contrastText,
     border: `1px solid ${theme.palette.primary.main}`,
+  },
+  circleSmall: {
+    width: pxToRem(40),
+    height: pxToRem(40),
+  },
+  circleMedium: {
+    width: pxToRem(50),
+    height: pxToRem(50),
   },
 }));

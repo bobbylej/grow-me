@@ -1,35 +1,48 @@
 import React, { ReactElement } from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import { useIntl } from 'react-intl';
 import { Circle } from 'app/shared/components/Circle/Circle';
 import { useAsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor.styles';
 import { AsideGraphic } from 'app/shared/interfaces/asideGraphic';
 
 export interface AsideGraphicEditorProps {
-  circleEditor: AsideGraphic[];
+  circleEditor: AsideGraphic;
   direction: 'column' | 'row';
 }
 
-export const AsideGraphicEditorProps = ({
-  circleEditor,
+const circleEditorGraphic: AsideGraphic[] = [
+  {
+    id: 'test 1',
+    name: 'test 1',
+    active: false,
+    type: 'group',
+  },
+];
+
+export const AsideGraphicEditor = ({
   direction,
 }: AsideGraphicEditorProps): ReactElement => {
-  const { asideGraphicEditor } = useAsideGraphicEditor();
+  const {
+    asideGraphicEditor,
+    itemGraphicEditor,
+    nameItem,
+  } = useAsideGraphicEditor();
 
-  const intl = useIntl();
-
-  const asideEditor = circleEditor.map((item) => (
-    <Grid key={item.id} item xs={3}>
+  const asideEditor = circleEditorGraphic.map((item) => (
+    <Grid
+      className={itemGraphicEditor}
+      key={item.id}
+      item
+      xs={3}
+      direction={direction}
+    >
       <Circle
-        circleParmas={item.active ? 'active' : undefined}
+        circleParmas={
+          item.active ? 'active' : 'outlined' || 'covered'
+        }
         theme="template"
+        size={item.type === 'group' ? 'medium' : 'small'}
       />
-      <Typography>
-        {intl.formatMessage({
-          id: `${item.idTranslation}`,
-          defaultMessage: `${item.defaultMessage}`,
-        })}
-      </Typography>
+      <Typography className={nameItem}>{item.name}</Typography>
     </Grid>
   ));
 
@@ -39,8 +52,6 @@ export const AsideGraphicEditorProps = ({
       container
       spacing={2}
       direction={direction}
-      justify="space-between"
-      alignItems="center"
     >
       {asideEditor}
     </Grid>

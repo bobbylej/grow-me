@@ -5,8 +5,16 @@ import { pxToRem } from 'app/shared/utils/stylesUtils';
 export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
   asideGraphicEditor: {
     position: 'fixed',
-    top: `${pxToRem(160)}%`,
-    left: 0,
+    top: `50%`,
+    left: '0.5%',
     color: theme.palette.primary.main,
+  },
+  itemGraphicEditor: {
+    display: 'flex',
+    marginBottom: pxToRem(40),
+  },
+  nameItem: {
+    marginLeft: pxToRem(10),
+    lineHeight: pxToRem(40),
   },
 }));
