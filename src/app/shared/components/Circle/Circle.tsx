@@ -21,7 +21,8 @@ export const Circle = ({
     circleSurvey,
     circleTemplate,
     circleActive,
-    circleInActive,
+    circleOutlined,
+    circleCovered,
     circleSmall,
     circleMedium,
   } = useCircleStyles();
@@ -29,13 +30,13 @@ export const Circle = ({
   return (
     <div>
       <Avatar
-        className={
-          (theme === 'template' ? circleTemplate : circleSurvey) ||
-          (circleParmas === 'active'
-            ? circleActive
-            : circleInActive) ||
-          (size === 'medium' ? circleMedium : circleSmall)
-        }
+        className={`${
+          theme === 'template' ? circleTemplate : circleSurvey
+        } ${circleParmas === 'active' ? circleActive : ''} ${
+          circleParmas === 'outlined' ? circleOutlined : ''
+        } ${circleParmas === 'covered' ? circleCovered : ''} ${
+          size === 'small' ? circleSmall : ''
+        } ${size === 'medium' ? circleMedium : ''}`}
       >
         {text || icon}
       </Avatar>

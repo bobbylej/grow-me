@@ -11,7 +11,7 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
   },
   itemGraphicEditor: {
     display: 'flex',
-    marginBottom: pxToRem(40),
+    marginBottom: pxToRem(1),
   },
   nameItem: {
     marginLeft: pxToRem(10),

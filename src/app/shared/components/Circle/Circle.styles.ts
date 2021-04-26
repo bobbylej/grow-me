@@ -17,16 +17,20 @@ export const useCircleStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.primary.contrastText,
     border: `5px solid ${theme.palette.primary.main}`,
   },
-  circleInActive: {
+  circleOutlined: {
     backgroundColor: theme.palette.primary.contrastText,
     border: `1px solid ${theme.palette.primary.main}`,
   },
+  circleCovered: {
+    backgroundColor: theme.palette.primary.main,
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
   circleSmall: {
-    width: pxToRem(40),
-    height: pxToRem(40),
+    width: pxToRem(20),
+    height: pxToRem(20),
   },
   circleMedium: {
-    width: pxToRem(50),
-    height: pxToRem(50),
+    width: pxToRem(30),
+    height: pxToRem(30),
   },
 }));
