@@ -7,17 +7,22 @@ export const SurveyGraphicEditor = (): React.ReactElement => {
     {
       id: 'test 1',
       name: 'test 1',
-      active: false,
+      status: 'done',
       type: 'group',
     },
     {
       id: 'test 2',
       name: 'test 2',
-      active: true,
+      status: 'active',
+      type: 'section',
+    },
+    {
+      id: 'test 3',
+      name: 'test 3',
+      status: 'pending',
       type: 'section',
     },
   ];
-  // const circle: CircleProps = { theme: 'template', size: 'small' };
   return (
     <div>
       <AsideGraphicEditor

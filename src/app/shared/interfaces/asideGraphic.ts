@@ -1,6 +1,6 @@
 export interface AsideGraphic {
   id: string;
   name: string;
-  active: boolean;
+  status: 'pending' | 'active' | 'done';
   type: 'group' | 'section';
 }

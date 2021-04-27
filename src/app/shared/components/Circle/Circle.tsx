@@ -6,7 +6,7 @@ export interface CircleProps {
   text?: string;
   icon?: string;
   theme: 'survey' | 'template';
-  circleParmas?: 'active' | 'outlined' | 'covered';
+  circleParams?: 'active' | 'outlined' | 'covered';
   size?: 'small' | 'medium';
 }
 
@@ -14,7 +14,7 @@ export const Circle = ({
   text,
   icon,
   theme,
-  circleParmas,
+  circleParams,
   size,
 }: CircleProps): ReactElement => {
   const {
@@ -32,9 +32,9 @@ export const Circle = ({
       <Avatar
         className={`${
           theme === 'template' ? circleTemplate : circleSurvey
-        } ${circleParmas === 'active' ? circleActive : ''} ${
-          circleParmas === 'outlined' ? circleOutlined : ''
-        } ${circleParmas === 'covered' ? circleCovered : ''} ${
+        } ${circleParams === 'active' ? circleActive : ''} ${
+          circleParams === 'outlined' ? circleOutlined : ''
+        } ${circleParams === 'covered' ? circleCovered : ''} ${
           size === 'small' ? circleSmall : ''
         } ${size === 'medium' ? circleMedium : ''}`}
       >

@@ -19,18 +19,31 @@ export const AsideGraphicEditor = ({
     nameItem,
   } = useAsideGraphicEditor();
 
+  const getCircleParams = (
+    item: AsideGraphic,
+  ): 'active' | 'outlined' | 'covered' => {
+    switch (item.status) {
+      case 'active':
+        return 'active';
+      case 'pending':
+        return 'outlined';
+      case 'done':
+        return 'covered';
+    }
+  };
+
   const asideEditor = circleEditor.map((item) => (
-    <Grid className={itemGraphicEditor} key={item.id} item xs={3}>
-      <Circle
-        circleParmas={
-          item.active ? 'active' : 'outlined' || 'covered'
-        }
-        theme="template"
-        size={item.type === 'group' ? 'medium' : 'small'}
-        text=" "
-      ></Circle>
-      <Typography className={nameItem}>{item.name}</Typography>
-    </Grid>
+    <>
+      <Grid className={itemGraphicEditor} key={item.id} item xs={1}>
+        <Circle
+          circleParams={getCircleParams(item)}
+          theme="template"
+          size={item.type === 'group' ? 'medium' : 'small'}
+          text=" "
+        ></Circle>
+        <Typography className={nameItem}>{item.name}</Typography>
+      </Grid>
+    </>
   ));
 
   return (
