@@ -17,6 +17,7 @@ export const AsideGraphicEditor = ({
     asideGraphicEditor,
     itemGraphicEditor,
     nameItem,
+    circleItem,
   } = useAsideGraphicEditor();
 
   const getCircleParams = (
@@ -33,17 +34,16 @@ export const AsideGraphicEditor = ({
   };
 
   const asideEditor = circleEditor.map((item) => (
-    <>
-      <Grid className={itemGraphicEditor} key={item.id} item xs={1}>
-        <Circle
-          circleParams={getCircleParams(item)}
-          theme="template"
-          size={item.type === 'group' ? 'medium' : 'small'}
-          text=" "
-        ></Circle>
-        <Typography className={nameItem}>{item.name}</Typography>
-      </Grid>
-    </>
+    <Grid className={itemGraphicEditor} key={item.id} item>
+      <Circle
+        className={circleItem}
+        circleParams={getCircleParams(item)}
+        theme="template"
+        size={item.type === 'group' ? 'medium' : 'small'}
+        text=" "
+      ></Circle>
+      <Typography className={nameItem}>{item.name}</Typography>
+    </Grid>
   ));
 
   return (

@@ -7,9 +7,10 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     position: 'fixed',
     top: '50%',
     left: '0.5%',
+    width: 'auto',
+    margin: 0,
     transform: 'translateY(-50%)',
     color: theme.palette.primary.main,
-    zIndex: -1,
   },
   itemGraphicEditor: {
     display: 'flex',
@@ -17,7 +18,11 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
   },
   nameItem: {
-    minWidth: pxToRem(50),
     marginLeft: pxToRem(10),
+  },
+  circleItem: {
+    display: 'flex',
+    minWidth: pxToRem(30),
+    justifyContent: 'center',
   },
 }));
