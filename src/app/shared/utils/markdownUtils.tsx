@@ -37,6 +37,7 @@ export type MarkdownRuleConvertedElements = [
 export const convertMarkdown = (
   markdownText: string,
   markdownRules: MarkdownRules = Markdown,
+  parentKey?: string,
 ): Array<React.ReactElement> | undefined => {
   if (markdownText) {
     const markdownElements: Array<MarkdownRuleElement> = [];
@@ -44,6 +45,7 @@ export const convertMarkdown = (
       const [elements, textLeft] = convertMarkdownRule(
         markdownText,
         markdownRule?.id,
+        parentKey,
       );
       markdownElements.push(...elements);
       markdownText = textLeft;
@@ -63,28 +65,29 @@ export const convertMarkdown = (
 export const convertMarkdownRule = (
   markdownText: string,
   markdownRuleType: MarkdownRuleType | undefined,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
   switch (markdownRuleType) {
     case 'group':
-      return convertMarkdownGroup(markdownText);
+      return convertMarkdownGroup(markdownText, parentKey);
     case 'section':
-      return convertMarkdownSection(markdownText);
+      return convertMarkdownSection(markdownText, parentKey);
     case 'questionSingle':
-      return convertMarkdownQuestionSingle(markdownText);
+      return convertMarkdownQuestionSingle(markdownText, parentKey);
     case 'questionGroup':
-      return convertMarkdownQuestionGroup(markdownText);
+      return convertMarkdownQuestionGroup(markdownText, parentKey);
     case 'questionSentence':
-      return convertMarkdownQuestionSentence(markdownText);
+      return convertMarkdownQuestionSentence(markdownText, parentKey);
     case 'radioButton':
-      return convertMarkdownRadioButton(markdownText);
+      return convertMarkdownRadioButton(markdownText, parentKey);
     case 'checkBox':
-      return convertMarkdownCheckBox(markdownText);
+      return convertMarkdownCheckBox(markdownText, parentKey);
     case 'textInput':
-      return convertMarkdownTextInput(markdownText);
+      return convertMarkdownTextInput(markdownText, parentKey);
     case 'textareaInput':
-      return convertMarkdownTextareaInput(markdownText);
+      return convertMarkdownTextareaInput(markdownText, parentKey);
     case 'weight':
-      return convertMarkdownWeight(markdownText);
+      return convertMarkdownWeight(markdownText, parentKey);
     default:
       return [[], markdownText];
     // TODO: Add converters for other elements
@@ -94,15 +97,18 @@ export const convertMarkdownRule = (
 export const convertMarkdownRuleElements = (
   markdownText: string,
   markdownRule: MarkdownRule,
-  generateJsxElement: (match: RegExpMatchArray) => ReactElement,
+  generateJsxElement: (
+    match: RegExpMatchArray,
+    index: number,
+  ) => ReactElement,
 ): MarkdownRuleConvertedElements => {
   const matches = markdownText.matchAll(markdownRule.regex);
-  const elements = Array.from(matches).map((match) => ({
+  const elements = Array.from(matches).map((match, index) => ({
     index: {
       start: match.index || 0,
       end: (match.index || 0) + match[0].length,
     },
-    element: generateJsxElement(match),
+    element: generateJsxElement(match, index),
   }));
   let textLeft = '';
   let lastIndex = 0;
@@ -141,18 +147,33 @@ export const groupMarkdownRuleElements = (
   return { element: jsxElement, index };
 };
 
+export const generateElementKey = (
+  elementName: string,
+  index: number,
+  parentKey?: string,
+): string => {
+  return `${parentKey ? `${parentKey}.` : ''}${elementName}-${index}`;
+};
+
 export const convertMarkdownGroup = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => (
-    <FormBox
-      key={`${MarkdownGroupRule.id}-${match.index}`}
-      title={match[1]}
-      color="primary"
-    >
-      {convertMarkdown(match[2], MarkdownGroupRule.children)}
-    </FormBox>
-  );
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownGroupRule.id,
+      index,
+      parentKey,
+    );
+    return (
+      <FormBox key={key} title={match[1]} color="primary">
+        {convertMarkdown(match[2], MarkdownGroupRule.children, key)}
+      </FormBox>
+    );
+  };
   return convertMarkdownRuleElements(
     markdownText,
     MarkdownGroupRule,
@@ -162,17 +183,28 @@ export const convertMarkdownGroup = (
 
 export const convertMarkdownSection = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => (
-    <FormBox
-      key={`${MarkdownSectionRule.id}-${match.index}`}
-      title={match[1]}
-      color="primary"
-      headerVariant="outlined"
-    >
-      {convertMarkdown(match[2], MarkdownSectionRule.children)}
-    </FormBox>
-  );
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownSectionRule.id,
+      index,
+      parentKey,
+    );
+    return (
+      <FormBox
+        key={key}
+        title={match[1]}
+        color="primary"
+        headerVariant="outlined"
+      >
+        {convertMarkdown(match[2], MarkdownSectionRule.children, key)}
+      </FormBox>
+    );
+  };
   return convertMarkdownRuleElements(
     markdownText,
     MarkdownSectionRule,
@@ -182,18 +214,33 @@ export const convertMarkdownSection = (
 
 export const convertMarkdownQuestionSingle = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => (
-    // TODO: Use proper component
-    <FormBox
-      key={`${MarkdownQuestionSingleRule.id}-${match.index}`}
-      title="Question Single"
-      color="primary"
-      headerVariant="outlined"
-    >
-      {convertMarkdown(match[1], MarkdownQuestionSingleRule.children)}
-    </FormBox>
-  );
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownQuestionSingleRule.id,
+      index,
+      parentKey,
+    );
+    return (
+      // TODO: Use proper component
+      <FormBox
+        key={key}
+        title="Question Single"
+        color="primary"
+        headerVariant="outlined"
+      >
+        {convertMarkdown(
+          match[1],
+          MarkdownQuestionSingleRule.children,
+          key,
+        )}
+      </FormBox>
+    );
+  };
   return convertMarkdownRuleElements(
     markdownText,
     MarkdownQuestionSingleRule,
@@ -203,18 +250,33 @@ export const convertMarkdownQuestionSingle = (
 
 export const convertMarkdownQuestionGroup = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => (
-    // TODO: Use proper component
-    <FormBox
-      key={`${MarkdownQuestionGroupRule.id}-${match.index}`}
-      title="Question Group"
-      color="primary"
-      headerVariant="outlined"
-    >
-      {convertMarkdown(match[1], MarkdownQuestionGroupRule.children)}
-    </FormBox>
-  );
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownQuestionGroupRule.id,
+      index,
+      parentKey,
+    );
+    return (
+      // TODO: Use proper component
+      <FormBox
+        key={key}
+        title="Question Group"
+        color="primary"
+        headerVariant="outlined"
+      >
+        {convertMarkdown(
+          match[1],
+          MarkdownQuestionGroupRule.children,
+          key,
+        )}
+      </FormBox>
+    );
+  };
   return convertMarkdownRuleElements(
     markdownText,
     MarkdownQuestionGroupRule,
@@ -224,21 +286,30 @@ export const convertMarkdownQuestionGroup = (
 
 export const convertMarkdownQuestionSentence = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => {
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownQuestionSentenceRule.id,
+      index,
+      parentKey,
+    );
     const children = match[1] || '[1]';
     return (
       // TODO: Use proper component
-      <Typography
-        key={`${MarkdownQuestionSentenceRule.id}-${match.index}`}
-        variant="body2"
-      >
-        {match[2]}{' '}
+      <div key={`${key}-wrapper`}>
+        <Typography key={key} variant="body2">
+          {match[2]}
+        </Typography>
         {convertMarkdown(
           children,
           MarkdownQuestionSentenceRule.children,
+          key,
         )}
-      </Typography>
+      </div>
     );
   };
   return convertMarkdownRuleElements(
@@ -250,23 +321,33 @@ export const convertMarkdownQuestionSentence = (
 
 export const convertMarkdownRadioButton = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => {
-    const children = match[1] || '[1]';
-    const labelAndWeightElement = (
-      <>
-        {convertMarkdown(children, MarkdownCheckBoxRule.children)}{' '}
-        {match[2]}
-      </>
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownRadioButtonRule.id,
+      index,
+      parentKey,
     );
+    const children = match[1] || '[1]';
     return (
       // TODO: Use proper component
-      <FormControlLabel
-        key={`${MarkdownRadioButtonRule.id}-${match.index}`}
-        value={match[2]}
-        control={<Radio color="primary" />}
-        label={labelAndWeightElement}
-      />
+      <div key={`${key}-wrapper`}>
+        <FormControlLabel
+          key={key}
+          value={match[2]}
+          control={<Radio color="primary" />}
+          label={match[2]}
+        />
+        {convertMarkdown(
+          children,
+          MarkdownCheckBoxRule.children,
+          key,
+        )}
+      </div>
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(
@@ -275,10 +356,13 @@ export const convertMarkdownRadioButton = (
     generateJsxElement,
   );
   const groupedMarkdownElement = groupMarkdownRuleElements(elements);
+  const groupKey = generateElementKey(
+    `${MarkdownRadioButtonRule.id}-group`,
+    0,
+    parentKey,
+  );
   const jsxElement = (
-    <RadioGroup
-      key={`${MarkdownRadioButtonRule.id}-group-${groupedMarkdownElement.index.start}`}
-    >
+    <RadioGroup key={groupKey}>
       {groupedMarkdownElement.element}
     </RadioGroup>
   );
@@ -291,23 +375,33 @@ export const convertMarkdownRadioButton = (
 
 export const convertMarkdownCheckBox = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => {
-    const children = match[1] || '[1]';
-    const labelAndWeightElement = (
-      <>
-        {convertMarkdown(children, MarkdownCheckBoxRule.children)}{' '}
-        {match[2]}
-      </>
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownCheckBoxRule.id,
+      index,
+      parentKey,
     );
+    const children = match[1] || '[1]';
     return (
       // TODO: Use proper component
-      <FormControlLabel
-        key={`${MarkdownCheckBoxRule.id}-${match.index}`}
-        value={match[2]}
-        control={<Checkbox color="primary" />}
-        label={labelAndWeightElement}
-      />
+      <div key={`${key}-wrapper`}>
+        <FormControlLabel
+          key={key}
+          value={match[2]}
+          control={<Checkbox color="primary" />}
+          label={match[2]}
+        />
+        {convertMarkdown(
+          children,
+          MarkdownCheckBoxRule.children,
+          key,
+        )}
+      </div>
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(
@@ -316,10 +410,13 @@ export const convertMarkdownCheckBox = (
     generateJsxElement,
   );
   const groupedMarkdownElement = groupMarkdownRuleElements(elements);
+  const groupKey = generateElementKey(
+    `${MarkdownCheckBoxRule.id}-group`,
+    0,
+    parentKey,
+  );
   const jsxElement = (
-    <FormGroup
-      key={`${MarkdownCheckBoxRule.id}-group-${groupedMarkdownElement.index.start}`}
-    >
+    <FormGroup key={groupKey}>
       {groupedMarkdownElement.element}
     </FormGroup>
   );
@@ -332,18 +429,28 @@ export const convertMarkdownCheckBox = (
 
 export const convertMarkdownTextInput = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => {
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownTextInputRule.id,
+      index,
+      parentKey,
+    );
     const children = match[1] || '[1]';
     return (
       // TODO: Use proper component
-      <>
-        <TextField
-          key={`${MarkdownTextInputRule.id}-${match.index}`}
-          value={match[2]}
-        />
-        {convertMarkdown(children, MarkdownTextInputRule.children)}
-      </>
+      <div key={`${key}-wrapper`}>
+        <TextField key={key} value={match[2]} fullWidth />
+        {convertMarkdown(
+          children,
+          MarkdownTextInputRule.children,
+          key,
+        )}
+      </div>
     );
   };
   return convertMarkdownRuleElements(
@@ -355,22 +462,28 @@ export const convertMarkdownTextInput = (
 
 export const convertMarkdownTextareaInput = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => {
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownTextareaInputRule.id,
+      index,
+      parentKey,
+    );
     const children = match[1] || '[1]';
     return (
       // TODO: Use proper component
-      <>
-        <TextField
-          key={`${MarkdownTextareaInputRule.id}-${match.index}`}
-          value={match[2]}
-          multiline
-        />
+      <div key={`${key}-wrapper`}>
+        <TextField key={key} value={match[2]} multiline fullWidth />
         {convertMarkdown(
           children,
           MarkdownTextareaInputRule.children,
+          key,
         )}
-      </>
+      </div>
     );
   };
   return convertMarkdownRuleElements(
@@ -382,15 +495,28 @@ export const convertMarkdownTextareaInput = (
 
 export const convertMarkdownWeight = (
   markdownText: string,
+  parentKey?: string,
 ): MarkdownRuleConvertedElements => {
-  const generateJsxElement = (match: RegExpMatchArray) => (
-    // TODO: Use proper component
-    <TextField
-      type="number"
-      value={match[1]}
-      style={{ display: 'inline-block', width: '2rem' }}
-    />
-  );
+  const generateJsxElement = (
+    match: RegExpMatchArray,
+    index: number,
+  ) => {
+    const key = generateElementKey(
+      MarkdownWeightRule.id,
+      index,
+      parentKey,
+    );
+    return (
+      // TODO: Use proper component
+      <TextField
+        key={key}
+        name={key}
+        type="number"
+        value={match[1]}
+        style={{ display: 'inline-block', width: '2rem' }}
+      />
+    );
+  };
   return convertMarkdownRuleElements(
     markdownText,
     MarkdownWeightRule,

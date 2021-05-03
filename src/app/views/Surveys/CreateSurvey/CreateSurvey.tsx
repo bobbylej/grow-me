@@ -37,7 +37,37 @@ export const CreateSurvey = (): ReactElement => {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    markdown: '',
+    markdown: `
+    *## Section 0.1
+  
+    *# Group 1
+    *## Section 1.1
+    *\`
+      *### Question sentence 1.1.1
+      *....
+    *\`
+  
+    *# Group 2
+    *## Section 2.1
+    *\`
+      *### Question sentence 2.1.1
+      *()[2] Radio button 1
+      *() Radio button 2
+      *() Radio button 3
+    *\`
+  
+    *# Group 3
+    *\`
+      *### Question sentence 3.1
+      *[][1] Checkbox 1
+      *[][2] Checkbox 2
+      *[] Checkbox 3
+    *\`
+    *\`
+      *### Question sentence 3.2
+      *...
+    *\`
+    `, // TODO: Temporary markdown, remove later
   });
 
   usePageTitle(

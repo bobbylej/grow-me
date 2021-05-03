@@ -34,41 +34,10 @@ export const SurveyGraphicEditor = ({
       type: 'section',
     },
   ];
-  const testMarkdown = `
-  *## Section 0.1
-
-  *# Group 1
-  *## Section 1.1
-  *\`
-    *### Question sentence 1.1.1
-    *....
-  *\`
-
-  *# Group 2
-  *## Section 2.1
-  *\`
-    *### Question sentence 2.1.1
-    *()[2] Radio button 1
-    *() Radio button 2
-    *() Radio button 3
-  *\`
-
-  *# Group 3
-  *\`
-    *### Question sentence 3.1
-    *[][1] Checkbox 1
-    *[][2] Checkbox 2
-    *[] Checkbox 3
-  *\`
-  *\`
-    *### Question sentence 3.2
-    *...
-  *\`
-  `;
-  const content = convertMarkdown(markdown || testMarkdown);
+  const content = convertMarkdown(markdown);
 
   return (
-    <>
+    <div>
       <Grid container direction="column" className={styles.form}>
         <SingleQuestion text="test1" />
         {content}
@@ -77,6 +46,6 @@ export const SurveyGraphicEditor = ({
         direction="column"
         circleEditor={circleEditorGraphic}
       />
-    </>
+    </div>
   );
 };
