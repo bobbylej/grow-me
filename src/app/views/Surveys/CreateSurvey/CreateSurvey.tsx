@@ -92,7 +92,7 @@ export const CreateSurvey = (): ReactElement => {
       <Grid item xs={12} className={surveySection}>
         <Switch>
           <Route exact path={path}>
-            <SurveyGraphicEditor />
+            <SurveyGraphicEditor markdown={form.markdown} />
           </Route>
           <Route path={`${path}/markdown`}>
             <SurveyMarkdown
