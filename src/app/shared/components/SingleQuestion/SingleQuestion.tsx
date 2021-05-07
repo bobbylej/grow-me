@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useSingleQuestionStyles } from 'app/shared/components/SingleQuestion/SingleQuestion.styles';
 
 export interface SingleQuestionProps {
@@ -15,12 +15,12 @@ export const SingleQuestion = ({
   return (
     <Grid className={questionContainer} container>
       <Grid className={question} direction="row" item xs={12}>
-        {text}
-        {children}
+        <Typography variant="body1">{text}</Typography>
       </Grid>
-      <Grid className={question} direction="row" item xs={12}>
-        {text}
-        {children}
+      <Grid direction="row" item xs={12}>
+        <Grid xs={12} item>
+          {children}
+        </Grid>
       </Grid>
     </Grid>
   );
