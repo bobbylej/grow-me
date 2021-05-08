@@ -1,6 +1,7 @@
 import React from 'react';
 import { AsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor';
 import { AsideGraphic } from 'app/shared/interfaces/asideGraphic';
+import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
 
 export const SurveyGraphicEditor = (): React.ReactElement => {
   const circleEditorGraphic: AsideGraphic[] = [
@@ -29,6 +30,7 @@ export const SurveyGraphicEditor = (): React.ReactElement => {
         direction="column"
         circleEditor={circleEditorGraphic}
       />
+      <SingleQuestion text="test1" />
     </div>
   );
 };
