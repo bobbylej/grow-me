@@ -28,6 +28,7 @@ import {
   MarkdownRules,
   MarkdownRuleType,
 } from 'app/shared/types/markdownRule.type';
+import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
 
 export type MarkdownRuleConvertedElements = [
   Array<MarkdownRuleElement>,
@@ -225,20 +226,22 @@ export const convertMarkdownQuestionSingle = (
       index,
       parentKey,
     );
+    const {
+      questionSentence,
+      ...contentMarkdownRules
+    } = MarkdownQuestionSingleRule.children as Record<
+      MarkdownRuleType,
+      MarkdownRule
+    >;
+    const questionSentenceElements = convertMarkdown(
+      match[1],
+      { questionSentence },
+      key,
+    );
     return (
-      // TODO: Use proper component
-      <FormBox
-        key={key}
-        title="Question Single"
-        color="primary"
-        headerVariant="outlined"
-      >
-        {convertMarkdown(
-          match[1],
-          MarkdownQuestionSingleRule.children,
-          key,
-        )}
-      </FormBox>
+      <SingleQuestion key={key} text={questionSentenceElements}>
+        {convertMarkdown(match[1], contentMarkdownRules, key)}
+      </SingleQuestion>
     );
   };
   return convertMarkdownRuleElements(
@@ -261,19 +264,27 @@ export const convertMarkdownQuestionGroup = (
       index,
       parentKey,
     );
+    const {
+      questionSentence,
+      ...contentMarkdownRules
+    } = MarkdownQuestionSingleRule.children as Record<
+      MarkdownRuleType,
+      MarkdownRule
+    >;
+    const questionSentenceElements = convertMarkdown(
+      match[1],
+      { questionSentence },
+      key,
+    );
     return (
       // TODO: Use proper component
       <FormBox
         key={key}
-        title="Question Group"
+        title={questionSentenceElements}
         color="primary"
         headerVariant="outlined"
       >
-        {convertMarkdown(
-          match[1],
-          MarkdownQuestionGroupRule.children,
-          key,
-        )}
+        {convertMarkdown(match[1], contentMarkdownRules, key)}
       </FormBox>
     );
   };
@@ -301,7 +312,7 @@ export const convertMarkdownQuestionSentence = (
     return (
       // TODO: Use proper component
       <div key={`${key}-wrapper`}>
-        <Typography key={key} variant="body2">
+        <Typography key={key} variant="body1">
           {match[2]}
         </Typography>
         {convertMarkdown(

@@ -10,7 +10,7 @@ import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Size } from 'app/shared/types/size.type';
 
 export interface FormBoxProps {
-  title: string;
+  title: string | React.ReactNode;
   size?: Size;
   color?: Color;
   headerVariant?: BackgroundVariant;

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core';
-import { pxToRem, defaultValues } from 'app/shared/utils/stylesUtils';
+import { defaultValues } from 'app/shared/utils/stylesUtils';
 
 export const useSingleQuestionStyles = makeStyles((theme: Theme) => ({
   questionContainer: {
@@ -8,8 +8,11 @@ export const useSingleQuestionStyles = makeStyles((theme: Theme) => ({
     borderRadius: defaultValues.borderRadius,
   },
   question: {
-    padding: pxToRem(5),
+    padding: theme.spacing(1, 2),
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main,
+  },
+  content: {
+    padding: theme.spacing(1, 2),
   },
 }));

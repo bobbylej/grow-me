@@ -39,7 +39,7 @@ export const SurveyGraphicEditor = ({
   return (
     <div>
       <Grid container direction="column" className={styles.form}>
-        <SingleQuestion text="test1" />
+        <SingleQuestion text="test1">Test</SingleQuestion>
         {content}
       </Grid>
       <AsideGraphicEditor
