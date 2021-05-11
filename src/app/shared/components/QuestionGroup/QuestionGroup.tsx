@@ -8,10 +8,10 @@ export const QuestionGroup = (): ReactElement => {
 
   return (
     <Grid container className={questionGroupContainer}>
-      <QuestionItem text="test 1" />
-      <QuestionItem text="test 2" />
-      <QuestionItem text="test 3" />
-      <QuestionItem text="test 4" />
+      <QuestionItem variant="outlined" text="test 1" />
+      <QuestionItem variant="contained" text="test 2" />
+      <QuestionItem variant="outlined" text="test 3" />
+      <QuestionItem variant="contained" text="test 4" />
     </Grid>
   );
 };

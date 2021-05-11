@@ -4,17 +4,27 @@ import { useQuestionItemStyles } from 'app/shared/components/QuestionItem/Questi
 
 export interface QuestionItemProps {
   text: string;
+  variant: 'contained' | 'outlined';
 }
 
 export const QuestionItem = ({
   text,
+  variant,
   children,
 }: React.PropsWithChildren<QuestionItemProps>): React.ReactElement => {
-  const { questionItemContainer } = useQuestionItemStyles();
+  const {
+    questionItemContainer,
+    questionItemOdd,
+    questionItemEven,
+  } = useQuestionItemStyles();
 
   return (
     <Grid
-      className={questionItemContainer}
+      className={
+        variant === 'contained'
+          ? `${questionItemContainer} ${questionItemOdd}`
+          : `${questionItemContainer} ${questionItemEven}`
+      }
       direction="row"
       item
       xs={12}
