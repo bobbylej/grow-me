@@ -1,9 +1,7 @@
 import React, { ReactElement } from 'react';
 import {
-  Checkbox,
   FormControlLabel,
   FormGroup,
-  Radio,
   RadioGroup,
   TextField,
   Typography,
@@ -29,6 +27,8 @@ import {
   MarkdownRuleType,
 } from 'app/shared/types/markdownRule.type';
 import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
+import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
+import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 
 export type MarkdownRuleConvertedElements = [
   Array<MarkdownRuleElement>,
@@ -350,7 +350,7 @@ export const convertMarkdownRadioButton = (
         <FormControlLabel
           key={key}
           value={match[2]}
-          control={<Radio color="primary" />}
+          control={<RadioCustom color="primary" />}
           label={match[2]}
         />
         {convertMarkdown(
@@ -404,7 +404,7 @@ export const convertMarkdownCheckBox = (
         <FormControlLabel
           key={key}
           value={match[2]}
-          control={<Checkbox color="primary" />}
+          control={<CheckBoxCustom color="primary" />}
           label={match[2]}
         />
         {convertMarkdown(
