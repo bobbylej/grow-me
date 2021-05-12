@@ -1,22 +1,38 @@
-import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
+import { MarkdownRules } from 'app/shared/types/markdownRule.type';
 import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
 
-export const MarkdownGroupRule: MarkdownRule = {
-  id: 'group',
-  regex: /\*# (.*)/g,
-  selector: {
-    start: '*#',
-    end: '\n',
-  },
+const generateSingleSelectorMultilineRegex = (
+  selector: string,
+): RegExp => {
+  return new RegExp(
+    `^\\s*${selector}(.*)((?:\\r?\\n(?!^\\s*${selector}).*)*)`,
+    'gm',
+  );
 };
 
-export const MarkdownSectionRule: MarkdownRule = {
-  id: 'section',
-  regex: /\*## (.*)/g,
-  selector: {
-    start: '*##',
-    end: '\n',
-  },
+const generateSingleSelectorSinglelineRegex = (
+  selector: string,
+  childSelector?: string,
+): RegExp => {
+  const childRegExp = childSelector ? `(${childSelector})?` : '';
+  return new RegExp(`^\\s*${selector}${childRegExp}\\v*(.*)$`, 'gm');
+};
+
+const generateSingleSelectorSinglelineWithoutContentRegex = (
+  selector: string,
+  childSelector?: string,
+): RegExp => {
+  const childRegExp = childSelector ? `(${childSelector})?` : '';
+  return new RegExp(`^\\s*${selector}${childRegExp}\\v*$`, 'gm');
+};
+
+const generatePairSelectorMultilineRegex = (
+  selector: string,
+): RegExp => {
+  return new RegExp(
+    `^\\s*${selector}\\s*\\n([\\s\\S]*?)\\n\\s*${selector}`,
+    'gm',
+  );
 };
 
 export const MarkdownWeightRule: MarkdownRule = {
@@ -30,9 +46,12 @@ export const MarkdownWeightRule: MarkdownRule = {
 
 export const MarkdownRadioButtonRule: MarkdownRule = {
   id: 'radioButton',
-  regex: /() (.*)/g,
+  regex: generateSingleSelectorSinglelineRegex(
+    '\\*\\(\\)',
+    '\\[\\d+\\]',
+  ),
   selector: {
-    start: '()',
+    start: '*()',
     end: '\n',
   },
   children: {
@@ -42,9 +61,12 @@ export const MarkdownRadioButtonRule: MarkdownRule = {
 
 export const MarkdownCheckBoxRule: MarkdownRule = {
   id: 'checkBox',
-  regex: /[] (.*)/g,
+  regex: generateSingleSelectorSinglelineRegex(
+    '\\*\\[\\]',
+    '\\[\\d+\\]',
+  ),
   selector: {
-    start: '[]',
+    start: '*[]',
     end: '\n',
   },
   children: {
@@ -54,9 +76,11 @@ export const MarkdownCheckBoxRule: MarkdownRule = {
 
 export const MarkdownTextInputRule: MarkdownRule = {
   id: 'textInput',
-  regex: /... (.*)/g,
+  regex: generateSingleSelectorSinglelineWithoutContentRegex(
+    '\\*\\.{3}',
+  ),
   selector: {
-    start: '...',
+    start: '*...',
     end: '\n',
   },
   children: {
@@ -66,9 +90,11 @@ export const MarkdownTextInputRule: MarkdownRule = {
 
 export const MarkdownTextareaInputRule: MarkdownRule = {
   id: 'textareaInput',
-  regex: /.... (.*)/g,
+  regex: generateSingleSelectorSinglelineWithoutContentRegex(
+    '\\*\\.{4}',
+  ),
   selector: {
-    start: '....',
+    start: '*....',
     end: '\n',
   },
   children: {
@@ -78,9 +104,12 @@ export const MarkdownTextareaInputRule: MarkdownRule = {
 
 export const MarkdownQuestionSentenceRule: MarkdownRule = {
   id: 'questionSentence',
-  regex: /### (.*)/g,
+  regex: generateSingleSelectorSinglelineRegex(
+    '\\*###',
+    '\\[\\d+\\]',
+  ),
   selector: {
-    start: '###',
+    start: '*###',
     end: '\n',
   },
   children: {
@@ -90,7 +119,7 @@ export const MarkdownQuestionSentenceRule: MarkdownRule = {
 
 export const MarkdownQuestionSingleRule: MarkdownRule = {
   id: 'questionSingle',
-  regex: /^\*`([^\*`]*)^\*`/gm,
+  regex: generatePairSelectorMultilineRegex('\\*`'),
   selector: {
     start: '*`\n',
     end: '\n*`',
@@ -106,7 +135,7 @@ export const MarkdownQuestionSingleRule: MarkdownRule = {
 
 export const MarkdownQuestionGroupRule: MarkdownRule = {
   id: 'questionGroup',
-  regex: /^\*```([^\*`]*)^\*```/gm,
+  regex: generatePairSelectorMultilineRegex('\\*```'),
   selector: {
     start: '*```\n',
     end: '\n*```',
@@ -120,9 +149,34 @@ export const MarkdownQuestionGroupRule: MarkdownRule = {
   },
 };
 
-export const Markdown: Partial<
-  Record<MarkdownRuleType, MarkdownRule>
-> = {
+export const MarkdownSectionRule: MarkdownRule = {
+  id: 'section',
+  regex: generateSingleSelectorMultilineRegex('\\*## '),
+  selector: {
+    start: '*## ',
+    end: '\n',
+  },
+  children: {
+    questionSingle: MarkdownQuestionSingleRule,
+    questionGroup: MarkdownQuestionGroupRule,
+  },
+};
+
+export const MarkdownGroupRule: MarkdownRule = {
+  id: 'group',
+  regex: generateSingleSelectorMultilineRegex('\\*# '),
+  selector: {
+    start: '*# ',
+    end: '\n',
+  },
+  children: {
+    section: MarkdownSectionRule,
+    questionSingle: MarkdownQuestionSingleRule,
+    questionGroup: MarkdownQuestionGroupRule,
+  },
+};
+
+export const Markdown: MarkdownRules = {
   group: MarkdownGroupRule,
   section: MarkdownSectionRule,
   questionSingle: MarkdownQuestionSingleRule,

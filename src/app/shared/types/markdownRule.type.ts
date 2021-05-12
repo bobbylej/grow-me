@@ -1,3 +1,5 @@
+import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
+
 export type MarkdownRuleType =
   | 'group'
   | 'section'
@@ -9,3 +11,7 @@ export type MarkdownRuleType =
   | 'textareaInput'
   | 'radioButton'
   | 'checkBox';
+
+export type MarkdownRules = Partial<
+  Record<MarkdownRuleType, MarkdownRule>
+>;

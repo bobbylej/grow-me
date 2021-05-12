@@ -1,26 +1,28 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { useSingleQuestionStyles } from 'app/shared/components/SingleQuestion/SingleQuestion.styles';
 
 export interface SingleQuestionProps {
-  text: string;
+  text: string | React.ReactNode;
 }
 
 export const SingleQuestion = ({
   text,
   children,
 }: React.PropsWithChildren<SingleQuestionProps>): React.ReactElement => {
-  const { questionContainer, question } = useSingleQuestionStyles();
+  const {
+    questionContainer,
+    question,
+    content,
+  } = useSingleQuestionStyles();
 
   return (
-    <Grid className={questionContainer} container>
-      <Grid className={question} direction="row" item xs={12}>
-        <Typography variant="body1">{text}</Typography>
+    <Grid className={questionContainer} container direction="column">
+      <Grid item xs={12} className={question}>
+        {text}
       </Grid>
-      <Grid direction="row" item xs={12}>
-        <Grid xs={12} item>
-          {children}
-        </Grid>
+      <Grid item xs={12} className={content}>
+        {children}
       </Grid>
     </Grid>
   );

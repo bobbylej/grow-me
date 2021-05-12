@@ -10,7 +10,7 @@ import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Size } from 'app/shared/types/size.type';
 
 export interface FormBoxProps {
-  title: string;
+  title: string | React.ReactNode;
   size?: Size;
   color?: Color;
   headerVariant?: BackgroundVariant;
@@ -18,7 +18,9 @@ export interface FormBoxProps {
   contentClassName?: string;
 }
 
-export const FormBox = ({
+export const FormBox: React.FC<
+  React.PropsWithChildren<FormBoxProps>
+> = ({
   title,
   size = 'medium',
   color = 'primary',
@@ -52,7 +54,7 @@ export const FormBox = ({
   };
 
   return (
-    <>
+    <div>
       <Grid
         container
         className={`${styles.header} ${headerColorClasses[color]} ${headerVariantClasses[headerVariant]}`}
@@ -71,6 +73,6 @@ export const FormBox = ({
           {children}
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };
