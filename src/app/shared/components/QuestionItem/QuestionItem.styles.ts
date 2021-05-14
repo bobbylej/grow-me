@@ -6,11 +6,11 @@ export const useQuestionItemStyles = makeStyles((theme: Theme) => ({
   questionItemContainer: {
     padding: pxToRem(5),
   },
-  questionItemOdd: {
+  questionItemContained: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
   },
-  questionItemEven: {
+  questionItemOutlined: {
     backgroundColor: theme.palette.primary.contrastText,
     color: theme.palette.primary.main,
   },

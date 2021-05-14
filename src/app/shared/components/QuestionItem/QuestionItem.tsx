@@ -14,16 +14,16 @@ export const QuestionItem = ({
 }: React.PropsWithChildren<QuestionItemProps>): React.ReactElement => {
   const {
     questionItemContainer,
-    questionItemOdd,
-    questionItemEven,
+    questionItemContained,
+    questionItemOutlined,
   } = useQuestionItemStyles();
 
   return (
     <Grid
       className={
         variant === 'contained'
-          ? `${questionItemContainer} ${questionItemOdd}`
-          : `${questionItemContainer} ${questionItemEven}`
+          ? `${questionItemContainer} ${questionItemContained}`
+          : `${questionItemContainer} ${questionItemOutlined}`
       }
       direction="row"
       item
