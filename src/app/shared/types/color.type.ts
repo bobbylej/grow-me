@@ -1,1 +1,5 @@
-export type Color = 'primary' | 'primaryLight' | 'secondary';
+export type Color =
+  | 'primary'
+  | 'primaryLight'
+  | 'secondary'
+  | 'secondaryLight';

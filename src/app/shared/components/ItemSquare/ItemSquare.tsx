@@ -45,13 +45,12 @@ export const ItemSquare = ({
       onClick={handleSquareClick}
     >
       <div className={circleSurvey}>
-        <Circle
-          theme="survey"
-          text={getCircleText({
+        <Circle theme="survey">
+          {getCircleText({
             total: square.badge.total,
             amount: square.badge.amount,
           })}
-        />
+        </Circle>
       </div>
       <Card>
         <ItemSquareList theme="survey" square={square} />

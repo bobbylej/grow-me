@@ -43,7 +43,7 @@ export const CreateSurvey = (): ReactElement => {
     *# Group 1
     *## Section 1.1
     *\`
-      *### Question sentence 1.1.1
+      *###[3] Question sentence 1.1.1
       *....
     *\`
   
@@ -52,7 +52,7 @@ export const CreateSurvey = (): ReactElement => {
     *\`
       *### Question sentence 2.1.1
       *()[2] Radio button 1
-      *() Radio button 2
+      *()[32] Radio button 2
       *() Radio button 3
     *\`
   

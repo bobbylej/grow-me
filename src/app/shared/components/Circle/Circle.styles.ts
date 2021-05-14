@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 import { pxToRem } from 'app/shared/utils/stylesUtils';
 
 export const useCircleStyles = makeStyles((theme: Theme) => ({
+  circle: {
+    boxSizing: 'border-box',
+  },
   circleSurvey: {
     color: theme.palette.secondary.contrastText,
     backgroundColor: theme.palette.secondary.dark,

@@ -38,6 +38,7 @@ export const FormBox: React.FC<
     primary: styles.headerPrimary,
     primaryLight: styles.headerPrimaryLight,
     secondary: styles.headerSecondary,
+    secondaryLight: styles.headerSecondaryLight,
   };
   const headerVariantClasses: Record<BackgroundVariant, string> = {
     contained: styles.headerContained,
@@ -47,6 +48,7 @@ export const FormBox: React.FC<
     primary: styles.contentPrimary,
     primaryLight: styles.contentPrimaryLight,
     secondary: styles.contentSecondary,
+    secondaryLight: styles.headerSecondaryLight,
   };
   const contentVariantClasses: Record<BackgroundVariant, string> = {
     contained: styles.contentContained,

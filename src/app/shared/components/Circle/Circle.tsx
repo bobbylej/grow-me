@@ -3,8 +3,6 @@ import { Avatar } from '@material-ui/core';
 import { useCircleStyles } from 'app/shared/components/Circle/Circle.styles';
 
 export interface CircleProps {
-  text?: string;
-  icon?: string;
   theme: 'survey' | 'template';
   circleParams?: 'active' | 'outlined' | 'covered';
   size?: 'small' | 'medium';
@@ -12,14 +10,14 @@ export interface CircleProps {
 }
 
 export const Circle = ({
-  text,
-  icon,
   theme,
   circleParams,
   size,
   className,
-}: CircleProps): ReactElement => {
+  children,
+}: React.PropsWithChildren<CircleProps>): ReactElement => {
   const {
+    circle,
     circleSurvey,
     circleTemplate,
     circleActive,
@@ -60,14 +58,14 @@ export const Circle = ({
   };
 
   return (
-    <div className={className}>
-      <Avatar
-        className={`${getThemeClass(theme)} ${getCircleParamsClass(
-          circleParams,
-        )} ${getSizeClass(size)}`}
-      >
-        {text || icon}
-      </Avatar>
-    </div>
+    <Avatar
+      className={`${circle} ${getThemeClass(
+        theme,
+      )} ${getCircleParamsClass(circleParams)} ${getSizeClass(
+        size,
+      )} ${className ? className : ''}`}
+    >
+      {children || ' '}
+    </Avatar>
   );
 };

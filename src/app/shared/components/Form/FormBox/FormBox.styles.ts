@@ -40,6 +40,15 @@ export const useFormBoxStyles = makeStyles(
         color: theme.palette.secondary.contrastText,
       },
     },
+    headerSecondaryLight: {
+      borderColor: theme.palette.secondary.light,
+      color: theme.palette.secondary.light,
+
+      '&$headerContained': {
+        backgroundColor: theme.palette.secondary.light,
+        color: theme.palette.secondary.contrastText,
+      },
+    },
     headerContained: {},
     content: {
       borderStyle: 'solid',
@@ -58,6 +67,9 @@ export const useFormBoxStyles = makeStyles(
     },
     contentSecondary: {
       borderColor: theme.palette.secondary.main,
+    },
+    contentSecondaryLight: {
+      borderColor: theme.palette.secondary.light,
     },
     contentContained: {
       backgroundColor: theme.palette.grey[300],
