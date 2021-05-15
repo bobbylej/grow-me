@@ -5,6 +5,7 @@ import { AsideGraphic } from 'app/shared/interfaces/asideGraphic';
 import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
 import { convertMarkdown } from 'app/shared/utils/markdownUtils';
 import { useSurveyGraphicEditorStyles } from 'app/views/Surveys/CreateSurvey/SurveyGraphicEditor/SurveyGraphicEditor.styles';
+import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
 
 export interface SurveyGraphicEditorProps {
   markdown: string;
@@ -46,6 +47,8 @@ export const SurveyGraphicEditor = ({
         direction="column"
         circleEditor={circleEditorGraphic}
       />
+      <SingleQuestion text="test1" />
+      <QuestionGroup />
     </div>
   );
 };
