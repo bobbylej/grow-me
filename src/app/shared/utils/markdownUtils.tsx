@@ -29,6 +29,8 @@ import {
 import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
 import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
+import { Weight } from 'app/shared/components/Weight/Weight';
+import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
 
 export type MarkdownRuleConvertedElements = [
   Array<MarkdownRuleElement>,
@@ -39,6 +41,7 @@ export const convertMarkdown = (
   markdownText: string,
   markdownRules: MarkdownRules = Markdown,
   parentKey?: string,
+  props?: MarkdownRuleProps,
 ): Array<React.ReactElement> | undefined => {
   if (markdownText) {
     const markdownElements: Array<MarkdownRuleElement> = [];
@@ -47,6 +50,7 @@ export const convertMarkdown = (
         markdownText,
         markdownRule?.id,
         parentKey,
+        props,
       );
       markdownElements.push(...elements);
       markdownText = textLeft;
@@ -67,6 +71,7 @@ export const convertMarkdownRule = (
   markdownText: string,
   markdownRuleType: MarkdownRuleType | undefined,
   parentKey?: string,
+  props?: MarkdownRuleProps,
 ): MarkdownRuleConvertedElements => {
   switch (markdownRuleType) {
     case 'group':
@@ -88,7 +93,7 @@ export const convertMarkdownRule = (
     case 'textareaInput':
       return convertMarkdownTextareaInput(markdownText, parentKey);
     case 'weight':
-      return convertMarkdownWeight(markdownText, parentKey);
+      return convertMarkdownWeight(markdownText, parentKey, props);
     default:
       return [[], markdownText];
     // TODO: Add converters for other elements
@@ -319,6 +324,7 @@ export const convertMarkdownQuestionSentence = (
           children,
           MarkdownQuestionSentenceRule.children,
           key,
+          { color: 'primaryLight' },
         )}
       </div>
     );
@@ -507,6 +513,7 @@ export const convertMarkdownTextareaInput = (
 export const convertMarkdownWeight = (
   markdownText: string,
   parentKey?: string,
+  props?: MarkdownRuleProps,
 ): MarkdownRuleConvertedElements => {
   const generateJsxElement = (
     match: RegExpMatchArray,
@@ -518,14 +525,7 @@ export const convertMarkdownWeight = (
       parentKey,
     );
     return (
-      // TODO: Use proper component
-      <TextField
-        key={key}
-        name={key}
-        type="number"
-        value={match[1]}
-        style={{ display: 'inline-block', width: '2rem' }}
-      />
+      <Weight key={key} weight={+match[1]} color={props?.color} />
     );
   };
   return convertMarkdownRuleElements(
