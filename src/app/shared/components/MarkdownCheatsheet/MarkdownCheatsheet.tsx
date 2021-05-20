@@ -5,7 +5,7 @@ import { useMarkdownCheatsheetDocs } from 'app/shared/hooks/useMarkdownCheatshee
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 import { MarkdownRuleDocumentation } from 'app/shared/interfaces/markdownRule.interface';
 import { useMarkdownCheatsheetStyles } from 'app/shared/components/MarkdownCheatsheet/MarkdownCheatsheet.styles';
-import { removeBlankLines } from 'app/shared/utils/textUtils';
+import { removeBlankLines } from 'app/shared/utils/text.utils';
 
 const generateMarkdownRuleKey = (
   markdownRuleKey: string,

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core';
-import { defaultValues } from 'app/shared/utils/stylesUtils';
+import { defaultValues } from 'app/shared/utils/styles.utils';
 
 export const useQuestionGroupStyle = makeStyles((theme: Theme) => ({
   questionGroupContainer: {

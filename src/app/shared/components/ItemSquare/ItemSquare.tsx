@@ -8,7 +8,7 @@ import {
 import { Circle } from '../Circle/Circle';
 import { ItemSquareList } from '../ItemSquareList/ItemSquareList';
 import { useItemSquareStyles } from './ItemSquare.styles';
-import { SquareItem } from 'app/shared/interfaces/squareItem';
+import { SquareItem } from 'app/shared/interfaces/squareItem.interface';
 
 export interface ItemSquareProps {
   square: SquareItem;

@@ -1,6 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { defaultValues } from 'app/shared/utils/stylesUtils';
+import { defaultValues } from 'app/shared/utils/styles.utils';
 
 export const useFormBoxStyles = makeStyles(
   (theme: Theme) => ({

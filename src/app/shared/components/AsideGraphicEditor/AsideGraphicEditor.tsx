@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { Circle } from 'app/shared/components/Circle/Circle';
 import { useAsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor.styles';
-import { AsideGraphic } from 'app/shared/interfaces/asideGraphic';
+import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
 
 export interface AsideGraphicEditorProps {
   circleEditor: AsideGraphic[];

@@ -15,7 +15,7 @@ const generateSingleSelectorSinglelineRegex = (
   childSelector?: string,
 ): RegExp => {
   const childRegExp = childSelector ? `(${childSelector})?` : '';
-  return new RegExp(`^\\s*${selector}${childRegExp}\\v*(.*)$`, 'gm');
+  return new RegExp(`^\\s*${selector}${childRegExp}\\s*(.*)$`, 'gm');
 };
 
 const generateSingleSelectorSinglelineWithoutContentRegex = (
