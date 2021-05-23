@@ -10,6 +10,8 @@ import { Tabs } from 'app/shared/components/Tabs/Tabs';
 import { Tab } from 'app/shared/interfaces/tab.interface';
 import { SurveyGraphicEditor } from 'app/views/Surveys/CreateSurvey/SurveyGraphicEditor/SurveyGraphicEditor';
 import { SurveyMarkdown } from 'app/views/Surveys/CreateSurvey/SurveyMarkdown/SurveyMarkdown';
+import { FormCreatorProvider } from 'app/shared/context/FormCreatorContext/FormCreatorContext';
+import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
 
 export const CreateSurvey = (): ReactElement => {
   const intl = useIntl();
@@ -38,8 +40,6 @@ export const CreateSurvey = (): ReactElement => {
     title: '',
     description: '',
     markdown: `
-    *## Section 0.1
-  
     *# Group 1
     *## Section 1.1
     *\`
@@ -93,45 +93,42 @@ export const CreateSurvey = (): ReactElement => {
     });
   };
 
-  const onChangeMarkdown = (markdown: string): void => {
-    console.log(markdown);
-    setForm({
-      ...form,
-      markdown,
-    });
-  };
-
   return (
-    <Grid
-      className={`${content} ${surveyContainer}`}
-      container
-      spacing={2}
+    <FormCreatorProvider
+      // TODO: Remove initialState later
+      initialState={{
+        form: convertMarkdownToJson(form.markdown),
+        markdown: form.markdown,
+      }}
     >
-      <Grid item xs={12} className={surveySection}>
-        <FormHeader
-          editMode
-          title={form.title}
-          description={form.description}
-          onChangeTitle={onChangeTitle}
-          onChangeDescription={onChangeDescription}
-        />
+      <Grid
+        className={`${content} ${surveyContainer}`}
+        container
+        spacing={2}
+      >
+        <Grid item xs={12} className={surveySection}>
+          <FormHeader
+            editMode
+            title={form.title}
+            description={form.description}
+            onChangeTitle={onChangeTitle}
+            onChangeDescription={onChangeDescription}
+          />
+        </Grid>
+        <Grid item xs={12} className={surveySection}>
+          <Tabs tabs={tabs}></Tabs>
+        </Grid>
+        <Grid item xs={12} className={surveySection}>
+          <Switch>
+            <Route exact path={path}>
+              <SurveyGraphicEditor />
+            </Route>
+            <Route path={`${path}/markdown`}>
+              <SurveyMarkdown />
+            </Route>
+          </Switch>
+        </Grid>
       </Grid>
-      <Grid item xs={12} className={surveySection}>
-        <Tabs tabs={tabs}></Tabs>
-      </Grid>
-      <Grid item xs={12} className={surveySection}>
-        <Switch>
-          <Route exact path={path}>
-            <SurveyGraphicEditor markdown={form.markdown} />
-          </Route>
-          <Route path={`${path}/markdown`}>
-            <SurveyMarkdown
-              markdown={form.markdown}
-              onChangeMarkdown={onChangeMarkdown}
-            />
-          </Route>
-        </Switch>
-      </Grid>
-    </Grid>
+    </FormCreatorProvider>
   );
 };

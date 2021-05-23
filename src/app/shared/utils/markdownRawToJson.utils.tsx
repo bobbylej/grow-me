@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import {
   Markdown,
   MarkdownCheckBoxRule,
@@ -12,19 +13,21 @@ import {
   MarkdownWeightRule,
 } from 'app/shared/constants/markdown';
 import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
-import { MarkdownRuleElementJson } from 'app/shared/interfaces/markdownRuleElementJson.interface';
+import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import {
   MarkdownRules,
   MarkdownRuleType,
 } from 'app/shared/types/markdownRule.type';
 import { MarkdownRuleConvertedJsonElements } from 'app/shared/types/markdownRuleConvertedElements.type';
 
+export const DEFAULT_WEIGHT_MARKDOWN = '[1]';
+
 export const convertMarkdownToJson = (
   markdownText: string,
   markdownRules: MarkdownRules = Markdown,
-): MarkdownRuleElementJson[] => {
+): FormElement[] => {
   if (markdownText) {
-    const markdownJson: MarkdownRuleElementJson[] = [];
+    const markdownJson: FormElement[] = [];
     Object.values(markdownRules).forEach((markdownRule) => {
       const [elements, textLeft] = convertMarkdownRule(
         markdownText,
@@ -79,9 +82,7 @@ export const convertMarkdownRule = (
 export const convertMarkdownRuleElements = (
   markdownText: string,
   markdownRule: MarkdownRule,
-  generateElement: (
-    match: RegExpMatchArray,
-  ) => MarkdownRuleElementJson,
+  generateElement: (match: RegExpMatchArray) => FormElement,
 ): MarkdownRuleConvertedJsonElements => {
   const matches = markdownText.matchAll(markdownRule.regex);
   const elements = Array.from(matches).map((match) => ({
@@ -105,8 +106,9 @@ export const generateSimpleJsonElement = (
   match: RegExpMatchArray,
   value?: string,
   childrenText?: string,
-): MarkdownRuleElementJson => {
+): FormElement => {
   return {
+    id: v4(),
     type: markdownRule.id,
     value,
     index: {
@@ -124,13 +126,16 @@ export const convertMarkdownRuleElementsToJson = (
   markdownRule: MarkdownRule,
   valueIndex?: number,
   childrenIndex?: number,
+  defaultChildren?: string,
 ): MarkdownRuleConvertedJsonElements => {
   const generateJsonElement = (match: RegExpMatchArray) => {
     return generateSimpleJsonElement(
       markdownRule,
       match,
       valueIndex ? match[valueIndex] : undefined,
-      childrenIndex ? match[childrenIndex] : undefined,
+      childrenIndex
+        ? match[childrenIndex] || defaultChildren
+        : undefined,
     );
   };
   return convertMarkdownRuleElements(
@@ -187,13 +192,12 @@ export const convertMarkdownQuestionGroup = (
 export const convertMarkdownQuestionSentence = (
   markdownText: string,
 ): MarkdownRuleConvertedJsonElements => {
-  console.log(MarkdownQuestionSentenceRule.regex);
-
   return convertMarkdownRuleElementsToJson(
     markdownText,
     MarkdownQuestionSentenceRule,
     2,
     1,
+    DEFAULT_WEIGHT_MARKDOWN,
   );
 };
 
@@ -205,6 +209,7 @@ export const convertMarkdownRadioButton = (
     MarkdownRadioButtonRule,
     2,
     1,
+    DEFAULT_WEIGHT_MARKDOWN,
   );
 };
 
@@ -216,6 +221,7 @@ export const convertMarkdownCheckBox = (
     MarkdownCheckBoxRule,
     2,
     1,
+    DEFAULT_WEIGHT_MARKDOWN,
   );
 };
 
@@ -227,6 +233,7 @@ export const convertMarkdownTextInput = (
     MarkdownTextInputRule,
     undefined,
     1,
+    DEFAULT_WEIGHT_MARKDOWN,
   );
 };
 
@@ -238,6 +245,7 @@ export const convertMarkdownTextareaInput = (
     MarkdownTextareaInputRule,
     undefined,
     1,
+    DEFAULT_WEIGHT_MARKDOWN,
   );
 };
 
