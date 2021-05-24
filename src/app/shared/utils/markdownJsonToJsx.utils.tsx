@@ -78,6 +78,10 @@ export const convertMarkdownGroupToJsx = (
       key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
       color="primary"
+      editMode
+      changeTitle={(title) =>
+        setValue && setValue(markdownRuleElementJson.id, title)
+      }
     >
       {markdownRuleElementJson.children &&
         convertMarkdownRulesJsonToJsx(
@@ -100,6 +104,10 @@ export const convertMarkdownSectionToJsx = (
       title={markdownRuleElementJson.value}
       color="primary"
       headerVariant="outlined"
+      editMode
+      changeTitle={(title) =>
+        setValue && setValue(markdownRuleElementJson.id, title)
+      }
     >
       {markdownRuleElementJson.children &&
         convertMarkdownRulesJsonToJsx(
