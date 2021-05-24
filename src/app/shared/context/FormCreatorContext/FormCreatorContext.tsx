@@ -8,6 +8,7 @@ import {
 } from 'app/shared/context/FormCreatorContext/FormCreatorContext.actions';
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
+import { convertJsonToMarkdown } from 'app/shared/utils/markdownJsonToRaw.utils';
 
 export interface FormCreatorContextState {
   readonly form?: FormElement[];
@@ -63,10 +64,12 @@ const FormCreatorReducer = (
 ): FormCreatorContextState => {
   switch (action.type) {
     case FormCreatorContextActionType.setElementValue:
+      const form =
+        updateFormElementValue(action.payload, state.form) ?? [];
       return {
         ...state,
-        form:
-          updateFormElementValue(action.payload, state.form) ?? [],
+        form,
+        markdown: convertJsonToMarkdown(form),
       };
     case FormCreatorContextActionType.setMarkdown:
       return {

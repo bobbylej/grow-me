@@ -25,6 +25,7 @@ export const QuestionItem = ({
           ? `${questionItemContainer} ${questionItemContained}`
           : `${questionItemContainer} ${questionItemOutlined}`
       }
+      container
       direction="row"
       item
       xs={12}
