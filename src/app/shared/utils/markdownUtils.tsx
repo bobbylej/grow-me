@@ -31,6 +31,7 @@ import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
+import { FormControl } from 'app/shared/components/FormControl/FormControl';
 
 export type MarkdownRuleConvertedElements = [
   Array<MarkdownRuleElement>,
@@ -353,11 +354,12 @@ export const convertMarkdownRadioButton = (
     return (
       // TODO: Use proper component
       <div key={`${key}-wrapper`}>
-        <FormControlLabel
+        <FormControl
           key={key}
           value={match[2]}
           control={<RadioCustom color="primary" />}
           label={match[2]}
+          weight={<Weight weight={1} />}
         />
         {convertMarkdown(
           children,

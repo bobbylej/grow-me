@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react';
 import { FormControlLabel } from '@material-ui/core';
-import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
-import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
-import { Weight } from 'app/shared/components/Weight/Weight';
+import { useFormControlStyles } from 'app/shared/components/FormControl/FormControl.styles';
 
 export interface FormControlProps {
   control: ReactElement;
@@ -17,14 +15,15 @@ export const FormControl = ({
   value,
   label,
 }: FormControlProps): ReactElement => {
+  const { formControlWrapper } = useFormControlStyles();
   return (
-    <>
+    <div className={formControlWrapper}>
       <FormControlLabel
         label={label}
         control={control}
         value={value}
       />
       <div>{weight}</div>
-    </>
+    </div>
   );
 };
