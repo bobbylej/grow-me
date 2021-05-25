@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import {
-  FormControlLabel,
   FormGroup,
   RadioGroup,
   TextField,
@@ -31,6 +30,7 @@ import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
+import { FormControl } from 'app/shared/components/FormControl/FormControl';
 
 export type MarkdownRuleConvertedElements = [
   Array<MarkdownRuleElement>,
@@ -350,21 +350,19 @@ export const convertMarkdownRadioButton = (
       parentKey,
     );
     const children = match[1] || '[1]';
+    const weightElement = convertMarkdown(
+      children,
+      MarkdownCheckBoxRule.children,
+      key,
+    )?.[0];
     return (
-      // TODO: Use proper component
-      <div key={`${key}-wrapper`}>
-        <FormControlLabel
-          key={key}
-          value={match[2]}
-          control={<RadioCustom color="primary" />}
-          label={match[2]}
-        />
-        {convertMarkdown(
-          children,
-          MarkdownCheckBoxRule.children,
-          key,
-        )}
-      </div>
+      <FormControl
+        key={key}
+        value={match[2]}
+        control={<RadioCustom color="primary" />}
+        label={match[2]}
+        weight={weightElement}
+      />
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(
@@ -404,21 +402,19 @@ export const convertMarkdownCheckBox = (
       parentKey,
     );
     const children = match[1] || '[1]';
+    const weightElement = convertMarkdown(
+      children,
+      MarkdownCheckBoxRule.children,
+      key,
+    )?.[0];
     return (
-      // TODO: Use proper component
-      <div key={`${key}-wrapper`}>
-        <FormControlLabel
-          key={key}
-          value={match[2]}
-          control={<CheckBoxCustom color="primary" />}
-          label={match[2]}
-        />
-        {convertMarkdown(
-          children,
-          MarkdownCheckBoxRule.children,
-          key,
-        )}
-      </div>
+      <FormControl
+        key={key}
+        value={match[2]}
+        control={<CheckBoxCustom color="primary" />}
+        label={match[2]}
+        weight={weightElement}
+      />
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(
