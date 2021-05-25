@@ -351,22 +351,19 @@ export const convertMarkdownRadioButton = (
       parentKey,
     );
     const children = match[1] || '[1]';
+    const weightElement = convertMarkdown(
+      children,
+      MarkdownCheckBoxRule.children,
+      key,
+    )?.[0];
     return (
-      // TODO: Use proper component
-      <div key={`${key}-wrapper`}>
-        <FormControl
-          key={key}
-          value={match[2]}
-          control={<RadioCustom color="primary" />}
-          label={match[2]}
-          weight={<Weight weight={1} />}
-        />
-        {convertMarkdown(
-          children,
-          MarkdownCheckBoxRule.children,
-          key,
-        )}
-      </div>
+      <FormControl
+        key={key}
+        value={match[2]}
+        control={<RadioCustom color="primary" />}
+        label={match[2]}
+        weight={weightElement}
+      />
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(

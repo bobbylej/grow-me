@@ -4,7 +4,7 @@ import { useFormControlStyles } from 'app/shared/components/FormControl/FormCont
 
 export interface FormControlProps {
   control: ReactElement;
-  weight: ReactElement;
+  weight?: ReactElement;
   value: string;
   label: string;
 }
