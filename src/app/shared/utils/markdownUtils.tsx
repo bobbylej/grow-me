@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import {
-  FormControlLabel,
   FormGroup,
   RadioGroup,
   TextField,
@@ -403,21 +402,19 @@ export const convertMarkdownCheckBox = (
       parentKey,
     );
     const children = match[1] || '[1]';
+    const weightElement = convertMarkdown(
+      children,
+      MarkdownCheckBoxRule.children,
+      key,
+    )?.[0];
     return (
-      // TODO: Use proper component
-      <div key={`${key}-wrapper`}>
-        <FormControlLabel
-          key={key}
-          value={match[2]}
-          control={<CheckBoxCustom color="primary" />}
-          label={match[2]}
-        />
-        {convertMarkdown(
-          children,
-          MarkdownCheckBoxRule.children,
-          key,
-        )}
-      </div>
+      <FormControl
+        key={key}
+        value={match[2]}
+        control={<CheckBoxCustom color="primary" />}
+        label={match[2]}
+        weight={weightElement}
+      />
     );
   };
   const [elements, textLeft] = convertMarkdownRuleElements(
