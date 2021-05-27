@@ -31,20 +31,16 @@ import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCus
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
 import { FormControl } from 'app/shared/components/FormControl/FormControl';
-
-export type MarkdownRuleConvertedElements = [
-  Array<MarkdownRuleElement>,
-  string,
-];
+import { MarkdownRuleConvertedElements } from 'app/shared/types/markdownRuleConvertedElements.type';
 
 export const convertMarkdown = (
   markdownText: string,
   markdownRules: MarkdownRules = Markdown,
   parentKey?: string,
   props?: MarkdownRuleProps,
-): Array<React.ReactElement> | undefined => {
+): React.ReactElement[] | undefined => {
   if (markdownText) {
-    const markdownElements: Array<MarkdownRuleElement> = [];
+    const markdownElements: MarkdownRuleElement[] = [];
     Object.values(markdownRules).forEach((markdownRule) => {
       const [elements, textLeft] = convertMarkdownRule(
         markdownText,
@@ -130,7 +126,7 @@ export const convertMarkdownRuleElements = (
 };
 
 export const groupMarkdownRuleElements = (
-  markdownRuleElements: Array<MarkdownRuleElement>,
+  markdownRuleElements: MarkdownRuleElement[],
 ): MarkdownRuleElement => {
   const index = markdownRuleElements
     .map(({ index }) => index)

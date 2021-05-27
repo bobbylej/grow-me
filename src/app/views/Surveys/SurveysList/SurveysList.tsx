@@ -4,7 +4,7 @@ import { Fab, Grid } from '@material-ui/core';
 import { Link, useRouteMatch } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import { ItemSquare } from 'app/shared/components/ItemSquare/ItemSquare';
-import { SquareItem } from 'app/shared/interfaces/squareItem';
+import { SquareItem } from 'app/shared/interfaces/squareItem.interface';
 import useLayoutStyles from 'app/shared/styles/layout.styles';
 import { usePageTitle } from 'app/shared/hooks/usePageTitle';
 import { useFabStyles } from 'app/shared/styles/fab.styles';

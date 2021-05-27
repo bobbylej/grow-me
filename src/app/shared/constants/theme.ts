@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { pxToRem } from 'app/shared/utils/stylesUtils';
+import { pxToRem } from 'app/shared/utils/styles.utils';
 
 export const maxContentWidth = '1140px';
 

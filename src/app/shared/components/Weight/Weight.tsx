@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { InputBase } from '@material-ui/core';
 import { useWeightStyles } from 'app/shared/components/Weight/Weight.styles';
-import { pxToRem } from 'app/shared/utils/stylesUtils';
+import { pxToRem } from 'app/shared/utils/styles.utils';
 import { Color } from 'app/shared/types/color.type';
 
 export interface WeightProps {

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { AsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor';
-import { AsideGraphic } from 'app/shared/interfaces/asideGraphic';
+import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
 import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
-import { convertMarkdown } from 'app/shared/utils/markdownUtils';
 import { useSurveyGraphicEditorStyles } from 'app/views/Surveys/CreateSurvey/SurveyGraphicEditor/SurveyGraphicEditor.styles';
 import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
+import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
+import { convertMarkdownRulesJsonToJsx } from 'app/shared/utils/markdownJsonToJsx.utils';
 
 export interface SurveyGraphicEditorProps {
   markdown: string;
@@ -35,20 +36,20 @@ export const SurveyGraphicEditor = ({
       type: 'section',
     },
   ];
-  const content = convertMarkdown(markdown);
+  const formStructure = convertMarkdownToJson(markdown);
+  const content = convertMarkdownRulesJsonToJsx(formStructure);
 
   return (
     <div>
       <Grid container direction="column" className={styles.form}>
-        <SingleQuestion text="test1">Test</SingleQuestion>
         {content}
+        <SingleQuestion text="test1" />
+        <QuestionGroup />
       </Grid>
       <AsideGraphicEditor
         direction="column"
         circleEditor={circleEditorGraphic}
       />
-      <SingleQuestion text="test1" />
-      <QuestionGroup />
     </div>
   );
 };
