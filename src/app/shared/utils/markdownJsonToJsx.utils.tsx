@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  FormControlLabel,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
@@ -14,6 +10,7 @@ import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCus
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
 import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
+import { FormControl } from 'app/shared/components/FormControl/FormControl';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: FormElement[],
@@ -209,22 +206,18 @@ export const convertMarkdownRadioButtonToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
+  const { id, value, children } = markdownRuleElementJson;
+  const weightElement =
+    children &&
+    convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0];
   return (
-    // TODO: Use proper component
-    <div key={`${markdownRuleElementJson.id}-wrapper`}>
-      <FormControlLabel
-        key={markdownRuleElementJson.id}
-        value={markdownRuleElementJson.value}
-        control={<RadioCustom color="primary" />}
-        label={markdownRuleElementJson.value}
-      />
-      {markdownRuleElementJson.children &&
-        convertMarkdownRulesJsonToJsx(
-          markdownRuleElementJson.children,
-          props,
-          setValue,
-        )}
-    </div>
+    <FormControl
+      key={id}
+      value={value as string}
+      control={<RadioCustom color="primary" />}
+      label={value as string}
+      weight={weightElement}
+    />
   );
 };
 
@@ -233,22 +226,18 @@ export const convertMarkdownCheckBoxToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
+  const { id, value, children } = markdownRuleElementJson;
+  const weightElement =
+    children &&
+    convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0];
   return (
-    // TODO: Use proper component
-    <div key={`${markdownRuleElementJson.id}-wrapper`}>
-      <FormControlLabel
-        key={markdownRuleElementJson.id}
-        value={markdownRuleElementJson.value}
-        control={<CheckBoxCustom color="primary" />}
-        label={markdownRuleElementJson.value}
-      />
-      {markdownRuleElementJson.children &&
-        convertMarkdownRulesJsonToJsx(
-          markdownRuleElementJson.children,
-          props,
-          setValue,
-        )}
-    </div>
+    <FormControl
+      key={id}
+      value={value as string}
+      control={<CheckBoxCustom color="primary" />}
+      label={value as string}
+      weight={weightElement}
+    />
   );
 };
 
