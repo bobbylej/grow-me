@@ -13,6 +13,7 @@ import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuest
 import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
+import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: MarkdownRuleElementJson[],
@@ -46,12 +47,7 @@ export const convertMarkdownRuleJsonToJsx = (
 
 export const getMarkdownRuleJsxConverter = (
   markdownRuleType: MarkdownRuleType,
-): ((
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
-  props?: MarkdownRuleProps,
-) => React.ReactElement) => {
+): MarkdownRuleJsxConverter => {
   switch (markdownRuleType) {
     case 'group':
       return convertMarkdownGroupToJsx;
