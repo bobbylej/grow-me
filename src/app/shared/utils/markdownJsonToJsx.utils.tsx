@@ -1,5 +1,10 @@
 import React from 'react';
-import { TextField, Typography } from '@material-ui/core';
+import {
+  FormGroup,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
@@ -121,15 +126,13 @@ export const convertMarkdownQuestionSingleToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const questionSentences = markdownRuleElementJson.children?.filter(
+  const { id, children } = markdownRuleElementJson;
+  const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
-  );
-  const content = markdownRuleElementJson.children?.filter(
-    (markdownRule) => markdownRule.type !== 'questionSentence',
   );
   return (
     <SingleQuestion
-      key={markdownRuleElementJson.id}
+      key={id}
       text={
         questionSentences &&
         convertMarkdownRulesJsonToJsx(
@@ -139,8 +142,8 @@ export const convertMarkdownQuestionSingleToJsx = (
         )
       }
     >
-      {content &&
-        convertMarkdownRulesJsonToJsx(content, props, setValue)}
+      {convertRadioGroupToJsx(id, children, props, setValue)}
+      {convertCheckBoxGroupToJsx(id, children, props, setValue)}
     </SingleQuestion>
   );
 };
@@ -150,29 +153,26 @@ export const convertMarkdownQuestionGroupToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const questionSentences = markdownRuleElementJson.children?.filter(
+  const { id, children } = markdownRuleElementJson;
+  const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
-  );
-  const content = markdownRuleElementJson.children?.filter(
-    (markdownRule) => markdownRule.type !== 'questionSentence',
   );
   return (
     // TODO: Use proper component
     <FormBox
-      key={markdownRuleElementJson.id}
-      title={
-        questionSentences &&
+      key={id}
+      title="Question Group"
+      color="primary"
+      headerVariant="outlined"
+    >
+      {questionSentences &&
         convertMarkdownRulesJsonToJsx(
           questionSentences,
           props,
           setValue,
-        )
-      }
-      color="primary"
-      headerVariant="outlined"
-    >
-      {content &&
-        convertMarkdownRulesJsonToJsx(content, props, setValue)}
+        )}
+      {convertRadioGroupToJsx(id, children, props, setValue)}
+      {convertCheckBoxGroupToJsx(id, children, props, setValue)}
     </FormBox>
   );
 };
@@ -201,6 +201,24 @@ export const convertMarkdownQuestionSentenceToJsx = (
   );
 };
 
+export const convertRadioGroupToJsx = (
+  markdownRuleId: string,
+  markdownRuleChildren?: FormElement[],
+  props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
+): React.ReactElement => {
+  const radioButtons = markdownRuleChildren?.filter(
+    (markdownRule) => markdownRule.type === 'radioButton',
+  );
+  return radioButtons?.length ? (
+    <RadioGroup key={`${markdownRuleId}-radio-group`}>
+      {convertMarkdownRulesJsonToJsx(radioButtons, props, setValue)}
+    </RadioGroup>
+  ) : (
+    <></>
+  );
+};
+
 export const convertMarkdownRadioButtonToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
@@ -218,6 +236,24 @@ export const convertMarkdownRadioButtonToJsx = (
       label={value as string}
       weight={weightElement}
     />
+  );
+};
+
+export const convertCheckBoxGroupToJsx = (
+  markdownRuleId: string,
+  markdownRuleChildren?: FormElement[],
+  props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
+): React.ReactElement => {
+  const checkBoxes = markdownRuleChildren?.filter(
+    (markdownRule) => markdownRule.type === 'checkBox',
+  );
+  return checkBoxes?.length ? (
+    <FormGroup key={`${markdownRuleId}-check-boxes`}>
+      {convertMarkdownRulesJsonToJsx(checkBoxes, props, setValue)}
+    </FormGroup>
+  ) : (
+    <></>
   );
 };
 
