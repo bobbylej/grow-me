@@ -1,24 +1,23 @@
 import { TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { FabPopper } from 'app/shared/components/FabPopper/FabPopper';
 import { MarkdownCheatsheet } from 'app/shared/components/MarkdownCheatsheet/MarkdownCheatsheet';
+import { FormCreatorContext } from 'app/shared/context/FormCreatorContext/FormCreatorContext';
+import { FormCreatorContextActionType } from 'app/shared/context/FormCreatorContext/FormCreatorContext.actions';
 
-export interface SurveyMarkdownProps {
-  markdown: string;
-  onChangeMarkdown?: (markdown: string) => void;
-}
-
-export const SurveyMarkdown = (
-  props: SurveyMarkdownProps,
-): React.ReactElement => {
+export const SurveyMarkdown = (): React.ReactElement => {
   const intl = useIntl();
-  const [markdown, setMarkdown] = useState(props.markdown);
+
+  const { state, dispatch } = useContext(FormCreatorContext);
+  const { markdown } = state;
 
   const onChangeMarkdown = (markdown: string): void => {
-    setMarkdown(markdown);
-    props.onChangeMarkdown && props.onChangeMarkdown(markdown);
+    dispatch({
+      type: FormCreatorContextActionType.setMarkdown,
+      payload: markdown,
+    });
   };
 
   return (

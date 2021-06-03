@@ -1,47 +1,45 @@
 import React from 'react';
 import {
-  FormControlLabel,
+  FormGroup,
+  RadioGroup,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
-import { MarkdownRuleElementJson } from 'app/shared/interfaces/markdownRuleElementJson.interface';
+import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
-import { generateElementKey } from 'app/shared/utils/markdownRawToJsx.utils';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
 import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
+import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
+import { FormControl } from 'app/shared/components/FormControl/FormControl';
 
 export const convertMarkdownRulesJsonToJsx = (
-  markdownRulesElementsJson: MarkdownRuleElementJson[],
-  parentKey?: string,
+  markdownRulesElementsJson: FormElement[],
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement[] => {
-  return markdownRulesElementsJson.map(
-    (markdownRuleElementJson, index) =>
-      convertMarkdownRuleJsonToJsx(
-        markdownRuleElementJson,
-        index,
-        parentKey,
-        props,
-      ),
+  return markdownRulesElementsJson.map((markdownRuleElementJson) =>
+    convertMarkdownRuleJsonToJsx(
+      markdownRuleElementJson,
+      props,
+      setValue,
+    ),
   );
 };
 
 export const convertMarkdownRuleJsonToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
   return getMarkdownRuleJsxConverter(markdownRuleElementJson.type)(
     markdownRuleElementJson,
-    index,
-    parentKey,
     props,
+    setValue,
   );
 };
 
@@ -73,288 +71,273 @@ export const getMarkdownRuleJsxConverter = (
 };
 
 export const convertMarkdownGroupToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
   return (
     <FormBox
-      key={key}
+      key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
       color="primary"
+      editMode
+      changeTitle={(title) =>
+        setValue && setValue(markdownRuleElementJson.id, title)
+      }
     >
       {markdownRuleElementJson.children &&
         convertMarkdownRulesJsonToJsx(
           markdownRuleElementJson.children,
-          key,
           props,
+          setValue,
         )}
     </FormBox>
   );
 };
 
 export const convertMarkdownSectionToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
   return (
     <FormBox
-      key={key}
+      key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
       color="primary"
       headerVariant="outlined"
+      editMode
+      changeTitle={(title) =>
+        setValue && setValue(markdownRuleElementJson.id, title)
+      }
     >
       {markdownRuleElementJson.children &&
         convertMarkdownRulesJsonToJsx(
           markdownRuleElementJson.children,
-          key,
           props,
+          setValue,
         )}
     </FormBox>
   );
 };
 
 export const convertMarkdownQuestionSingleToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const questionSentences = markdownRuleElementJson.children?.filter(
+  const { id, children } = markdownRuleElementJson;
+  const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
-  );
-  const content = markdownRuleElementJson.children?.filter(
-    (markdownRule) => markdownRule.type !== 'questionSentence',
   );
   return (
     <SingleQuestion
-      key={key}
+      key={id}
       text={
         questionSentences &&
-        convertMarkdownRulesJsonToJsx(questionSentences, key, props)
+        convertMarkdownRulesJsonToJsx(
+          questionSentences,
+          props,
+          setValue,
+        )
       }
     >
-      {content && convertMarkdownRulesJsonToJsx(content, key, props)}
+      {convertRadioGroupToJsx(id, children, props, setValue)}
+      {convertCheckBoxGroupToJsx(id, children, props, setValue)}
     </SingleQuestion>
   );
 };
 
 export const convertMarkdownQuestionGroupToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const questionSentences = markdownRuleElementJson.children?.filter(
+  const { id, children } = markdownRuleElementJson;
+  const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
-  );
-  const content = markdownRuleElementJson.children?.filter(
-    (markdownRule) => markdownRule.type !== 'questionSentence',
   );
   return (
     // TODO: Use proper component
     <FormBox
-      key={key}
-      title={
-        questionSentences &&
-        convertMarkdownRulesJsonToJsx(questionSentences, key, props)
-      }
+      key={id}
+      title="Question Group"
       color="primary"
       headerVariant="outlined"
     >
-      {content && convertMarkdownRulesJsonToJsx(content, key, props)}
+      {questionSentences &&
+        convertMarkdownRulesJsonToJsx(
+          questionSentences,
+          props,
+          setValue,
+        )}
+      {convertRadioGroupToJsx(id, children, props, setValue)}
+      {convertCheckBoxGroupToJsx(id, children, props, setValue)}
     </FormBox>
   );
 };
 
 export const convertMarkdownQuestionSentenceToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const children = getChildrenWithDefaultWeight(
-    markdownRuleElementJson.children,
-  );
   return (
     // TODO: Use proper component
-    <div key={`${key}-wrapper`}>
-      <Typography key={key} variant="body1">
+    <div key={`${markdownRuleElementJson.id}-wrapper`}>
+      <Typography key={markdownRuleElementJson.id} variant="body1">
         {markdownRuleElementJson.value}
       </Typography>
-      {children &&
-        convertMarkdownRulesJsonToJsx(children, key, {
-          ...props,
-          color: 'primaryLight',
-        })}
+      {markdownRuleElementJson.children &&
+        convertMarkdownRulesJsonToJsx(
+          markdownRuleElementJson.children,
+          {
+            ...props,
+            color: 'primaryLight',
+          },
+          setValue,
+        )}
     </div>
+  );
+};
+
+export const convertRadioGroupToJsx = (
+  markdownRuleId: string,
+  markdownRuleChildren?: FormElement[],
+  props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
+): React.ReactElement => {
+  const radioButtons = markdownRuleChildren?.filter(
+    (markdownRule) => markdownRule.type === 'radioButton',
+  );
+  return radioButtons?.length ? (
+    <RadioGroup key={`${markdownRuleId}-radio-group`}>
+      {convertMarkdownRulesJsonToJsx(radioButtons, props, setValue)}
+    </RadioGroup>
+  ) : (
+    <></>
   );
 };
 
 export const convertMarkdownRadioButtonToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const children = getChildrenWithDefaultWeight(
-    markdownRuleElementJson.children,
-  );
+  const { id, value, children } = markdownRuleElementJson;
+  const weightElement =
+    children &&
+    convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0];
   return (
-    // TODO: Use proper component
-    <div key={`${key}-wrapper`}>
-      <FormControlLabel
-        key={key}
-        value={markdownRuleElementJson.value}
-        control={<RadioCustom color="primary" />}
-        label={markdownRuleElementJson.value}
-      />
-      {children &&
-        convertMarkdownRulesJsonToJsx(children, key, props)}
-    </div>
+    <FormControl
+      key={id}
+      value={value as string}
+      control={<RadioCustom color="primary" />}
+      label={value as string}
+      weight={weightElement}
+    />
+  );
+};
+
+export const convertCheckBoxGroupToJsx = (
+  markdownRuleId: string,
+  markdownRuleChildren?: FormElement[],
+  props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
+): React.ReactElement => {
+  const checkBoxes = markdownRuleChildren?.filter(
+    (markdownRule) => markdownRule.type === 'checkBox',
+  );
+  return checkBoxes?.length ? (
+    <FormGroup key={`${markdownRuleId}-check-boxes`}>
+      {convertMarkdownRulesJsonToJsx(checkBoxes, props, setValue)}
+    </FormGroup>
+  ) : (
+    <></>
   );
 };
 
 export const convertMarkdownCheckBoxToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const children = getChildrenWithDefaultWeight(
-    markdownRuleElementJson.children,
-  );
+  const { id, value, children } = markdownRuleElementJson;
+  const weightElement =
+    children &&
+    convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0];
   return (
-    // TODO: Use proper component
-    <div key={`${key}-wrapper`}>
-      <FormControlLabel
-        key={key}
-        value={markdownRuleElementJson.value}
-        control={<CheckBoxCustom color="primary" />}
-        label={markdownRuleElementJson.value}
-      />
-      {children &&
-        convertMarkdownRulesJsonToJsx(children, key, props)}
-    </div>
+    <FormControl
+      key={id}
+      value={value as string}
+      control={<CheckBoxCustom color="primary" />}
+      label={value as string}
+      weight={weightElement}
+    />
   );
 };
 
 export const convertMarkdownTextInputToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const children = getChildrenWithDefaultWeight(
-    markdownRuleElementJson.children,
-  );
   return (
     // TODO: Use proper component
-    <div key={`${key}-wrapper`}>
+    <div key={`${markdownRuleElementJson.id}-wrapper`}>
       <TextField
-        key={key}
+        key={markdownRuleElementJson.id}
         value={markdownRuleElementJson.value}
         fullWidth
       />
-      {children &&
-        convertMarkdownRulesJsonToJsx(children, key, props)}
+      {markdownRuleElementJson.children &&
+        convertMarkdownRulesJsonToJsx(
+          markdownRuleElementJson.children,
+          props,
+          setValue,
+        )}
     </div>
   );
 };
 
 export const convertMarkdownTextareaInputToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
-  const children = getChildrenWithDefaultWeight(
-    markdownRuleElementJson.children,
-  );
   return (
     // TODO: Use proper component
-    <div key={`${key}-wrapper`}>
+    <div key={`${markdownRuleElementJson.id}-wrapper`}>
       <TextField
-        key={key}
+        key={markdownRuleElementJson.id}
         value={markdownRuleElementJson.value}
         multiline
         fullWidth
       />
-      {children &&
-        convertMarkdownRulesJsonToJsx(children, key, props)}
+      {markdownRuleElementJson.children &&
+        convertMarkdownRulesJsonToJsx(
+          markdownRuleElementJson.children,
+          props,
+          setValue,
+        )}
     </div>
   );
 };
 
 export const convertMarkdownWeightToJsx = (
-  markdownRuleElementJson: MarkdownRuleElementJson,
-  index: number,
-  parentKey?: string,
+  markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const key = generateElementKey(
-    markdownRuleElementJson.type,
-    index,
-    parentKey,
-  );
   const value = markdownRuleElementJson.value ?? 1;
-  return <Weight key={key} weight={+value} color={props?.color} />;
+  return (
+    <Weight
+      key={markdownRuleElementJson.id}
+      weight={+value}
+      color={props?.color}
+      onChangeWeight={(weight) =>
+        setValue && setValue(markdownRuleElementJson.id, weight)
+      }
+    />
+  );
 };
-
-const getChildrenWithDefaultWeight = (
-  children?: MarkdownRuleElementJson[],
-): MarkdownRuleElementJson[] =>
-  children || [
-    {
-      type: 'weight',
-      value: '1',
-    },
-  ];

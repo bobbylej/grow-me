@@ -1,5 +1,6 @@
 import {
   Grid,
+  TextField,
   Typography,
   TypographyVariant,
 } from '@material-ui/core';
@@ -16,6 +17,8 @@ export interface FormBoxProps {
   headerVariant?: BackgroundVariant;
   contentVariant?: BackgroundVariant;
   contentClassName?: string;
+  editMode?: boolean;
+  changeTitle?: (title: string) => void;
 }
 
 export const FormBox: React.FC<
@@ -27,49 +30,58 @@ export const FormBox: React.FC<
   headerVariant = 'contained',
   contentVariant = 'outlined',
   contentClassName,
+  editMode = false,
+  changeTitle,
   children,
 }: React.PropsWithChildren<FormBoxProps>): React.ReactElement => {
-  const styles = useFormBoxStyles();
+  const styles = useFormBoxStyles({
+    size,
+    color,
+    headerVariant,
+    contentVariant,
+  });
+
   const headerTextVariant: Record<Size, TypographyVariant> = {
     small: 'body1',
     medium: 'h3',
   };
-  const headerColorClasses: Record<Color, string> = {
-    primary: styles.headerPrimary,
-    primaryLight: styles.headerPrimaryLight,
-    secondary: styles.headerSecondary,
-    secondaryLight: styles.headerSecondaryLight,
+
+  const getTextFieldColor = (): 'primary' | 'secondary' => {
+    switch (color) {
+      case 'primary':
+      case 'primaryLight':
+        return 'primary';
+      case 'secondary':
+      case 'secondaryLight':
+        return 'secondary';
+    }
   };
-  const headerVariantClasses: Record<BackgroundVariant, string> = {
-    contained: styles.headerContained,
-    outlined: '',
+
+  const onChangeTitle = (title: string): void => {
+    changeTitle && changeTitle(title);
   };
-  const contentColorClasses: Record<Color, string> = {
-    primary: styles.contentPrimary,
-    primaryLight: styles.contentPrimaryLight,
-    secondary: styles.contentSecondary,
-    secondaryLight: styles.headerSecondaryLight,
-  };
-  const contentVariantClasses: Record<BackgroundVariant, string> = {
-    contained: styles.contentContained,
-    outlined: '',
-  };
+
+  const titleElement = editMode ? (
+    <TextField
+      value={title}
+      color={getTextFieldColor()}
+      inputProps={{
+        className: styles.headerInput,
+      }}
+      onChange={(event) => onChangeTitle(event.target.value)}
+    />
+  ) : (
+    <Typography variant={headerTextVariant[size]}>{title}</Typography>
+  );
 
   return (
     <div>
-      <Grid
-        container
-        className={`${styles.header} ${headerColorClasses[color]} ${headerVariantClasses[headerVariant]}`}
-      >
-        <Grid item>
-          <Typography variant={headerTextVariant[size]}>
-            {title}
-          </Typography>
-        </Grid>
+      <Grid container className={`${styles.header}`}>
+        <Grid item>{titleElement}</Grid>
       </Grid>
       <Grid
         container
-        className={`${styles.content} ${contentColorClasses[color]} ${contentVariantClasses[contentVariant]} ${contentClassName}`}
+        className={`${styles.content} ${contentClassName}`}
       >
         <Grid item xs={12}>
           {children}

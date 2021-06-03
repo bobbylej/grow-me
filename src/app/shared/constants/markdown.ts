@@ -121,8 +121,8 @@ export const MarkdownQuestionSingleRule: MarkdownRule = {
   id: 'questionSingle',
   regex: generatePairSelectorMultilineRegex('\\*`'),
   selector: {
-    start: '*`\n',
-    end: '\n*`',
+    start: '*`',
+    end: '*`',
   },
   children: {
     questionSentence: MarkdownQuestionSentenceRule,
@@ -137,8 +137,8 @@ export const MarkdownQuestionGroupRule: MarkdownRule = {
   id: 'questionGroup',
   regex: generatePairSelectorMultilineRegex('\\*```'),
   selector: {
-    start: '*```\n',
-    end: '\n*```',
+    start: '*```',
+    end: '*```',
   },
   children: {
     questionSentence: MarkdownQuestionSentenceRule,
