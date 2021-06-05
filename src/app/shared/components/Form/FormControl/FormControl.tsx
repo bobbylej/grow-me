@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { FormControlLabel } from '@material-ui/core';
-import { useFormControlStyles } from 'app/shared/components/FormControl/FormControl.styles';
+import { useFormControlStyles } from 'app/shared/components/Form/FormControl/FormControl.styles';
 
 export interface FormControlProps {
   control: ReactElement;

@@ -30,7 +30,7 @@ import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
-import { FormControl } from 'app/shared/components/FormControl/FormControl';
+import { FormControl } from 'app/shared/components/Form/FormControl/FormControl';
 import { MarkdownRuleConvertedElements } from 'app/shared/types/markdownRuleConvertedElements.type';
 
 export const convertMarkdown = (

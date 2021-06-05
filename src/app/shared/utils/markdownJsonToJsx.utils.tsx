@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  FormGroup,
-  RadioGroup,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { FormGroup, RadioGroup, TextField } from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
@@ -15,7 +10,9 @@ import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCus
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
 import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
-import { FormControl } from 'app/shared/components/FormControl/FormControl';
+import { FormControl } from 'app/shared/components/Form/FormControl/FormControl';
+import { QuestionSentence } from 'app/shared/components/Form/QuestionSentence/QuestionSentence';
+import { Color } from 'app/shared/types/color.type';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: FormElement[],
@@ -79,7 +76,7 @@ export const convertMarkdownGroupToJsx = (
     <FormBox
       key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
-      color="primary"
+      color={props?.color}
       editMode
       changeTitle={(title) =>
         setValue && setValue(markdownRuleElementJson.id, title)
@@ -104,7 +101,7 @@ export const convertMarkdownSectionToJsx = (
     <FormBox
       key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
-      color="primary"
+      color={props?.color}
       headerVariant="outlined"
       editMode
       changeTitle={(title) =>
@@ -130,6 +127,12 @@ export const convertMarkdownQuestionSingleToJsx = (
   const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
   );
+  const otherChildren = children?.filter(
+    (markdownRule) =>
+      !['questionSentence', 'radioButton', 'checkBox'].includes(
+        markdownRule.type,
+      ),
+  );
   return (
     <SingleQuestion
       key={id}
@@ -144,6 +147,8 @@ export const convertMarkdownQuestionSingleToJsx = (
     >
       {convertRadioGroupToJsx(id, children, props, setValue)}
       {convertCheckBoxGroupToJsx(id, children, props, setValue)}
+      {otherChildren &&
+        convertMarkdownRulesJsonToJsx(otherChildren, props, setValue)}
     </SingleQuestion>
   );
 };
@@ -156,6 +161,12 @@ export const convertMarkdownQuestionGroupToJsx = (
   const { id, children } = markdownRuleElementJson;
   const questionSentences = children?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
+  );
+  const otherChildren = children?.filter(
+    (markdownRule) =>
+      !['questionSentence', 'radioButton', 'checkBox'].includes(
+        markdownRule.type,
+      ),
   );
   return (
     // TODO: Use proper component
@@ -173,6 +184,8 @@ export const convertMarkdownQuestionGroupToJsx = (
         )}
       {convertRadioGroupToJsx(id, children, props, setValue)}
       {convertCheckBoxGroupToJsx(id, children, props, setValue)}
+      {otherChildren &&
+        convertMarkdownRulesJsonToJsx(otherChildren, props, setValue)}
     </FormBox>
   );
 };
@@ -182,22 +195,30 @@ export const convertMarkdownQuestionSentenceToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
+  const { id, value, children } = markdownRuleElementJson;
+
+  const weightColor: Record<Color, Color> = {
+    primary: 'primaryLight',
+    primaryLight: 'primary',
+    secondary: 'secondaryLight',
+    secondaryLight: 'secondary',
+  };
+  const weightElement =
+    children &&
+    convertMarkdownRulesJsonToJsx(
+      children,
+      { color: weightColor[props?.color || 'primary'], ...props },
+      setValue,
+    )?.[0];
   return (
-    // TODO: Use proper component
-    <div key={`${markdownRuleElementJson.id}-wrapper`}>
-      <Typography key={markdownRuleElementJson.id} variant="body1">
-        {markdownRuleElementJson.value}
-      </Typography>
-      {markdownRuleElementJson.children &&
-        convertMarkdownRulesJsonToJsx(
-          markdownRuleElementJson.children,
-          {
-            ...props,
-            color: 'primaryLight',
-          },
-          setValue,
-        )}
-    </div>
+    <QuestionSentence
+      key={id}
+      text={value as string}
+      color={props?.color}
+      weight={weightElement}
+      editMode
+      changeText={(text) => setValue && setValue(id, text)}
+    ></QuestionSentence>
   );
 };
 

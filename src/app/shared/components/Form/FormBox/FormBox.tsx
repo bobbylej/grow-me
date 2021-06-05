@@ -65,6 +65,7 @@ export const FormBox: React.FC<
     <TextField
       value={title}
       color={getTextFieldColor()}
+      fullWidth
       inputProps={{
         className: styles.headerInput,
       }}
@@ -77,7 +78,9 @@ export const FormBox: React.FC<
   return (
     <div>
       <Grid container className={`${styles.header}`}>
-        <Grid item>{titleElement}</Grid>
+        <Grid item xs={12}>
+          {titleElement}
+        </Grid>
       </Grid>
       <Grid
         container
