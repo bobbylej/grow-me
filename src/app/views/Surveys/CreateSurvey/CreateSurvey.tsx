@@ -78,7 +78,6 @@ export const CreateSurvey = (): ReactElement => {
   );
 
   const onChangeTitle = (title: string): void => {
-    console.log(title);
     setForm({
       ...form,
       title,
@@ -86,7 +85,6 @@ export const CreateSurvey = (): ReactElement => {
   };
 
   const onChangeDescription = (description: string): void => {
-    console.log(description);
     setForm({
       ...form,
       description,

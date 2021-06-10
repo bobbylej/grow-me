@@ -29,8 +29,8 @@ export const useWeightStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.primary.contrastText,
   },
   rootSecondary: {
-    color: theme.palette.secondary.contrastText,
-    borderColor: theme.palette.secondary.contrastText,
+    color: theme.palette.secondary.main,
+    borderColor: theme.palette.secondary.main,
   },
   rootSecondaryLight: {
     color: theme.palette.secondary.contrastText,
