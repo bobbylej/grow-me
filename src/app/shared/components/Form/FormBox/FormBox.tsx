@@ -9,6 +9,7 @@ import { useFormBoxStyles } from 'app/shared/components/Form/FormBox/FormBox.sty
 import { Color } from 'app/shared/types/color.type';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Size } from 'app/shared/types/size.type';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export interface FormBoxProps {
   title: string | React.ReactNode;
@@ -46,17 +47,6 @@ export const FormBox: React.FC<
     medium: 'h3',
   };
 
-  const getTextFieldColor = (): 'primary' | 'secondary' => {
-    switch (color) {
-      case 'primary':
-      case 'primaryLight':
-        return 'primary';
-      case 'secondary':
-      case 'secondaryLight':
-        return 'secondary';
-    }
-  };
-
   const onChangeTitle = (title: string): void => {
     changeTitle && changeTitle(title);
   };
@@ -64,7 +54,7 @@ export const FormBox: React.FC<
   const titleElement = editMode ? (
     <TextField
       value={title}
-      color={getTextFieldColor()}
+      color={getSimplyColor(color)}
       fullWidth
       inputProps={{
         className: styles.headerInput,

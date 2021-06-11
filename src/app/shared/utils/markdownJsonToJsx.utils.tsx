@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, RadioGroup, TextField } from '@material-ui/core';
+import { FormGroup, RadioGroup } from '@material-ui/core';
 import { FormBox } from 'app/shared/components/Form/FormBox/FormBox';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
@@ -15,6 +15,8 @@ import { QuestionSentence } from 'app/shared/components/Form/QuestionSentence/Qu
 import { Color } from 'app/shared/types/color.type';
 import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
 import { QuestionItem } from 'app/shared/components/QuestionItem/QuestionItem';
+import { FormTextField } from 'app/shared/components/Form/FormTextField/FormTextField';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: FormElement[],
@@ -274,10 +276,17 @@ export const convertMarkdownRadioButtonToJsx = (
   return (
     <FormControl
       key={id}
-      value={value as string}
-      control={<RadioCustom color="primary" />}
+      control={
+        <RadioCustom
+          color={getSimplyColor(props?.color)}
+          value={value}
+          disabled
+        />
+      }
       label={value as string}
       weight={weightElement}
+      editMode
+      changeLabel={(label) => setValue && setValue(id, label)}
     />
   );
 };
@@ -312,10 +321,17 @@ export const convertMarkdownCheckBoxToJsx = (
   return (
     <FormControl
       key={id}
-      value={value as string}
-      control={<CheckBoxCustom color="primary" />}
+      control={
+        <CheckBoxCustom
+          color={getSimplyColor(props?.color)}
+          value={value}
+          disabled
+        />
+      }
       label={value as string}
       weight={weightElement}
+      editMode
+      changeLabel={(label) => setValue && setValue(id, label)}
     />
   );
 };
@@ -325,21 +341,18 @@ export const convertMarkdownTextInputToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
+  const { id, value, children } = markdownRuleElementJson;
   return (
-    // TODO: Use proper component
-    <div key={`${markdownRuleElementJson.id}-wrapper`}>
-      <TextField
-        key={markdownRuleElementJson.id}
-        value={markdownRuleElementJson.value}
-        fullWidth
-      />
-      {markdownRuleElementJson.children &&
-        convertMarkdownRulesJsonToJsx(
-          markdownRuleElementJson.children,
-          props,
-          setValue,
-        )}
-    </div>
+    <FormTextField
+      key={id}
+      value={value}
+      fullWidth
+      disabled
+      weight={
+        children &&
+        convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0]
+      }
+    />
   );
 };
 
@@ -348,22 +361,22 @@ export const convertMarkdownTextareaInputToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
+  const { id, value, children } = markdownRuleElementJson;
   return (
-    // TODO: Use proper component
-    <div key={`${markdownRuleElementJson.id}-wrapper`}>
-      <TextField
-        key={markdownRuleElementJson.id}
-        value={markdownRuleElementJson.value}
-        multiline
-        fullWidth
-      />
-      {markdownRuleElementJson.children &&
-        convertMarkdownRulesJsonToJsx(
-          markdownRuleElementJson.children,
-          props,
-          setValue,
-        )}
-    </div>
+    <FormTextField
+      key={id}
+      value={value}
+      placeholder={`
+      
+      `}
+      fullWidth
+      multiline
+      disabled
+      weight={
+        children &&
+        convertMarkdownRulesJsonToJsx(children, props, setValue)?.[0]
+      }
+    />
   );
 };
 

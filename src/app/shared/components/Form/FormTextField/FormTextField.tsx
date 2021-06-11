@@ -4,17 +4,22 @@ import { useFormTextFieldStyles } from 'app/shared/components/Form/FormTextField
 
 export interface FormTextFieldProps {
   inputSize?: 'small' | 'medium' | 'h2' | 'h3';
+  weight?: ReactElement;
 }
 
 export const FormTextField = ({
   inputSize,
+  weight,
   ...props
 }: FormTextFieldProps & TextFieldProps): ReactElement => {
-  const { textField } = useFormTextFieldStyles({ inputSize });
+  const { root, textField } = useFormTextFieldStyles({ inputSize });
   return (
-    <TextField
-      {...props}
-      className={`${textField} ${props.className}`}
-    />
+    <div className={root}>
+      <TextField
+        {...props}
+        className={`${textField} ${props.className}`}
+      />
+      {weight}
+    </div>
   );
 };
