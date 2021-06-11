@@ -140,6 +140,7 @@ export const convertMarkdownQuestionSingleToJsx = (
   return (
     <SingleQuestion
       key={id}
+      color={props?.color}
       text={
         questionSentences &&
         convertMarkdownRulesJsonToJsx(
@@ -231,7 +232,7 @@ export const convertMarkdownQuestionSentenceToJsx = (
     children &&
     convertMarkdownRulesJsonToJsx(
       children,
-      { color: weightColor[props?.color || 'primary'], ...props },
+      { ...props, color: weightColor[props?.color || 'primary'] },
       setValue,
     )?.[0];
   return (
@@ -341,11 +342,13 @@ export const convertMarkdownTextInputToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const { id, value, children } = markdownRuleElementJson;
+  const { id, value, children, type } = markdownRuleElementJson;
+  const placeholder = props?.placeholders?.[type];
   return (
     <FormTextField
       key={id}
       value={value}
+      placeholder={placeholder}
       fullWidth
       disabled
       weight={
@@ -361,14 +364,13 @@ export const convertMarkdownTextareaInputToJsx = (
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
-  const { id, value, children } = markdownRuleElementJson;
+  const { id, value, children, type } = markdownRuleElementJson;
+  const placeholder = props?.placeholders?.[type];
   return (
     <FormTextField
       key={id}
       value={value}
-      placeholder={`
-      
-      `}
+      placeholder={placeholder}
       fullWidth
       multiline
       disabled
