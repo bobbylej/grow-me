@@ -3,13 +3,20 @@ import React from 'react';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import { useTabsStyles } from 'app/shared/components/Tabs/Tabs.styles';
 import { Tab } from 'app/shared/interfaces/tab.interface';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export interface TabsProps {
   tabs: Tab[];
+  color?: SimplyColor;
 }
 
-export const Tabs = ({ tabs }: TabsProps): React.ReactElement => {
-  const { tabLink, tabButton, tabButtonActive } = useTabsStyles();
+export const Tabs = ({
+  tabs,
+  color = 'primary',
+}: TabsProps): React.ReactElement => {
+  const { tabLink, tabButton, tabButtonActive } = useTabsStyles({
+    color,
+  });
   const location = useLocation();
 
   const tabsButtons = tabs.map((tab) => {
@@ -36,7 +43,7 @@ export const Tabs = ({ tabs }: TabsProps): React.ReactElement => {
 
   return (
     <ButtonGroup
-      color="primary"
+      color={color}
       size="small"
       aria-label="contained primary button group"
     >

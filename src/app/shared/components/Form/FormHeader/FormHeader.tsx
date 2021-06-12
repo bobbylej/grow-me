@@ -3,16 +3,21 @@ import React, { ReactElement, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useFormHeaderStyles } from 'app/shared/components/Form/FormHeader/FormHeader.styles';
 import { FormTextField } from 'app/shared/components/Form/FormTextField/FormTextField';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export interface FormHeaderProps {
   editMode?: boolean;
   title?: string;
   description?: string;
+  color?: SimplyColor;
   onChangeTitle?: (value: string) => void;
   onChangeDescription?: (value: string) => void;
 }
 
-export const FormHeader = (props: FormHeaderProps): ReactElement => {
+export const FormHeader = ({
+  color = 'primary',
+  ...props
+}: FormHeaderProps): ReactElement => {
   const intl = useIntl();
   const translation = {
     label: {
@@ -52,7 +57,7 @@ export const FormHeader = (props: FormHeaderProps): ReactElement => {
   const editableTextFields = (
     <div>
       <FormTextField
-        color="primary"
+        color={color}
         name="title"
         inputSize="h3"
         className={headerItem}
@@ -65,7 +70,7 @@ export const FormHeader = (props: FormHeaderProps): ReactElement => {
         }
       />
       <FormTextField
-        color="primary"
+        color={color}
         name="description"
         className={headerItem}
         fullWidth={true}

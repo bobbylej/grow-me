@@ -3,22 +3,25 @@ import { Grid, Typography } from '@material-ui/core';
 import { Circle } from 'app/shared/components/Circle/Circle';
 import { useAsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor.styles';
 import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export interface AsideGraphicEditorProps {
   circleEditor: AsideGraphic[];
   direction: 'column' | 'row';
+  color?: SimplyColor;
 }
 
 export const AsideGraphicEditor = ({
   circleEditor,
   direction,
+  color = 'primary',
 }: AsideGraphicEditorProps): ReactElement => {
   const {
     asideGraphicEditor,
     itemGraphicEditor,
     nameItem,
     circleItem,
-  } = useAsideGraphicEditor();
+  } = useAsideGraphicEditor({ color });
 
   const getCircleParams = (
     item: AsideGraphic,
@@ -38,7 +41,7 @@ export const AsideGraphicEditor = ({
       <div className={circleItem}>
         <Circle
           circleParams={getCircleParams(item)}
-          theme="template"
+          color={color}
           size={item.type === 'group' ? 'medium' : 'small'}
         />
       </div>

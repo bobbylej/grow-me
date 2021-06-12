@@ -45,7 +45,9 @@ export const ItemSquare = ({
       onClick={handleSquareClick}
     >
       <div className={circleSurvey}>
-        <Circle theme="survey">
+        <Circle
+          color={theme === 'template' ? 'primary' : 'secondary'}
+        >
           {getCircleText({
             total: square.badge.total,
             amount: square.badge.amount,

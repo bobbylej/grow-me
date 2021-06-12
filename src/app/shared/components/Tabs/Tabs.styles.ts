@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export const useTabsStyles = makeStyles(
   (theme: Theme) => ({
@@ -9,16 +10,16 @@ export const useTabsStyles = makeStyles(
     tabButton: {
       padding: 0,
     },
-    tabButtonActive: {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
+    tabButtonActive: ({ color }: { color: SimplyColor }) => ({
+      backgroundColor: theme.palette[color].main,
+      color: theme.palette[color].contrastText,
 
       '&:hover': {
-        backgroundColor: theme.palette.primary.dark,
-        color: theme.palette.primary.contrastText,
-        borderColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette[color].dark,
+        color: theme.palette[color].contrastText,
+        borderColor: theme.palette[color].dark,
       },
-    },
+    }),
   }),
   { name: 'Tabs' },
 );
