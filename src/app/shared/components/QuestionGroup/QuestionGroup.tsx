@@ -4,7 +4,9 @@ import { useQuestionGroupStyle } from 'app/shared/components/QuestionGroup/Quest
 
 export const QuestionGroup = ({
   children,
-}: React.PropsWithChildren<any>): ReactElement => {
+}: {
+  children?: React.ReactNode;
+}): ReactElement => {
   const { questionGroupContainer } = useQuestionGroupStyle();
 
   return (

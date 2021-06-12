@@ -1,7 +1,5 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-// import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
-// import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { useQuestionItemStyles } from 'app/shared/components/QuestionItem/QuestionItem.styles';
 
 export interface QuestionItemProps {
