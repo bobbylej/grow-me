@@ -31,9 +31,7 @@ export const QuestionItem = ({
       xs={12}
     >
       <Typography>{text}</Typography>
-      <Grid item xs={6}>
-        {children}
-      </Grid>
+      <Grid item>{children}</Grid>
     </Grid>
   );
 };

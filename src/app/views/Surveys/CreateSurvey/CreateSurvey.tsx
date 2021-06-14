@@ -42,10 +42,15 @@ export const CreateSurvey = (): ReactElement => {
     markdown: `
     *# Group 1
     *## Section 1.1
-    *\`
+    *\`\`\`
       *###[3] Question sentence 1.1.1
-      *....
-    *\`
+      *### Question sentence 1.1.2
+      *### Question sentence 1.1.3
+      *### Question sentence 1.1.4
+      *()[2] Radio 1
+      *()[32] Radio 2
+      *() Radio 3
+    *\`\`\`
   
     *# Group 2
     *## Section 2.1

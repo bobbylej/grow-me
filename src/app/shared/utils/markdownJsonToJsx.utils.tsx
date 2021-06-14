@@ -13,6 +13,8 @@ import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
 import { FormControl } from 'app/shared/components/Form/FormControl/FormControl';
 import { QuestionSentence } from 'app/shared/components/Form/QuestionSentence/QuestionSentence';
 import { Color } from 'app/shared/types/color.type';
+import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
+import { QuestionItem } from 'app/shared/components/QuestionItem/QuestionItem';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: FormElement[],
@@ -159,34 +161,54 @@ export const convertMarkdownQuestionGroupToJsx = (
   setValue?: SetFormElementValue,
 ): React.ReactElement => {
   const { id, children } = markdownRuleElementJson;
-  const questionSentences = children?.filter(
+
+  return (
+    <QuestionGroup key={id}>
+      {convertQuestionSentenceGroupToJsx(
+        id,
+        children,
+        props,
+        setValue,
+      )}
+    </QuestionGroup>
+  );
+};
+
+export const convertQuestionSentenceGroupToJsx = (
+  markdownRuleId: string,
+  markdownRuleChildren?: FormElement[],
+  props?: MarkdownRuleProps,
+  setValue?: SetFormElementValue,
+): React.ReactElement => {
+  const questionSentences = markdownRuleChildren?.filter(
     (markdownRule) => markdownRule.type === 'questionSentence',
   );
-  const otherChildren = children?.filter(
-    (markdownRule) =>
-      !['questionSentence', 'radioButton', 'checkBox'].includes(
-        markdownRule.type,
-      ),
-  );
-  return (
-    // TODO: Use proper component
-    <FormBox
-      key={id}
-      title="Question Group"
-      color="primary"
-      headerVariant="outlined"
-    >
-      {questionSentences &&
-        convertMarkdownRulesJsonToJsx(
-          questionSentences,
+  const questionSentencesElement = questionSentences?.map(
+    (questionSentence, index) => (
+      <QuestionItem
+        key={questionSentence.id}
+        text={questionSentence.value as string}
+        variant={index % 2 ? 'outlined' : 'contained'}
+      >
+        {convertRadioGroupToJsx(
+          markdownRuleId,
+          markdownRuleChildren,
           props,
           setValue,
         )}
-      {convertRadioGroupToJsx(id, children, props, setValue)}
-      {convertCheckBoxGroupToJsx(id, children, props, setValue)}
-      {otherChildren &&
-        convertMarkdownRulesJsonToJsx(otherChildren, props, setValue)}
-    </FormBox>
+        {convertCheckBoxGroupToJsx(
+          markdownRuleId,
+          markdownRuleChildren,
+          props,
+          setValue,
+        )}
+      </QuestionItem>
+    ),
+  );
+  return questionSentences?.length ? (
+    <>{questionSentencesElement}</>
+  ) : (
+    <></>
   );
 };
 
