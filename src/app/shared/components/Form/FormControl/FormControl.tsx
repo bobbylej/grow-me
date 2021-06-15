@@ -1,28 +1,44 @@
 import React, { ReactElement } from 'react';
-import { FormControlLabel } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
 import { useFormControlStyles } from 'app/shared/components/Form/FormControl/FormControl.styles';
 
 export interface FormControlProps {
   control: ReactElement;
-  weight?: ReactElement;
-  value: string;
   label: string;
+  weight?: ReactElement;
+  editMode?: boolean;
+  changeLabel?: (label: string) => void;
 }
 
 export const FormControl = ({
   control,
-  weight,
-  value,
   label,
+  weight,
+  editMode = false,
+  changeLabel,
 }: FormControlProps): ReactElement => {
-  const { formControlWrapper } = useFormControlStyles();
+  const { root, formControlWrapper } = useFormControlStyles();
+
+  const onChangeLabel = (label: string): void => {
+    changeLabel && changeLabel(label);
+  };
+
+  const labelElement = editMode ? (
+    <TextField
+      value={label}
+      fullWidth
+      onChange={(event) => onChangeLabel(event.target.value)}
+    />
+  ) : (
+    <Typography variant="body1">{label}</Typography>
+  );
+
   return (
-    <div className={formControlWrapper}>
-      <FormControlLabel
-        label={label}
-        control={control}
-        value={value}
-      />
+    <div className={root}>
+      <div className={formControlWrapper}>
+        {control}
+        {labelElement}
+      </div>
       <div>{weight}</div>
     </div>
   );

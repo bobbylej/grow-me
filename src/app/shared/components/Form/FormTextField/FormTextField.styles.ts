@@ -17,6 +17,11 @@ const getFontSize = (
 };
 
 export const useFormTextFieldStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: theme.spacing(2),
+  },
   textField: {
     '& input': {
       fontSize: (props: FormTextFieldProps) =>
