@@ -166,7 +166,7 @@ export const convertMarkdownQuestionGroupToJsx = (
   const { id, children } = markdownRuleElementJson;
 
   return (
-    <QuestionGroup key={id}>
+    <QuestionGroup key={id} color={props?.color}>
       {convertQuestionSentenceGroupToJsx(
         id,
         children,
@@ -192,6 +192,7 @@ export const convertQuestionSentenceGroupToJsx = (
         key={questionSentence.id}
         text={questionSentence.value as string}
         variant={index % 2 ? 'outlined' : 'contained'}
+        color={props?.color}
       >
         {convertRadioGroupToJsx(
           markdownRuleId,
