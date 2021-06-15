@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Typography } from '@material-ui/core';
 import { Color } from 'app/shared/types/color.type';
-import { useQuestionSentenceStyles } from 'app/shared/components/Form/QuestionSentence/QuestionSentence.styles';
+import { useQuestionSentenceStyles } from 'app/shared/components/QuestionSentence/QuestionSentence.styles';
 
 export interface QuestionSentenceProps {
   text: string;

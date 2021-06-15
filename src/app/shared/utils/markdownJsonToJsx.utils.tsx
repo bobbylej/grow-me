@@ -11,7 +11,7 @@ import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
 import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
 import { FormControl } from 'app/shared/components/Form/FormControl/FormControl';
-import { QuestionSentence } from 'app/shared/components/Form/QuestionSentence/QuestionSentence';
+import { QuestionSentence } from 'app/shared/components/QuestionSentence/QuestionSentence';
 import { Color } from 'app/shared/types/color.type';
 import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
 import { QuestionItem } from 'app/shared/components/QuestionItem/QuestionItem';

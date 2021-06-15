@@ -1,6 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { QuestionSentenceProps } from 'app/shared/components/Form/QuestionSentence/QuestionSentence';
+import { QuestionSentenceProps } from 'app/shared/components/QuestionSentence/QuestionSentence';
 import { Color } from 'app/shared/types/color.type';
 
 export const useQuestionSentenceStyles = makeStyles(
