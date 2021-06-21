@@ -3,16 +3,20 @@ import React, { useState } from 'react';
 import { FabContainer } from 'app/shared/components/FabContainer/FabContainer';
 import { useFabStyles } from 'app/shared/styles/fab.styles';
 import { useFabPopperStyles } from 'app/shared/components/FabPopper/FabPopper.styles';
+import { SimplyColor } from 'app/shared/types/color.type';
+import { Size } from 'app/shared/types/size.type';
 
 export interface FabPopperProps {
   button: React.ReactChild;
-  size?: 'small' | 'medium';
+  size?: Size;
+  color?: SimplyColor;
 }
 
 export const FabPopper = ({
   button,
   children,
   size,
+  color = 'primary',
 }: React.PropsWithChildren<FabPopperProps>): React.ReactElement => {
   const { fab } = useFabStyles();
   const { popper } = useFabPopperStyles({ size });
@@ -36,7 +40,7 @@ export const FabPopper = ({
         <div>
           <Fab
             className={fab}
-            color="primary"
+            color={color}
             aria-label="cheatsheet"
             onClick={handleClick}
           >

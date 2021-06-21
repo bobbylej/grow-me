@@ -1,35 +1,29 @@
 import React, { ReactElement } from 'react';
 import { Avatar } from '@material-ui/core';
 import { useCircleStyles } from 'app/shared/components/Circle/Circle.styles';
+import { Size } from 'app/shared/types/size.type';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export interface CircleProps {
-  theme: 'survey' | 'template';
+  color?: SimplyColor;
   circleParams?: 'active' | 'outlined' | 'covered';
-  size?: 'small' | 'medium';
+  size?: Size;
   className?: string;
 }
 
 export const Circle = ({
-  theme,
+  color = 'primary',
   circleParams,
-  size,
+  size = 'medium',
   className,
   children,
 }: React.PropsWithChildren<CircleProps>): ReactElement => {
   const {
     circle,
-    circleSurvey,
-    circleTemplate,
     circleActive,
     circleOutlined,
     circleCovered,
-    circleSmall,
-    circleMedium,
-  } = useCircleStyles();
-
-  const getThemeClass = (theme: 'survey' | 'template'): string => {
-    return theme === 'template' ? circleTemplate : circleSurvey;
-  };
+  } = useCircleStyles({ color, size });
 
   const getCircleParamsClass = (
     circleParams?: 'active' | 'outlined' | 'covered',
@@ -46,24 +40,11 @@ export const Circle = ({
     }
   };
 
-  const getSizeClass = (size?: 'small' | 'medium'): string => {
-    switch (size) {
-      case 'small':
-        return circleSmall;
-      case 'medium':
-        return circleMedium;
-      default:
-        return '';
-    }
-  };
-
   return (
     <Avatar
-      className={`${circle} ${getThemeClass(
-        theme,
-      )} ${getCircleParamsClass(circleParams)} ${getSizeClass(
-        size,
-      )} ${className ? className : ''}`}
+      className={`${circle} ${getCircleParamsClass(circleParams)} ${
+        className ? className : ''
+      }`}
     >
       {children || ' '}
     </Avatar>

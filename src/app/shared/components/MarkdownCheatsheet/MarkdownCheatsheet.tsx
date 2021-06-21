@@ -6,6 +6,11 @@ import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 import { MarkdownRuleDocumentation } from 'app/shared/interfaces/markdownRule.interface';
 import { useMarkdownCheatsheetStyles } from 'app/shared/components/MarkdownCheatsheet/MarkdownCheatsheet.styles';
 import { removeBlankLines } from 'app/shared/utils/text.utils';
+import { Color } from 'app/shared/types/color.type';
+
+export interface MarkdownCheatsheetProps {
+  color?: Color;
+}
 
 const generateMarkdownRuleKey = (
   markdownRuleKey: string,
@@ -14,7 +19,9 @@ const generateMarkdownRuleKey = (
   return `${parentKey ? `${parentKey}-` : ''}${markdownRuleKey}`;
 };
 
-export const MarkdownCheatsheet = (): React.ReactElement => {
+export const MarkdownCheatsheet = ({
+  color = 'primary',
+}: MarkdownCheatsheetProps): React.ReactElement => {
   const intl = useIntl();
   const styles = useMarkdownCheatsheetStyles();
   const markdownCheatsheetDocs = useMarkdownCheatsheetDocs();
@@ -85,6 +92,7 @@ export const MarkdownCheatsheet = (): React.ReactElement => {
         id: 'GLOBAL.LABEL.MARKDOWN_CHEATSHEET',
         defaultMessage: 'Markdown Cheatsheet',
       })}
+      color={color}
       size="small"
       contentVariant="contained"
       contentClassName={styles.markdownContent}

@@ -24,14 +24,14 @@ export const SurveyMarkdown = (): React.ReactElement => {
     <div>
       <FormBox
         title="Markdown"
-        color="primaryLight"
+        color="secondaryLight"
         contentVariant="contained"
       >
         <TextField
           multiline
           fullWidth
           name="markdown"
-          color="primary"
+          color="secondary"
           variant="standard"
           className="code"
           value={markdown}
@@ -44,8 +44,9 @@ export const SurveyMarkdown = (): React.ReactElement => {
           defaultMessage: 'MC',
         })}
         size="medium"
+        color="secondary"
       >
-        <MarkdownCheatsheet />
+        <MarkdownCheatsheet color="secondary" />
       </FabPopper>
     </div>
   );

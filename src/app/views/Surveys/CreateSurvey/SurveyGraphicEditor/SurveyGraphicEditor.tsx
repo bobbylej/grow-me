@@ -20,6 +20,7 @@ export const SurveyGraphicEditor = (): React.ReactElement => {
 
   return (
     <FormCreator
+      color="secondary"
       formElements={form || []}
       changeFormElementValue={onChangeFormElementValue}
     />

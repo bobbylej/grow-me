@@ -3,16 +3,16 @@ import { Grid } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { AsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor';
 import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
-import { SingleQuestion } from 'app/shared/components/SingleQuestion/SingleQuestion';
-import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup';
 import { convertMarkdownRulesJsonToJsx } from 'app/shared/utils/markdownJsonToJsx.utils';
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { useFormCreatorStyles } from 'app/shared/components/Form/FormCreator/FormCreator.styles';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
+import { SimplyColor } from 'app/shared/types/color.type';
 
 export interface FormCreatorProps {
   formElements: FormElement[];
+  color?: SimplyColor;
   changeFormElementValue?: (
     id: string,
     value?: FormElementValue,
@@ -21,6 +21,7 @@ export interface FormCreatorProps {
 
 export const FormCreator = ({
   formElements,
+  color = 'primary',
   changeFormElementValue,
 }: FormCreatorProps): React.ReactElement => {
   const intl = useIntl();
@@ -63,7 +64,7 @@ export const FormCreator = ({
   const content = convertMarkdownRulesJsonToJsx(
     formElements,
     {
-      color: 'secondary',
+      color,
       placeholders,
     },
     setValue,
@@ -73,11 +74,10 @@ export const FormCreator = ({
     <div>
       <Grid container direction="column" className={styles.form}>
         {content}
-        <SingleQuestion text="test1" color="secondary" />
-        <QuestionGroup />
       </Grid>
       <AsideGraphicEditor
         direction="column"
+        color={color}
         circleEditor={circleEditorGraphic}
       />
     </div>

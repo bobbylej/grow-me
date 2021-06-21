@@ -28,7 +28,8 @@ export const useFormTextFieldStyles = makeStyles((theme: Theme) => ({
         getFontSize(props, theme),
     },
     '& label:not(.MuiInputLabel-shrink)': {
-      color: theme.palette.primary.light,
+      color: ({ color = 'primary' }: FormTextFieldProps) =>
+        theme.palette[color].light,
       fontSize: (props: FormTextFieldProps) =>
         getFontSize(props, theme),
     },
