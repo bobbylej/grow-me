@@ -10,6 +10,8 @@ import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
 import { convertJsonToMarkdown } from 'app/shared/utils/markdownJsonToRaw.utils';
 import { MarkdownMock } from 'app/shared/mocks/markdown.mock';
+import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
+import { generateFormElementByType } from 'app/shared/utils/markdown.utils';
 
 export interface FormCreatorContextState {
   readonly title?: string;
@@ -61,6 +63,25 @@ const updateFormElementValue = (
   );
 };
 
+const addFormElement = (
+  { type, parentId }: { type: MarkdownRuleType; parentId?: string },
+  formElements?: FormElement[],
+  formElementaParentId?: string,
+): FormElement[] | undefined => {
+  if (!parentId || formElementaParentId === parentId) {
+    const newFormElement = generateFormElementByType(type);
+    return [...(formElements || []), newFormElement];
+  }
+  return formElements?.map((formElement) => ({
+    ...formElement,
+    children: addFormElement(
+      { type, parentId },
+      formElement.children,
+      formElement.id,
+    ),
+  }));
+};
+
 const FormCreatorReducer = (
   state: FormCreatorContextState,
   action: FormCreatorContextActions,
@@ -90,6 +111,18 @@ const FormCreatorReducer = (
         ...state,
         markdown: action.payload,
         formElements: convertMarkdownToJson(action.payload),
+      };
+    case FormCreatorContextActionType.addElement:
+      const formElementsWithNewElement = addFormElement(
+        action.payload,
+        state.formElements,
+      );
+      console.log(formElementsWithNewElement);
+
+      return {
+        ...state,
+        formElements: formElementsWithNewElement,
+        markdown: convertJsonToMarkdown(formElementsWithNewElement),
       };
     default:
       throw new Error('Wrong action type provided');

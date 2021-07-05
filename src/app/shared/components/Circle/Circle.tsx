@@ -3,49 +3,26 @@ import { Avatar } from '@material-ui/core';
 import { useCircleStyles } from 'app/shared/components/Circle/Circle.styles';
 import { Size } from 'app/shared/types/size.type';
 import { SimplyColor } from 'app/shared/types/color.type';
+import { CircleVariant } from 'app/shared/types/circleVariant.type';
 
 export interface CircleProps {
   color?: SimplyColor;
-  circleParams?: 'active' | 'outlined' | 'covered';
+  variant?: CircleVariant;
   size?: Size;
   className?: string;
 }
 
 export const Circle = ({
   color = 'primary',
-  circleParams,
+  variant,
   size = 'medium',
   className,
   children,
 }: React.PropsWithChildren<CircleProps>): ReactElement => {
-  const {
-    circle,
-    circleActive,
-    circleOutlined,
-    circleCovered,
-  } = useCircleStyles({ color, size });
-
-  const getCircleParamsClass = (
-    circleParams?: 'active' | 'outlined' | 'covered',
-  ): string => {
-    switch (circleParams) {
-      case 'active':
-        return circleActive;
-      case 'outlined':
-        return circleOutlined;
-      case 'covered':
-        return circleCovered;
-      default:
-        return '';
-    }
-  };
+  const { circle } = useCircleStyles({ color, size, variant });
 
   return (
-    <Avatar
-      className={`${circle} ${getCircleParamsClass(circleParams)} ${
-        className ? className : ''
-      }`}
-    >
+    <Avatar className={`${circle} ${className ? className : ''}`}>
       {children || ' '}
     </Avatar>
   );

@@ -52,6 +52,10 @@ export const useFormBoxStyles = makeStyles(
       backgroundColor: (props: Partial<FormBoxProps>) =>
         getContentBackgroundColor(theme, props.contentVariant),
       padding: theme.spacing(2),
+
+      '& > *:not(:last-child)': {
+        marginBottom: theme.spacing(2),
+      },
     },
   }),
   { name: 'FormBox' },

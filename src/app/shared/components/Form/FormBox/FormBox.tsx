@@ -72,11 +72,12 @@ export const FormBox: React.FC<
           {titleElement}
         </Grid>
       </Grid>
-      <Grid
-        container
-        className={`${styles.content} ${contentClassName}`}
-      >
-        <Grid item xs={12}>
+      <Grid container>
+        <Grid
+          item
+          xs={12}
+          className={`${styles.content} ${contentClassName}`}
+        >
           {children}
         </Grid>
       </Grid>

@@ -1,4 +1,7 @@
-import { MarkdownRules } from 'app/shared/types/markdownRule.type';
+import {
+  MarkdownRules,
+  MarkdownRuleType,
+} from 'app/shared/types/markdownRule.type';
 import { MarkdownRule } from 'app/shared/interfaces/markdownRule.interface';
 
 const generateSingleSelectorMultilineRegex = (
@@ -181,4 +184,20 @@ export const Markdown: MarkdownRules = {
   section: MarkdownSectionRule,
   questionSingle: MarkdownQuestionSingleRule,
   questionGroup: MarkdownQuestionGroupRule,
+};
+
+export const AllMarkdownRules: Record<
+  MarkdownRuleType,
+  MarkdownRule
+> = {
+  group: MarkdownGroupRule,
+  section: MarkdownSectionRule,
+  questionSingle: MarkdownQuestionSingleRule,
+  questionGroup: MarkdownQuestionGroupRule,
+  questionSentence: MarkdownQuestionSentenceRule,
+  radioButton: MarkdownRadioButtonRule,
+  checkBox: MarkdownCheckBoxRule,
+  textInput: MarkdownTextInputRule,
+  textareaInput: MarkdownTextareaInputRule,
+  weight: MarkdownWeightRule,
 };

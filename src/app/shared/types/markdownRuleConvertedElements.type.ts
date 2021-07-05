@@ -2,7 +2,10 @@ import { ReactElement } from 'react';
 import { MarkdownRuleElement } from 'app/shared/interfaces/markdownRuleElement.interface';
 import { MarkdownRuleProps } from 'app/shared/interfaces/markdownRuleProps.interface';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
-import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
+import {
+  AddFormElement,
+  SetFormElementValue,
+} from 'app/shared/types/formCreatorAction.type';
 
 export type MarkdownRuleConvertedElements = [
   MarkdownRuleElement[],
@@ -18,4 +21,5 @@ export type MarkdownRuleJsxConverter = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ) => ReactElement;
