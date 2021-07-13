@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import {
   defaultValues,
   getBoxColor,
-  getContrastBoxColor,
+  getBackgroundBoxColor,
   getTypographyStyle,
 } from 'app/shared/utils/styles.utils';
 import { FormBoxProps } from 'app/shared/components/Form/FormBox/FormBox';
@@ -14,7 +14,7 @@ const getContentBackgroundColor = (
   variant?: BackgroundVariant,
 ): string => {
   return variant === 'contained'
-    ? theme.palette.grey[300]
+    ? theme.palette.background.paper
     : theme.palette.background.default;
 };
 
@@ -31,7 +31,11 @@ export const useFormBoxStyles = makeStyles(
       color: (props: Partial<FormBoxProps>) =>
         getBoxColor(theme, props.color, props.headerVariant),
       backgroundColor: (props: Partial<FormBoxProps>) =>
-        getContrastBoxColor(theme, props.color, props.headerVariant),
+        getBackgroundBoxColor(
+          theme,
+          props.color,
+          props.headerVariant,
+        ),
       padding: theme.spacing(1, 2),
     },
     headerInput: (props: Partial<FormBoxProps>) => {

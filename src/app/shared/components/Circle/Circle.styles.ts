@@ -25,7 +25,7 @@ const getBackgroudColor = (
   switch (variant) {
     case 'active':
     case 'outlined':
-      return theme.palette[color].contrastText;
+      return theme.palette.background.default;
     case 'contained':
       return theme.palette[color].main;
     default:

@@ -66,3 +66,32 @@ export const getContrastBoxColor = (
     variant === 'outlined' ? 'contained' : 'outlined',
   );
 };
+
+export const getBackgroundBoxColor = (
+  theme: Theme,
+  color: Color = 'primary',
+  variant: BackgroundVariant = 'outlined',
+): string => {
+  const colorMatrix: Record<
+    Color,
+    Record<BackgroundVariant, string>
+  > = {
+    primary: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.primary.main,
+    },
+    primaryLight: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.primary.light,
+    },
+    secondary: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.secondary.main,
+    },
+    secondaryLight: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.secondary.light,
+    },
+  };
+  return colorMatrix[color][variant];
+};
