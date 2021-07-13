@@ -12,6 +12,7 @@ import { Size } from 'app/shared/types/size.type';
 import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export interface FormBoxProps {
+  id?: string;
   title: string | React.ReactNode;
   size?: Size;
   color?: Color;
@@ -25,6 +26,7 @@ export interface FormBoxProps {
 export const FormBox: React.FC<
   React.PropsWithChildren<FormBoxProps>
 > = ({
+  id,
   title,
   size = 'medium',
   color = 'primary',
@@ -66,7 +68,7 @@ export const FormBox: React.FC<
   );
 
   return (
-    <div>
+    <div id={id}>
       <Grid container className={`${styles.header}`}>
         <Grid item xs={12}>
           {titleElement}

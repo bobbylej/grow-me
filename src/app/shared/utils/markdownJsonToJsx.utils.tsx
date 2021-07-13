@@ -96,6 +96,7 @@ export const convertMarkdownGroupToJsx = (
 ): React.ReactElement => {
   return (
     <FormBox
+      id={markdownRuleElementJson.id}
       key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
       color={props?.color}
@@ -129,6 +130,7 @@ export const convertMarkdownSectionToJsx = (
 ): React.ReactElement => {
   return (
     <FormBox
+      id={markdownRuleElementJson.id}
       key={markdownRuleElementJson.id}
       title={markdownRuleElementJson.value}
       color={props?.color}

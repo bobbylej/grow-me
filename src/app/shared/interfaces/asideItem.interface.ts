@@ -1,4 +1,4 @@
-export interface AsideGraphic {
+export interface AsideItem {
   id: string;
   name: string;
   status: 'pending' | 'active' | 'done';
