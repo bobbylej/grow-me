@@ -14,6 +14,7 @@ import {
   SetFormElementValue,
 } from 'app/shared/types/formCreatorAction.type';
 import { generateAsideItemsFromFormElements } from 'app/shared/utils/aside.utils';
+import { IntersectionProvider } from 'app/shared/context/IntersectionContext/IntersectionContext';
 
 export interface FormCreatorProps {
   formElements: FormElement[];
@@ -70,7 +71,7 @@ export const FormCreator = ({
   );
 
   return (
-    <div>
+    <IntersectionProvider>
       <AsideGraphicEditor
         direction="column"
         color={color}
@@ -79,6 +80,6 @@ export const FormCreator = ({
       <Grid container direction="column" className={styles.form}>
         {content}
       </Grid>
-    </div>
+    </IntersectionProvider>
   );
 };

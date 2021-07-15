@@ -1,6 +1,8 @@
+import { IntersectionState } from 'app/shared/enums/intersectionState.enum';
+
 export interface AsideItem {
   id: string;
   name: string;
-  status: 'pending' | 'active' | 'done';
+  status?: IntersectionState;
   type: 'group' | 'section';
 }

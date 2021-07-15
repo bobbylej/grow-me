@@ -22,13 +22,7 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     margin: 0,
     transform: 'translateY(-50%)',
     color: theme.palette[color].main,
-    zIndex: 1,
-
-    '&:hover': {
-      '& $nameItem': {
-        opacity: 1,
-      },
-    },
+    zIndex: 2,
   }),
   blanket: {
     position: 'fixed',
@@ -38,11 +32,13 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     left: '-50%',
     backgroundImage: `linear-gradient(to right, ${theme.palette.background.default}, rgba(255,0,0,0))`,
     transition: 'left 0.3s ease-in',
+    zIndex: 1,
   },
   item: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    cursor: 'pointer',
   },
   nameItem: {
     marginLeft: pxToRem(10),

@@ -1,10 +1,12 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { Circle } from 'app/shared/components/Circle/Circle';
 import { useAsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor.styles';
 import { AsideItem } from 'app/shared/interfaces/asideItem.interface';
 import { SimplyColor } from 'app/shared/types/color.type';
 import { CircleVariant } from 'app/shared/types/circleVariant.type';
+import { IntersectionContext } from 'app/shared/context/IntersectionContext/IntersectionContext';
+import { IntersectionState } from 'app/shared/enums/intersectionState.enum';
 
 export interface AsideGraphicEditorProps {
   items: AsideItem[];
@@ -17,15 +19,18 @@ export const AsideGraphicEditor = ({
   direction,
   color = 'primary',
 }: AsideGraphicEditorProps): ReactElement => {
+  const { state } = useContext(IntersectionContext);
+
   const styles = useAsideGraphicEditor({ color });
 
   const getCircleVariant = (item: AsideItem): CircleVariant => {
-    switch (item.status) {
-      case 'active':
+    const status = state.itemsState[item.id];
+    switch (status || item.status) {
+      case IntersectionState.active:
         return 'active';
-      case 'pending':
+      case IntersectionState.pending:
         return 'outlined';
-      case 'done':
+      case IntersectionState.done:
         return 'contained';
     }
   };

@@ -4,12 +4,15 @@ import {
   Typography,
   TypographyVariant,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { useFormBoxStyles } from 'app/shared/components/Form/FormBox/FormBox.styles';
 import { Color } from 'app/shared/types/color.type';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Size } from 'app/shared/types/size.type';
 import { getSimplyColor } from 'app/shared/utils/color.utils';
+import { IntersectionContext } from 'app/shared/context/IntersectionContext/IntersectionContext';
+import { IntersectionContextActionType } from 'app/shared/context/IntersectionContext/IntersectionContext.actions';
+import { useOnScreen } from 'app/shared/hooks/useOnScreen';
 
 export interface FormBoxProps {
   id?: string;
@@ -37,16 +40,32 @@ export const FormBox: React.FC<
   changeTitle,
   children,
 }: React.PropsWithChildren<FormBoxProps>): React.ReactElement => {
+  const { state, dispatch } = useContext(IntersectionContext);
+  const ref = useRef(null);
+  const itemsIntersectionState = useOnScreen([ref]);
+
+  useEffect(() => {
+    setIntersectionState();
+  }, [id, itemsIntersectionState]);
+
   const styles = useFormBoxStyles({
     size,
     color,
     headerVariant,
     contentVariant,
   });
-
   const headerTextVariant: Record<Size, TypographyVariant> = {
     small: 'body1',
     medium: 'h3',
+  };
+
+  const setIntersectionState = (): void => {
+    if (id && state.itemsState[id] !== itemsIntersectionState[id]) {
+      dispatch({
+        type: IntersectionContextActionType.setIntersection,
+        payload: { id, state: itemsIntersectionState[id] },
+      });
+    }
   };
 
   const onChangeTitle = (title: string): void => {
@@ -68,7 +87,7 @@ export const FormBox: React.FC<
   );
 
   return (
-    <div id={id}>
+    <div id={id} ref={ref}>
       <Grid container className={`${styles.header}`}>
         <Grid item xs={12}>
           {titleElement}

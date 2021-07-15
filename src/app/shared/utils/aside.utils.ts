@@ -16,7 +16,6 @@ export const generateAsideItemsFromFormElements = (
         id: formElement.id,
         name: formElement.value as string,
         type: formElement.type as 'group' | 'section',
-        status: 'pending',
       });
       const children =
         formElement.children &&
