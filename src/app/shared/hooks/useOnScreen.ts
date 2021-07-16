@@ -34,7 +34,7 @@ export const useOnScreen = (
     return () => {
       observer.disconnect();
     };
-  }, []);
+  });
 
   return isIntersecting;
 };

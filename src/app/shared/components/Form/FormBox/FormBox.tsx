@@ -45,8 +45,17 @@ export const FormBox: React.FC<
   const itemsIntersectionState = useOnScreen([ref]);
 
   useEffect(() => {
+    const setIntersectionState = (): void => {
+      if (id && state.itemsState[id] !== itemsIntersectionState[id]) {
+        dispatch({
+          type: IntersectionContextActionType.setIntersection,
+          payload: { id, state: itemsIntersectionState[id] },
+        });
+      }
+    };
+
     setIntersectionState();
-  }, [id, itemsIntersectionState]);
+  }, [id, itemsIntersectionState, state, dispatch]);
 
   const styles = useFormBoxStyles({
     size,
@@ -57,15 +66,6 @@ export const FormBox: React.FC<
   const headerTextVariant: Record<Size, TypographyVariant> = {
     small: 'body1',
     medium: 'h3',
-  };
-
-  const setIntersectionState = (): void => {
-    if (id && state.itemsState[id] !== itemsIntersectionState[id]) {
-      dispatch({
-        type: IntersectionContextActionType.setIntersection,
-        payload: { id, state: itemsIntersectionState[id] },
-      });
-    }
   };
 
   const onChangeTitle = (title: string): void => {
