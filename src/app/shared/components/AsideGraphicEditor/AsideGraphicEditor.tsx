@@ -35,6 +35,16 @@ export const AsideGraphicEditor = ({
     }
   };
 
+  const getNameActiveClass = (
+    item: AsideItem,
+  ): string | undefined => {
+    const status = state.itemsState[item.id];
+    switch (status || item.status) {
+      case IntersectionState.active:
+        return styles.nameItemActive;
+    }
+  };
+
   const scrollToItem = (item: AsideItem): void => {
     document.getElementById(item.id)?.scrollIntoView({
       behavior: 'smooth',
@@ -55,7 +65,11 @@ export const AsideGraphicEditor = ({
           size={item.type === 'group' ? 'medium' : 'small'}
         />
       </div>
-      <Typography className={styles.nameItem}>{item.name}</Typography>
+      <Typography
+        className={`${styles.nameItem} ${getNameActiveClass(item)}`}
+      >
+        {item.name}
+      </Typography>
     </Grid>
   ));
 

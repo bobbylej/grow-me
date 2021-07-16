@@ -45,6 +45,9 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     opacity: 0,
     transition: 'opacity 0.3s ease-in',
   },
+  nameItemActive: {
+    fontWeight: theme.typography.fontWeightBold,
+  },
   circleItem: {
     display: 'flex',
     minWidth: pxToRem(30),
