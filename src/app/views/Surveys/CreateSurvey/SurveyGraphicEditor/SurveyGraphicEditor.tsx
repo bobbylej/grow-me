@@ -6,7 +6,7 @@ import { FormElementValue } from 'app/shared/types/formElementValue.type';
 
 export const SurveyGraphicEditor = (): React.ReactElement => {
   const { state, dispatch } = useContext(FormCreatorContext);
-  const { form } = state;
+  const { formElements } = state;
 
   const onChangeFormElementValue = (
     id: string,
@@ -21,7 +21,7 @@ export const SurveyGraphicEditor = (): React.ReactElement => {
   return (
     <FormCreator
       color="secondary"
-      formElements={form || []}
+      formElements={formElements || []}
       changeFormElementValue={onChangeFormElementValue}
     />
   );

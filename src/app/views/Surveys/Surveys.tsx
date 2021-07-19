@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router';
 import { CreateSurvey } from 'app/views/Surveys/CreateSurvey/CreateSurvey';
 import { SurveysList } from 'app/views/Surveys/SurveysList/SurveysList';
+import { FormCreatorProvider } from 'app/shared/context/FormCreatorContext/FormCreatorContext';
 
 export const Surveys = (): ReactElement => {
   const { path } = useRouteMatch();
@@ -11,7 +12,9 @@ export const Surveys = (): ReactElement => {
         <SurveysList />
       </Route>
       <Route path={`${path}/new`}>
-        <CreateSurvey />
+        <FormCreatorProvider>
+          <CreateSurvey />
+        </FormCreatorProvider>
       </Route>
     </Switch>
   );

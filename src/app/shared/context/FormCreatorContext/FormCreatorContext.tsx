@@ -9,9 +9,12 @@ import {
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
 import { convertJsonToMarkdown } from 'app/shared/utils/markdownJsonToRaw.utils';
+import { MarkdownMock } from 'app/shared/mocks/markdown.mock';
 
 export interface FormCreatorContextState {
-  readonly form?: FormElement[];
+  readonly title?: string;
+  readonly description?: string;
+  readonly formElements?: FormElement[];
   readonly markdown?: string;
 }
 
@@ -26,8 +29,8 @@ export interface FormCreatorProviderProps {
 
 const initialContext: FormCreatorContextModel = {
   state: {
-    form: [],
-    markdown: '',
+    formElements: convertMarkdownToJson(MarkdownMock), // TODO: Temporary formElements, remove later
+    markdown: MarkdownMock, // TODO: Temporary markdown, remove later
   },
   dispatch: () => {
     noContextProviderWarning();
@@ -63,19 +66,30 @@ const FormCreatorReducer = (
   action: FormCreatorContextActions,
 ): FormCreatorContextState => {
   switch (action.type) {
-    case FormCreatorContextActionType.setElementValue:
-      const form =
-        updateFormElementValue(action.payload, state.form) ?? [];
+    case FormCreatorContextActionType.setTitle:
       return {
         ...state,
-        form,
-        markdown: convertJsonToMarkdown(form),
+        title: action.payload,
+      };
+    case FormCreatorContextActionType.setDescription:
+      return {
+        ...state,
+        description: action.payload,
+      };
+    case FormCreatorContextActionType.setElementValue:
+      const formElements =
+        updateFormElementValue(action.payload, state.formElements) ??
+        [];
+      return {
+        ...state,
+        formElements,
+        markdown: convertJsonToMarkdown(formElements),
       };
     case FormCreatorContextActionType.setMarkdown:
       return {
         ...state,
         markdown: action.payload,
-        form: convertMarkdownToJson(action.payload),
+        formElements: convertMarkdownToJson(action.payload),
       };
     default:
       throw new Error('Wrong action type provided');
