@@ -23,11 +23,9 @@ export const ItemSquareList = ({
 
   return (
     <CardContent
-      className={
-        itemSquare && theme === 'template'
-          ? itemSquareTemplate
-          : itemSquareSurvey
-      }
+      className={`${itemSquare} ${
+        theme === 'template' ? itemSquareTemplate : itemSquareSurvey
+      }`}
       key={square.name}
     >
       <Typography variant="body1">

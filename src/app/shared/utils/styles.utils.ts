@@ -3,6 +3,7 @@ import { CSSProperties } from '@material-ui/styles';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Color } from 'app/shared/types/color.type';
 import { Size } from 'app/shared/types/size.type';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export const htmlFontSize = 16;
 
@@ -94,4 +95,15 @@ export const getBackgroundBoxColor = (
     },
   };
   return colorMatrix[color][variant];
+};
+
+export const getTextColor = (
+  theme: Theme,
+  color?: Color,
+  variant?: BackgroundVariant,
+): string => {
+  const simplyColor = getSimplyColor(color);
+  return variant === 'contained'
+    ? theme.palette[simplyColor].contrastText
+    : theme.palette.text.primary;
 };

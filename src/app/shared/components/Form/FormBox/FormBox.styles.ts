@@ -5,6 +5,7 @@ import {
   getBoxColor,
   getBackgroundBoxColor,
   getTypographyStyle,
+  getTextColor,
 } from 'app/shared/utils/styles.utils';
 import { FormBoxProps } from 'app/shared/components/Form/FormBox/FormBox';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
@@ -29,7 +30,7 @@ export const useFormBoxStyles = makeStyles(
       borderColor: (props: Partial<FormBoxProps>) =>
         getBoxColor(theme, props.color),
       color: (props: Partial<FormBoxProps>) =>
-        getBoxColor(theme, props.color, props.headerVariant),
+        getTextColor(theme, props.color, props.headerVariant),
       backgroundColor: (props: Partial<FormBoxProps>) =>
         getBackgroundBoxColor(
           theme,
@@ -41,7 +42,7 @@ export const useFormBoxStyles = makeStyles(
     headerInput: (props: Partial<FormBoxProps>) => {
       const fontStyles = getTypographyStyle(theme, props.size);
       return {
-        color: getBoxColor(theme, props.color, props.headerVariant),
+        color: getTextColor(theme, props.color, props.headerVariant),
         fontSize: fontStyles.fontSize,
         fontWeight: fontStyles.fontWeight,
       };

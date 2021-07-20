@@ -1,7 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { AsidePosition } from 'app/shared/types/asidePosition.type';
-import { SimplyColor } from 'app/shared/types/color.type';
 import { pxToRem } from 'app/shared/utils/styles.utils';
 
 const getAsidePosition = (
@@ -56,11 +55,9 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     },
   },
   asideGraphicEditor: ({
-    color,
     position,
     isFlying,
   }: {
-    color: SimplyColor;
     position: AsidePosition;
     isFlying: boolean;
   }) => ({
@@ -69,7 +66,7 @@ export const useAsideGraphicEditor = makeStyles((theme: Theme) => ({
     left: '1rem',
     width: 'auto',
     margin: 0,
-    color: theme.palette[color].main,
+    color: theme.palette.text.primary,
     zIndex: 2,
     transform: getAsideTransform(position, isFlying),
   }),

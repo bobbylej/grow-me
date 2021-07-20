@@ -30,7 +30,7 @@ export const AsideGraphicEditor = ({
 }: AsideGraphicEditorProps): ReactElement => {
   const { state } = useContext(IntersectionContext);
   const [isFlying, setFlying] = useState(false);
-  const styles = useAsideGraphicEditor({ color, position, isFlying });
+  const styles = useAsideGraphicEditor({ position, isFlying });
   const asideRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
