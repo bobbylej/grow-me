@@ -4,6 +4,7 @@ import { Circle } from 'app/shared/components/Circle/Circle';
 import { useAsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor.styles';
 import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
 import { SimplyColor } from 'app/shared/types/color.type';
+import { CircleVariant } from 'app/shared/types/circleVariant.type';
 
 export interface AsideGraphicEditorProps {
   circleEditor: AsideGraphic[];
@@ -23,16 +24,14 @@ export const AsideGraphicEditor = ({
     circleItem,
   } = useAsideGraphicEditor({ color });
 
-  const getCircleParams = (
-    item: AsideGraphic,
-  ): 'active' | 'outlined' | 'covered' => {
+  const getCircleVariant = (item: AsideGraphic): CircleVariant => {
     switch (item.status) {
       case 'active':
         return 'active';
       case 'pending':
         return 'outlined';
       case 'done':
-        return 'covered';
+        return 'contained';
     }
   };
 
@@ -40,7 +39,7 @@ export const AsideGraphicEditor = ({
     <Grid className={itemGraphicEditor} key={item.id} item>
       <div className={circleItem}>
         <Circle
-          circleParams={getCircleParams(item)}
+          variant={getCircleVariant(item)}
           color={color}
           size={item.type === 'group' ? 'medium' : 'small'}
         />

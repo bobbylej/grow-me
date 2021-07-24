@@ -9,20 +9,23 @@ import { useFormCreatorStyles } from 'app/shared/components/Form/FormCreator/For
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 import { SimplyColor } from 'app/shared/types/color.type';
+import {
+  AddFormElement,
+  SetFormElementValue,
+} from 'app/shared/types/formCreatorAction.type';
 
 export interface FormCreatorProps {
   formElements: FormElement[];
   color?: SimplyColor;
-  changeFormElementValue?: (
-    id: string,
-    value?: FormElementValue,
-  ) => void;
+  changeFormElementValue?: SetFormElementValue;
+  addFormElement?: AddFormElement;
 }
 
 export const FormCreator = ({
   formElements,
   color = 'primary',
   changeFormElementValue,
+  addFormElement,
 }: FormCreatorProps): React.ReactElement => {
   const intl = useIntl();
   const styles = useFormCreatorStyles();
@@ -57,8 +60,17 @@ export const FormCreator = ({
     }),
   };
 
-  const setValue = (id: string, value: FormElementValue): void => {
+  const setValue = (id: string, value?: FormElementValue): void => {
     changeFormElementValue && changeFormElementValue(id, value);
+  };
+
+  const onAddFormElement = (
+    type: MarkdownRuleType,
+    parentId?: string,
+  ): void => {
+    console.log('onAddFormElement', type, parentId);
+
+    addFormElement && addFormElement(type, parentId);
   };
 
   const content = convertMarkdownRulesJsonToJsx(
@@ -68,6 +80,8 @@ export const FormCreator = ({
       placeholders,
     },
     setValue,
+    onAddFormElement,
+    true,
   );
 
   return (

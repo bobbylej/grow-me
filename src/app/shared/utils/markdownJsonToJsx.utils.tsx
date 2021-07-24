@@ -9,7 +9,10 @@ import { RadioCustom } from 'app/shared/components/RadioCustom/RadioCustom';
 import { CheckBoxCustom } from 'app/shared/components/CheckBoxCustom/CheckBoxCustom';
 import { Weight } from 'app/shared/components/Weight/Weight';
 import { MarkdownRuleJsxConverter } from 'app/shared/types/markdownRuleConvertedElements.type';
-import { SetFormElementValue } from 'app/shared/types/setFormElementValue.type';
+import {
+  AddFormElement,
+  SetFormElementValue,
+} from 'app/shared/types/formCreatorAction.type';
 import { FormControl } from 'app/shared/components/Form/FormControl/FormControl';
 import { QuestionSentence } from 'app/shared/components/QuestionSentence/QuestionSentence';
 import { Color } from 'app/shared/types/color.type';
@@ -17,30 +20,44 @@ import { QuestionGroup } from 'app/shared/components/QuestionGroup/QuestionGroup
 import { QuestionItem } from 'app/shared/components/QuestionItem/QuestionItem';
 import { FormTextField } from 'app/shared/components/Form/FormTextField/FormTextField';
 import { getSimplyColor } from 'app/shared/utils/color.utils';
+import { AddFormElementButton } from 'app/shared/components/Form/AddFormElementButton/AddFormElementButton';
+import { getPossibleChildrenTypes } from 'app/shared/utils/markdown.utils';
 
 export const convertMarkdownRulesJsonToJsx = (
   markdownRulesElementsJson: FormElement[],
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
+  root?: boolean,
 ): React.ReactElement[] => {
-  return markdownRulesElementsJson.map((markdownRuleElementJson) =>
-    convertMarkdownRuleJsonToJsx(
-      markdownRuleElementJson,
-      props,
-      setValue,
-    ),
+  const jsxNodes = markdownRulesElementsJson.map(
+    (markdownRuleElementJson) =>
+      convertMarkdownRuleJsonToJsx(
+        markdownRuleElementJson,
+        props,
+        setValue,
+        addFormElement,
+      ),
   );
+  if (root) {
+    jsxNodes.push(
+      convertAddFormElementButtonToJsx(props, addFormElement),
+    );
+  }
+  return jsxNodes;
 };
 
 export const convertMarkdownRuleJsonToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ): React.ReactElement => {
   return getMarkdownRuleJsxConverter(markdownRuleElementJson.type)(
     markdownRuleElementJson,
     props,
     setValue,
+    addFormElement,
   );
 };
 
@@ -75,6 +92,7 @@ export const convertMarkdownGroupToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ): React.ReactElement => {
   return (
     <FormBox
@@ -91,7 +109,14 @@ export const convertMarkdownGroupToJsx = (
           markdownRuleElementJson.children,
           props,
           setValue,
+          addFormElement,
         )}
+      {convertAddFormElementButtonToJsx(
+        props,
+        addFormElement,
+        markdownRuleElementJson.type,
+        markdownRuleElementJson.id,
+      )}
     </FormBox>
   );
 };
@@ -100,6 +125,7 @@ export const convertMarkdownSectionToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ): React.ReactElement => {
   return (
     <FormBox
@@ -117,7 +143,14 @@ export const convertMarkdownSectionToJsx = (
           markdownRuleElementJson.children,
           props,
           setValue,
+          addFormElement,
         )}
+      {convertAddFormElementButtonToJsx(
+        props,
+        addFormElement,
+        markdownRuleElementJson.type,
+        markdownRuleElementJson.id,
+      )}
     </FormBox>
   );
 };
@@ -126,6 +159,7 @@ export const convertMarkdownQuestionSingleToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ): React.ReactElement => {
   const { id, children } = markdownRuleElementJson;
   const questionSentences = children?.filter(
@@ -147,6 +181,7 @@ export const convertMarkdownQuestionSingleToJsx = (
           questionSentences,
           props,
           setValue,
+          addFormElement,
         )
       }
     >
@@ -154,6 +189,12 @@ export const convertMarkdownQuestionSingleToJsx = (
       {convertCheckBoxGroupToJsx(id, children, props, setValue)}
       {otherChildren &&
         convertMarkdownRulesJsonToJsx(otherChildren, props, setValue)}
+      {convertAddFormElementButtonToJsx(
+        props,
+        addFormElement,
+        markdownRuleElementJson.type,
+        markdownRuleElementJson.id,
+      )}
     </SingleQuestion>
   );
 };
@@ -162,6 +203,7 @@ export const convertMarkdownQuestionGroupToJsx = (
   markdownRuleElementJson: FormElement,
   props?: MarkdownRuleProps,
   setValue?: SetFormElementValue,
+  addFormElement?: AddFormElement,
 ): React.ReactElement => {
   const { id, children } = markdownRuleElementJson;
 
@@ -172,6 +214,12 @@ export const convertMarkdownQuestionGroupToJsx = (
         children,
         props,
         setValue,
+      )}
+      {convertAddFormElementButtonToJsx(
+        props,
+        addFormElement,
+        markdownRuleElementJson.type,
+        markdownRuleElementJson.id,
       )}
     </QuestionGroup>
   );
@@ -396,6 +444,27 @@ export const convertMarkdownWeightToJsx = (
       color={props?.color}
       onChangeWeight={(weight) =>
         setValue && setValue(markdownRuleElementJson.id, weight)
+      }
+    />
+  );
+};
+
+export const convertAddFormElementButtonToJsx = (
+  props?: MarkdownRuleProps,
+  addFormElement?: AddFormElement,
+  parentType?: MarkdownRuleType,
+  parentId?: string,
+  possibleChildrenTypes?: MarkdownRuleType[],
+): React.ReactElement => {
+  possibleChildrenTypes =
+    possibleChildrenTypes ?? getPossibleChildrenTypes(parentType);
+  return (
+    <AddFormElementButton
+      key={`${parentId || 'root'}AddButton`}
+      possibleFormElementsTypes={possibleChildrenTypes}
+      color={getSimplyColor(props?.color)}
+      onAdd={(type: MarkdownRuleType) =>
+        addFormElement && addFormElement(type, parentId)
       }
     />
   );
