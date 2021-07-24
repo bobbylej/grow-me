@@ -23,7 +23,8 @@ export const useFormBoxStyles = makeStyles(
   (theme: Theme) => ({
     header: {
       borderStyle: 'solid',
-      borderWidth: '1px',
+      borderWidth: (props: Partial<FormBoxProps>) =>
+        props.noBorder ? 0 : '1px',
       borderTopRightRadius: defaultValues.borderRadius,
       borderTopLeftRadius: defaultValues.borderRadius,
       borderBottomWidth: 0,
@@ -49,14 +50,16 @@ export const useFormBoxStyles = makeStyles(
     },
     content: {
       borderStyle: 'solid',
-      borderWidth: '1px',
+      borderWidth: (props: Partial<FormBoxProps>) =>
+        props.noBorder ? 0 : '1px',
       borderBottomRightRadius: defaultValues.borderRadius,
       borderBottomLeftRadius: defaultValues.borderRadius,
       borderColor: (props: Partial<FormBoxProps>) =>
         getBoxColor(theme, props.color),
       backgroundColor: (props: Partial<FormBoxProps>) =>
         getContentBackgroundColor(theme, props.contentVariant),
-      padding: theme.spacing(2),
+      padding: (props: Partial<FormBoxProps>) =>
+        props.noPadding ? 0 : theme.spacing(2),
 
       '& > *:not(:last-child)': {
         marginBottom: theme.spacing(2),

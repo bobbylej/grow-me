@@ -9,25 +9,25 @@ import { Circle } from '../Circle/Circle';
 import { ItemSquareList } from '../ItemSquareList/ItemSquareList';
 import { useItemSquareStyles } from './ItemSquare.styles';
 import { SquareItem } from 'app/shared/interfaces/squareItem.interface';
+import { Color } from 'app/shared/types/color.type';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export interface ItemSquareProps {
   square: SquareItem;
-  theme: 'survey' | 'template';
+  color: Color;
   handleSquareClick: () => void;
 }
 
 export const ItemSquare = ({
   square,
-  theme,
+  color,
   handleSquareClick,
 }: ItemSquareProps): ReactElement => {
   const {
     itemSquareWrap,
     descriptionSquare,
-    descriptionSquareTemplate,
-    descriptionSquareSurvey,
     circleSurvey,
-  } = useItemSquareStyles();
+  } = useItemSquareStyles({ color });
 
   const getCircleText = (badge: {
     total: number;
@@ -45,9 +45,7 @@ export const ItemSquare = ({
       onClick={handleSquareClick}
     >
       <div className={circleSurvey}>
-        <Circle
-          color={theme === 'template' ? 'primary' : 'secondary'}
-        >
+        <Circle color={getSimplyColor(color)}>
           {getCircleText({
             total: square.badge.total,
             amount: square.badge.amount,
@@ -55,14 +53,8 @@ export const ItemSquare = ({
         </Circle>
       </div>
       <Card>
-        <ItemSquareList theme="survey" square={square} />
-        <CardContent
-          className={`${descriptionSquare} ${
-            theme === 'template'
-              ? descriptionSquareTemplate
-              : descriptionSquareSurvey
-          }`}
-        >
+        <ItemSquareList color={color} square={square} />
+        <CardContent className={descriptionSquare}>
           <Typography variant="body1">{square.name}</Typography>
         </CardContent>
       </Card>

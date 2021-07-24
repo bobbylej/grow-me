@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { FormCreator } from 'app/shared/components/Form/FormCreator/FormCreator';
 import { FormCreatorContext } from 'app/shared/context/FormCreatorContext/FormCreatorContext';
 import { FormCreatorContextActionType } from 'app/shared/context/FormCreatorContext/FormCreatorContext.actions';
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
+import { FormCreator } from 'app/shared/components/Form/FormCreator/FormCreator';
 
 export const SurveyGraphicEditor = (): React.ReactElement => {
   const { state, dispatch } = useContext(FormCreatorContext);
@@ -31,7 +31,7 @@ export const SurveyGraphicEditor = (): React.ReactElement => {
 
   return (
     <FormCreator
-      color="secondary"
+      color="primary"
       formElements={formElements || []}
       changeFormElementValue={onChangeFormElementValue}
       addFormElement={onAddFormElement}

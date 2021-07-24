@@ -29,15 +29,15 @@ export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#73C6B6',
-      light: '#A2D9CE',
-      dark: '#45B39D',
+      main: '#33a68f',
+      light: '#73C6B6',
+      dark: '#237a69',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#138D75',
-      light: '#45B39D',
-      dark: '#0E6655',
+      main: '#D9A5B3',
+      light: '#FFDBE5',
+      dark: '#8C5D69',
       contrastText: '#fff',
     },
     text: {
@@ -56,15 +56,15 @@ export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#73C6B6',
-      light: '#A2D9CE',
-      dark: '#45B39D',
+      main: '#33a68f',
+      light: '#73C6B6',
+      dark: '#237a69',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#33a68f',
-      light: '#3cc7ab',
-      dark: '#237a69',
+      main: '#D9A5B3',
+      light: '#FFDBE5',
+      dark: '#8C5D69',
       contrastText: '#fff',
     },
     text: {

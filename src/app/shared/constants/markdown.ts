@@ -181,7 +181,6 @@ export const MarkdownGroupRule: MarkdownRule = {
 
 export const Markdown: MarkdownRules = {
   group: MarkdownGroupRule,
-  section: MarkdownSectionRule,
   questionSingle: MarkdownQuestionSingleRule,
   questionGroup: MarkdownQuestionGroupRule,
 };
