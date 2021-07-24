@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { AsideGraphicEditor } from 'app/shared/components/AsideGraphicEditor/AsideGraphicEditor';
-import { AsideGraphic } from 'app/shared/interfaces/asideGraphic.interface';
+import { AsideItem } from 'app/shared/interfaces/asideItem.interface';
 import { convertMarkdownRulesJsonToJsx } from 'app/shared/utils/markdownJsonToJsx.utils';
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { useFormCreatorStyles } from 'app/shared/components/Form/FormCreator/FormCreator.styles';
@@ -13,6 +13,8 @@ import {
   AddFormElement,
   SetFormElementValue,
 } from 'app/shared/types/formCreatorAction.type';
+import { generateAsideItemsFromFormElements } from 'app/shared/utils/aside.utils';
+import { IntersectionProvider } from 'app/shared/context/IntersectionContext/IntersectionContext';
 
 export interface FormCreatorProps {
   formElements: FormElement[];
@@ -29,26 +31,6 @@ export const FormCreator = ({
 }: FormCreatorProps): React.ReactElement => {
   const intl = useIntl();
   const styles = useFormCreatorStyles();
-  const circleEditorGraphic: AsideGraphic[] = [
-    {
-      id: 'test 1',
-      name: 'test 1',
-      status: 'done',
-      type: 'group',
-    },
-    {
-      id: 'test 2',
-      name: 'test 2',
-      status: 'active',
-      type: 'section',
-    },
-    {
-      id: 'test 3',
-      name: 'test 3',
-      status: 'pending',
-      type: 'section',
-    },
-  ];
   const placeholders: Partial<Record<MarkdownRuleType, string>> = {
     textInput: intl.formatMessage({
       id: 'FORM_CREATOR.PLACEHOLDER.TEXT_INPUT',
@@ -84,16 +66,20 @@ export const FormCreator = ({
     true,
   );
 
+  const asideItems: AsideItem[] = generateAsideItemsFromFormElements(
+    formElements,
+  );
+
   return (
-    <div>
-      <Grid container direction="column" className={styles.form}>
-        {content}
-      </Grid>
+    <IntersectionProvider>
       <AsideGraphicEditor
         direction="column"
         color={color}
-        circleEditor={circleEditorGraphic}
+        items={asideItems}
       />
-    </div>
+      <Grid container direction="column" className={styles.form}>
+        {content}
+      </Grid>
+    </IntersectionProvider>
   );
 };

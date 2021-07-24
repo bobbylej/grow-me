@@ -56,5 +56,7 @@ export const useCircleStyles = makeStyles((theme: Theme) => ({
     color: theme.palette[color].contrastText,
     backgroundColor: getBackgroudColor(theme, color, variant),
     border: getBorder(theme, color, variant),
+    transition:
+      'background-color 0.3s ease-in, border-width 0.3s ease-in',
   }),
 }));
