@@ -1,5 +1,8 @@
 {
+  "CREATE_SURVEY.ACTION.CREATE_SURVEY": "Umfrage erstellen",
+  "CREATE_SURVEY.ACTION.UPDATE_SURVEY": "Update Umfrage",
   "CREATE_SURVEY.TITLE": "Umfrage erstellen",
+  "EDIT_SURVEY.TITLE": "Umfrage bearbeiten",
   "FORM.LABEL.DESCRIPTION": "Beschreibung",
   "FORM.LABEL.TITLE": "Titel",
   "FORM_CREATOR.PLACEHOLDER.TEXTAREA_INPUT": "Dies ist ein Platz für eine lange Freitext-Antwort",

@@ -1,7 +1,7 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-export const useCreateSurveyStyles = makeStyles((theme: Theme) => ({
+export const useSurveyFormStyles = makeStyles((theme: Theme) => ({
   surveyContainer: {
     marginTop: theme.spacing(4),
   },
@@ -11,5 +11,8 @@ export const useCreateSurveyStyles = makeStyles((theme: Theme) => ({
     '&:first-child': {
       marginTop: 0,
     },
+  },
+  surveyButtons: {
+    textAlign: 'right',
   },
 }));

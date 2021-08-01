@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useFormHeaderStyles } from 'app/shared/components/Form/FormHeader/FormHeader.styles';
 import { FormTextField } from 'app/shared/components/Form/FormTextField/FormTextField';
@@ -53,6 +53,14 @@ export const FormHeader = ({
         break;
     }
   };
+
+  useEffect(() => {
+    setTitle(props.title || '');
+  }, [props.title]);
+
+  useEffect(() => {
+    setDescription(props.description || '');
+  }, [props.description]);
 
   const editableTextFields = (
     <div>

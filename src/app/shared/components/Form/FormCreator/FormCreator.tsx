@@ -51,8 +51,6 @@ export const FormCreator = ({
     type: MarkdownRuleType,
     parentId?: string,
   ): void => {
-    console.log('onAddFormElement', type, parentId);
-
     addFormElement && addFormElement(type, parentId);
   };
 

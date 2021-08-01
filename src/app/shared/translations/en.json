@@ -1,5 +1,8 @@
 {
+  "CREATE_SURVEY.ACTION.CREATE_SURVEY": "Create Survey",
+  "CREATE_SURVEY.ACTION.UPDATE_SURVEY": "Update Survey",
   "CREATE_SURVEY.TITLE": "Create Survey",
+  "EDIT_SURVEY.TITLE": "Edit Survey",
   "FORM.LABEL.DESCRIPTION": "Description",
   "FORM.LABEL.TITLE": "Title",
   "FORM_CREATOR.PLACEHOLDER.TEXTAREA_INPUT": "This is a place for a long open text answer",
