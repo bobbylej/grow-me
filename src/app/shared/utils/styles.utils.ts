@@ -3,6 +3,7 @@ import { CSSProperties } from '@material-ui/styles';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
 import { Color } from 'app/shared/types/color.type';
 import { Size } from 'app/shared/types/size.type';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export const htmlFontSize = 16;
 
@@ -65,4 +66,44 @@ export const getContrastBoxColor = (
     color,
     variant === 'outlined' ? 'contained' : 'outlined',
   );
+};
+
+export const getBackgroundBoxColor = (
+  theme: Theme,
+  color: Color = 'primary',
+  variant: BackgroundVariant = 'outlined',
+): string => {
+  const colorMatrix: Record<
+    Color,
+    Record<BackgroundVariant, string>
+  > = {
+    primary: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.primary.main,
+    },
+    primaryLight: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.primary.light,
+    },
+    secondary: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.secondary.main,
+    },
+    secondaryLight: {
+      outlined: theme.palette.background.default,
+      contained: theme.palette.secondary.light,
+    },
+  };
+  return colorMatrix[color][variant];
+};
+
+export const getTextColor = (
+  theme: Theme,
+  color?: Color,
+  variant?: BackgroundVariant,
+): string => {
+  const simplyColor = getSimplyColor(color);
+  return variant === 'contained'
+    ? theme.palette[simplyColor].contrastText
+    : theme.palette.text.primary;
 };

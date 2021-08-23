@@ -10,6 +10,7 @@ import { Color } from 'app/shared/types/color.type';
 
 export interface MarkdownCheatsheetProps {
   color?: Color;
+  fixed?: boolean;
 }
 
 const generateMarkdownRuleKey = (
@@ -21,9 +22,10 @@ const generateMarkdownRuleKey = (
 
 export const MarkdownCheatsheet = ({
   color = 'primary',
+  fixed = true,
 }: MarkdownCheatsheetProps): React.ReactElement => {
   const intl = useIntl();
-  const styles = useMarkdownCheatsheetStyles();
+  const styles = useMarkdownCheatsheetStyles({ fixed });
   const markdownCheatsheetDocs = useMarkdownCheatsheetDocs();
 
   const getMarkdownRuleElement = (
@@ -95,6 +97,7 @@ export const MarkdownCheatsheet = ({
       color={color}
       size="small"
       contentVariant="contained"
+      noPadding
       contentClassName={styles.markdownContent}
     >
       <table>

@@ -71,13 +71,13 @@ export const CreateSurvey = (): ReactElement => {
           editMode
           title={state.title}
           description={state.description}
-          color="secondary"
+          color="primary"
           onChangeTitle={onChangeTitle}
           onChangeDescription={onChangeDescription}
         />
       </Grid>
       <Grid item xs={12} className={surveySection}>
-        <Tabs tabs={tabs} color="secondary"></Tabs>
+        <Tabs tabs={tabs} color="primary"></Tabs>
       </Grid>
       <Grid item xs={12} className={surveySection}>
         <Switch>

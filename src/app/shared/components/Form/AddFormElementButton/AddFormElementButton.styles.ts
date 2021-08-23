@@ -18,7 +18,7 @@ export const useAddFormElementButtonStyles = makeStyles(
       color = 'primary',
     }: Partial<AddFormElementButtonProps>) => ({
       backgroundColor: theme.palette.background.default,
-      color: theme.palette[color].main,
+      color: theme.palette.text.primary,
       transition: 'all ease-in 0.3s',
 
       '&:hover': {

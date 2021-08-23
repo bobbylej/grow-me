@@ -27,9 +27,7 @@ export const FormMarkdown = ({
     <div>
       <FormBox
         title="Markdown"
-        color={
-          color === 'primary' ? 'primaryLight' : 'secondaryLight'
-        }
+        color={color}
         contentVariant="contained"
       >
         <TextField
@@ -49,9 +47,9 @@ export const FormMarkdown = ({
           defaultMessage: 'MC',
         })}
         size="medium"
-        color={color}
+        color="secondary"
       >
-        <MarkdownCheatsheet color={color} />
+        <MarkdownCheatsheet color="secondary" />
       </FabPopper>
     </div>
   );

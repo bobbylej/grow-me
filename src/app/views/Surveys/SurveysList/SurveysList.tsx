@@ -44,7 +44,7 @@ export const SurveysList = (): ReactElement => {
   const itemsSquareList = itemsSquare.map((item) => (
     <Grid item xs={2} key={item.id}>
       <ItemSquare
-        theme="survey"
+        color="primary"
         square={item}
         handleSquareClick={handleSquareClick}
       />

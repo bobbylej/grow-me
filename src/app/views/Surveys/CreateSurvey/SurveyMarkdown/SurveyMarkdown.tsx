@@ -16,7 +16,7 @@ export const SurveyMarkdown = (): React.ReactElement => {
 
   return (
     <FormMarkdown
-      color="secondary"
+      color="primary"
       markdown={markdown}
       changeMarkdown={(markdown) => onChangeMarkdown(markdown)}
     />

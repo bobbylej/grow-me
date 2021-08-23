@@ -3,33 +3,23 @@ import React, { ReactElement } from 'react';
 import { useIntl } from 'react-intl';
 import { SquareItem } from 'app/shared/interfaces/squareItem.interface';
 import { useItemSquareListStyles } from 'app/shared/components/ItemSquareList/ItemSquareList.styles';
+import { Color } from 'app/shared/types/color.type';
 
 export interface ItemSquareListParams {
   square: SquareItem;
-  theme: 'survey' | 'template';
+  color: Color;
 }
 
 export const ItemSquareList = ({
   square,
-  theme,
+  color,
 }: ItemSquareListParams): ReactElement => {
-  const {
-    itemSquare,
-    itemSquareTemplate,
-    itemSquareSurvey,
-  } = useItemSquareListStyles();
+  const { itemSquare } = useItemSquareListStyles({ color });
 
   const intl = useIntl();
 
   return (
-    <CardContent
-      className={
-        itemSquare && theme === 'template'
-          ? itemSquareTemplate
-          : itemSquareSurvey
-      }
-      key={square.name}
-    >
+    <CardContent className={itemSquare} key={square.name}>
       <Typography variant="body1">
         {square.groupsNumber}{' '}
         {intl.formatMessage({

@@ -8,17 +8,18 @@ import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { useFormCreatorStyles } from 'app/shared/components/Form/FormCreator/FormCreator.styles';
 import { FormElement } from 'app/shared/interfaces/formElement.interface';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
-import { SimplyColor } from 'app/shared/types/color.type';
+import { Color } from 'app/shared/types/color.type';
 import {
   AddFormElement,
   SetFormElementValue,
 } from 'app/shared/types/formCreatorAction.type';
 import { generateAsideItemsFromFormElements } from 'app/shared/utils/aside.utils';
 import { IntersectionProvider } from 'app/shared/context/IntersectionContext/IntersectionContext';
+import { getSimplyColor } from 'app/shared/utils/color.utils';
 
 export interface FormCreatorProps {
   formElements: FormElement[];
-  color?: SimplyColor;
+  color?: Color;
   changeFormElementValue?: SetFormElementValue;
   addFormElement?: AddFormElement;
 }
@@ -74,7 +75,7 @@ export const FormCreator = ({
     <IntersectionProvider>
       <AsideGraphicEditor
         direction="column"
-        color={color}
+        color={getSimplyColor(color)}
         items={asideItems}
       />
       <Grid container direction="column" className={styles.form}>

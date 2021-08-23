@@ -1,15 +1,11 @@
-import {
-  createMuiTheme,
-  Theme,
-  useMediaQuery,
-} from '@material-ui/core';
+import { createMuiTheme, Theme } from '@material-ui/core';
 import React from 'react';
 import { darkTheme, lightTheme } from 'app/shared/constants/theme';
 
 const useTheme = (): Theme => {
-  const prefersDarkMode = useMediaQuery(
-    '(prefers-color-scheme: light)',
-  );
+  const prefersDarkMode =
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const theme = prefersDarkMode ? darkTheme : lightTheme;
 

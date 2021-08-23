@@ -21,6 +21,8 @@ export interface FormBoxProps {
   color?: Color;
   headerVariant?: BackgroundVariant;
   contentVariant?: BackgroundVariant;
+  noPadding?: boolean;
+  noBorder?: boolean;
   contentClassName?: string;
   editMode?: boolean;
   changeTitle?: (title: string) => void;
@@ -35,6 +37,8 @@ export const FormBox: React.FC<
   color = 'primary',
   headerVariant = 'contained',
   contentVariant = 'outlined',
+  noPadding,
+  noBorder,
   contentClassName,
   editMode = false,
   changeTitle,
@@ -62,6 +66,8 @@ export const FormBox: React.FC<
     color,
     headerVariant,
     contentVariant,
+    noPadding,
+    noBorder,
   });
   const headerTextVariant: Record<Size, TypographyVariant> = {
     small: 'body1',

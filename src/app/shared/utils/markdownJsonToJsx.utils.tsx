@@ -135,6 +135,7 @@ export const convertMarkdownSectionToJsx = (
       title={markdownRuleElementJson.value}
       color={props?.color}
       headerVariant="outlined"
+      noBorder
       editMode
       changeTitle={(title) =>
         setValue && setValue(markdownRuleElementJson.id, title)
@@ -464,7 +465,7 @@ export const convertAddFormElementButtonToJsx = (
     <AddFormElementButton
       key={`${parentId || 'root'}AddButton`}
       possibleFormElementsTypes={possibleChildrenTypes}
-      color={getSimplyColor(props?.color)}
+      color="secondary"
       onAdd={(type: MarkdownRuleType) =>
         addFormElement && addFormElement(type, parentId)
       }

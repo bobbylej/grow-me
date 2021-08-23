@@ -20,7 +20,7 @@ export interface AddFormElementButtonProps {
 export const AddFormElementButton = ({
   possibleFormElementsTypes,
   color,
-  variant,
+  variant = 'contained',
   onAdd,
 }: AddFormElementButtonProps): React.ReactElement => {
   const intl = useIntl();

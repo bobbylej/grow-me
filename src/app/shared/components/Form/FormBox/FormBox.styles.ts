@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 import {
   defaultValues,
   getBoxColor,
-  getContrastBoxColor,
+  getBackgroundBoxColor,
   getTypographyStyle,
+  getTextColor,
 } from 'app/shared/utils/styles.utils';
 import { FormBoxProps } from 'app/shared/components/Form/FormBox/FormBox';
 import { BackgroundVariant } from 'app/shared/types/backgroundVariant.type';
@@ -14,7 +15,7 @@ const getContentBackgroundColor = (
   variant?: BackgroundVariant,
 ): string => {
   return variant === 'contained'
-    ? theme.palette.grey[300]
+    ? theme.palette.background.paper
     : theme.palette.background.default;
 };
 
@@ -22,36 +23,43 @@ export const useFormBoxStyles = makeStyles(
   (theme: Theme) => ({
     header: {
       borderStyle: 'solid',
-      borderWidth: '1px',
+      borderWidth: (props: Partial<FormBoxProps>) =>
+        props.noBorder ? 0 : '1px',
       borderTopRightRadius: defaultValues.borderRadius,
       borderTopLeftRadius: defaultValues.borderRadius,
       borderBottomWidth: 0,
       borderColor: (props: Partial<FormBoxProps>) =>
         getBoxColor(theme, props.color),
       color: (props: Partial<FormBoxProps>) =>
-        getBoxColor(theme, props.color, props.headerVariant),
+        getTextColor(theme, props.color, props.headerVariant),
       backgroundColor: (props: Partial<FormBoxProps>) =>
-        getContrastBoxColor(theme, props.color, props.headerVariant),
+        getBackgroundBoxColor(
+          theme,
+          props.color,
+          props.headerVariant,
+        ),
       padding: theme.spacing(1, 2),
     },
     headerInput: (props: Partial<FormBoxProps>) => {
       const fontStyles = getTypographyStyle(theme, props.size);
       return {
-        color: getBoxColor(theme, props.color, props.headerVariant),
+        color: getTextColor(theme, props.color, props.headerVariant),
         fontSize: fontStyles.fontSize,
         fontWeight: fontStyles.fontWeight,
       };
     },
     content: {
       borderStyle: 'solid',
-      borderWidth: '1px',
+      borderWidth: (props: Partial<FormBoxProps>) =>
+        props.noBorder ? 0 : '1px',
       borderBottomRightRadius: defaultValues.borderRadius,
       borderBottomLeftRadius: defaultValues.borderRadius,
       borderColor: (props: Partial<FormBoxProps>) =>
         getBoxColor(theme, props.color),
       backgroundColor: (props: Partial<FormBoxProps>) =>
         getContentBackgroundColor(theme, props.contentVariant),
-      padding: theme.spacing(2),
+      padding: (props: Partial<FormBoxProps>) =>
+        props.noPadding ? 0 : theme.spacing(2),
 
       '& > *:not(:last-child)': {
         marginBottom: theme.spacing(2),

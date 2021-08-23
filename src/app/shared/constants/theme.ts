@@ -29,15 +29,15 @@ export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#009688',
-      light: '#80cbc4',
-      dark: '#00695c',
+      main: '#33a68f',
+      light: '#73C6B6',
+      dark: '#237a69',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#f50057',
-      light: '#ff4081',
-      dark: '#c51162',
+      main: '#D9A5B3',
+      light: '#FFDBE5',
+      dark: '#8C5D69',
       contrastText: '#fff',
     },
     text: {
@@ -45,7 +45,7 @@ export const lightTheme = createMuiTheme({
       secondary: '#fff',
     },
     background: {
-      paper: '#424242',
+      paper: '#e0e0e0',
       default: '#fff',
     },
   },
@@ -56,15 +56,15 @@ export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#009688',
-      light: 'rgb(51, 171, 159)',
-      dark: 'rgb(0, 105, 95)',
+      main: '#33a68f',
+      light: '#73C6B6',
+      dark: '#237a69',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#f50057',
-      light: 'rgb(247, 51, 120)',
-      dark: 'rgb(171, 0, 60)',
+      main: '#D9A5B3',
+      light: '#FFDBE5',
+      dark: '#8C5D69',
       contrastText: '#fff',
     },
     text: {
@@ -72,7 +72,7 @@ export const darkTheme = createMuiTheme({
       secondary: '#3e3e3e',
     },
     background: {
-      paper: '#fff',
+      paper: '#757575',
       default: '#424242',
     },
   },
