@@ -1,7 +1,7 @@
 import { useIntl } from 'react-intl';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Fab, Grid } from '@material-ui/core';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import { ItemSquare } from 'app/shared/components/ItemSquare/ItemSquare';
 import { SquareItem } from 'app/shared/interfaces/squareItem.interface';
@@ -9,11 +9,16 @@ import useLayoutStyles from 'app/shared/styles/layout.styles';
 import { usePageTitle } from 'app/shared/hooks/usePageTitle';
 import { useFabStyles } from 'app/shared/styles/fab.styles';
 import { FabContainer } from 'app/shared/components/FabContainer/FabContainer';
+import { getSurveys } from 'app/shared/api/services/surveys.service';
+
+import { Survey } from 'app/shared/interfaces/survey.interface';
 
 export const SurveysList = (): ReactElement => {
   const intl = useIntl();
+  const [surveys, setSurveys] = useState<Survey[]>([]);
   const { content, listContainer } = useLayoutStyles();
   const { fab } = useFabStyles();
+  const history = useHistory();
   const { url } = useRouteMatch();
 
   usePageTitle(
@@ -23,22 +28,26 @@ export const SurveysList = (): ReactElement => {
     }),
   );
 
-  const itemsSquare: SquareItem[] = new Array(10)
-    .fill({})
-    .map((item, index) => ({
-      id: `test${index}`,
-      name: `Test ${index}`,
-      groupsNumber: index,
-      sectionsNumber: index,
-      questionsNumber: index,
-      badge: {
-        total: index,
-        amount: Math.floor(Math.random() * index),
-      },
-    }));
+  useEffect(() => {
+    getSurveys().then((surveys) => {
+      setSurveys(surveys);
+    });
+  }, []);
 
-  const handleSquareClick = () => {
-    console.log('item clicked');
+  const itemsSquare: SquareItem[] = surveys.map((survey) => ({
+    id: survey.id,
+    name: survey.title,
+    groupsNumber: survey.counter?.groups ?? 0,
+    sectionsNumber: survey.counter?.sections ?? 0,
+    questionsNumber: survey.counter?.questions ?? 0,
+    badge: {
+      total: survey.statistics?.sent ?? 0,
+      amount: survey.statistics?.filled ?? 0,
+    },
+  }));
+
+  const handleSquareClick = (item: SquareItem): void => {
+    history.push(`${url}/${item.id}`);
   };
 
   const itemsSquareList = itemsSquare.map((item) => (
@@ -46,7 +55,7 @@ export const SurveysList = (): ReactElement => {
       <ItemSquare
         color="primary"
         square={item}
-        handleSquareClick={handleSquareClick}
+        handleSquareClick={() => handleSquareClick(item)}
       />
     </Grid>
   ));

@@ -1,14 +1,27 @@
+import { FormCreatorContextState } from 'app/shared/context/FormCreatorContext/FormCreatorContext';
 import { ContextAction } from 'app/shared/interfaces/context.interface';
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 
 export enum FormCreatorContextActionType {
+  setState = 'setState',
+  setId = 'setId',
   setTitle = 'setTitle',
   setDescription = 'setDescription',
   setElementValue = 'setElementValue',
   setMarkdown = 'setMarkdown',
   addElement = 'addElement',
 }
+
+type SetStateAction = ContextAction<
+  FormCreatorContextActionType.setState,
+  FormCreatorContextState
+>;
+
+type SetIdAction = ContextAction<
+  FormCreatorContextActionType.setId,
+  string
+>;
 
 type SetTitleAction = ContextAction<
   FormCreatorContextActionType.setTitle,
@@ -36,6 +49,8 @@ type AddFormElementValueAction = ContextAction<
 >;
 
 export type FormCreatorContextActions =
+  | SetStateAction
+  | SetIdAction
   | SetTitleAction
   | SetDescriptionAction
   | SetFormElementValueAction

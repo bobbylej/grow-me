@@ -1,5 +1,8 @@
 {
+  "CREATE_SURVEY.ACTION.CREATE_SURVEY": "Utwórz ankietę",
+  "CREATE_SURVEY.ACTION.UPDATE_SURVEY": "Ankieta aktualizacyjna",
   "CREATE_SURVEY.TITLE": "Utwórz ankietę",
+  "EDIT_SURVEY.TITLE": "Edycja ankiety",
   "FORM.LABEL.DESCRIPTION": "Opis",
   "FORM.LABEL.TITLE": "Tytuł",
   "FORM_CREATOR.PLACEHOLDER.TEXTAREA_INPUT": "To jest miejsce na długą odpowiedź otwartym tekstem",

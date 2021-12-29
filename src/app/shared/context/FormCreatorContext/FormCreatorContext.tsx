@@ -9,11 +9,11 @@ import {
 import { FormElementValue } from 'app/shared/types/formElementValue.type';
 import { convertMarkdownToJson } from 'app/shared/utils/markdownRawToJson.utils';
 import { convertJsonToMarkdown } from 'app/shared/utils/markdownJsonToRaw.utils';
-import { MarkdownMock } from 'app/shared/mocks/markdown.mock';
 import { MarkdownRuleType } from 'app/shared/types/markdownRule.type';
 import { generateFormElementByType } from 'app/shared/utils/markdown.utils';
 
 export interface FormCreatorContextState {
+  readonly id?: string;
   readonly title?: string;
   readonly description?: string;
   readonly formElements?: FormElement[];
@@ -31,8 +31,8 @@ export interface FormCreatorProviderProps {
 
 const initialContext: FormCreatorContextModel = {
   state: {
-    formElements: convertMarkdownToJson(MarkdownMock), // TODO: Temporary formElements, remove later
-    markdown: MarkdownMock, // TODO: Temporary markdown, remove later
+    // formElements: convertMarkdownToJson(MarkdownMock), // TODO: Temporary formElements, remove later
+    // markdown: MarkdownMock, // TODO: Temporary markdown, remove later
   },
   dispatch: () => {
     noContextProviderWarning();
@@ -66,9 +66,9 @@ const updateFormElementValue = (
 const addFormElement = (
   { type, parentId }: { type: MarkdownRuleType; parentId?: string },
   formElements?: FormElement[],
-  formElementaParentId?: string,
+  formElementsParentId?: string,
 ): FormElement[] | undefined => {
-  if (!parentId || formElementaParentId === parentId) {
+  if (!parentId || formElementsParentId === parentId) {
     const newFormElement = generateFormElementByType(type);
     return [...(formElements || []), newFormElement];
   }
@@ -87,6 +87,15 @@ const FormCreatorReducer = (
   action: FormCreatorContextActions,
 ): FormCreatorContextState => {
   switch (action.type) {
+    case FormCreatorContextActionType.setState:
+      return {
+        ...action.payload,
+      };
+    case FormCreatorContextActionType.setId:
+      return {
+        ...state,
+        id: action.payload,
+      };
     case FormCreatorContextActionType.setTitle:
       return {
         ...state,
@@ -117,8 +126,6 @@ const FormCreatorReducer = (
         action.payload,
         state.formElements,
       );
-      console.log(formElementsWithNewElement);
-
       return {
         ...state,
         formElements: formElementsWithNewElement,

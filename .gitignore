@@ -27,3 +27,6 @@ simpleen.config.json
 
 # eslint
 .eslintcache
+
+# environment variables
+.env

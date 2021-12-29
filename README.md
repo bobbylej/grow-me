@@ -2,11 +2,28 @@
 
 Application to create, send, summarize surveys, and gather the feedback in meaningful way.
 
+## Demo
+
+Demo preview of the application: [DEMO](https://growme.netlify.app/)
+
 ## Environment
 
 **Node**: 14.15.3
 
 **Yarn**: 1.22.10
+
+## Environment variables
+
+In the project root directory, you have to create `.env` file with such variables:
+
+- REACT_APP_FIREBASE_API_KEY
+- REACT_APP_FIREBASE_AUTH_DOMAIN
+- REACT_APP_FIREBASE_PROJECT_ID
+- REACT_APP_FIREBASE_STORAGE_BUCKET
+- REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+- REACT_APP_FIREBASE_APP_ID
+
+You can get values for these variables from the admin of the repository.
 
 ## Available Scripts
 
