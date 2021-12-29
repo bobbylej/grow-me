@@ -5,12 +5,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import { IntlProvider } from 'react-intl';
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch,
 } from 'react-router-dom';
 import useTheme from 'app/shared/hooks/useTheme';
 import useIntlProvider from 'app/shared/hooks/useIntlProvider';
-import PageOne from 'app/views/PageOne/PageOne';
 import { AppProvider } from 'app/shared/context/AppContext/AppContext';
 import { Surveys } from 'app/views/Surveys/Surveys';
 import { PageWrapper } from 'app/shared/components/PageWrapper/PageWrapper';
@@ -48,8 +48,8 @@ const App = (): ReactElement => {
                     <Route path={`/${RouterPath.Surveys}`}>
                       <Surveys />
                     </Route>
-                    <Route path="/">
-                      <PageOne />
+                    <Route exact path="/">
+                      <Redirect to={`/${RouterPath.Surveys}`} />
                     </Route>
                   </Switch>
                 </PageWrapper>

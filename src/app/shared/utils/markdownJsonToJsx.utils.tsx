@@ -30,7 +30,7 @@ export const convertMarkdownRulesJsonToJsx = (
   addFormElement?: AddFormElement,
   root?: boolean,
 ): React.ReactElement[] => {
-  const jsxNodes = markdownRulesElementsJson.map(
+  const jsxNodes = markdownRulesElementsJson?.map(
     (markdownRuleElementJson) =>
       convertMarkdownRuleJsonToJsx(
         markdownRuleElementJson,

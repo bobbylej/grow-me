@@ -2,6 +2,10 @@
 
 Application to create, send, summarize surveys, and gather the feedback in meaningful way.
 
+## Demo
+
+Demo preview of the application: [DEMO](https://growme.netlify.app/)
+
 ## Environment
 
 **Node**: 14.15.3
