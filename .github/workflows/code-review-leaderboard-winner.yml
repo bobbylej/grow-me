@@ -1,0 +1,186 @@
+name: code-review-leaderboard-winner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/code-review-leaderboard-winner.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: code-review-leaderboard-winner
+  cancel-in-progress: true
+
+jobs:
+  code-review-leaderboard-winner:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Find PR associated with current commit
+        uses: jwalton/gh-find-current-pr@v1
+        id: pr-finder
+
+      - name: Count Reviews
+        id: count-reviews
+        uses: actions/github-script@v7
+        with:
+          script: |
+            async function getFilteredPullRequests(owner, repo, startDate) {
+              const { data: pullRequests } = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: 'all', // Fetch both open and closed pull requests
+                per_page: 100,
+                sort: 'created', // Sort by creation date
+                direction: 'desc', // Newest first
+              });
+
+              // Filter pull requests opened or merged within the last week
+              const filteredPullRequests = pullRequests;
+
+              const filteredPRs = [];
+
+              for (const pr of filteredPullRequests) {
+                // Fetch reviews for each pull request
+                const { data: reviews } = await github.rest.pulls.listReviews({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                });
+
+                // Sort reviews by submission date
+                reviews.sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+
+                // Check if the first review is approved or changes requested
+                const firstReview = reviews[0];
+                if (firstReview && (firstReview.state === 'APPROVED' || firstReview.state === 'CHANGES_REQUESTED')) {
+                  filteredPRs.push({ pr, reviews: [firstReview] });
+                }
+              }
+
+              return filteredPRs;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Calculate date for last Friday at 7:00 AM UTC
+            const now = new Date();
+            const dayOfWeek = now.getUTCDay();
+            const daysSinceFriday = (dayOfWeek + 2) % 7 + 1; // Calculate days since last Friday
+            const lastFriday = new Date(now);
+            lastFriday.setUTCDate(now.getUTCDate() - daysSinceFriday);
+            lastFriday.setUTCHours(7, 0, 0, 0); // Set time to 7:00 AM UTC
+
+            const filteredPRs = await getFilteredPullRequests(owner, repo, lastFriday);
+
+            const reviewCounts = filteredPRs.reduce((acc, { reviews }) => {
+              reviews.forEach(review => {
+                const user = review.user.login;
+                if (!acc[user]) {
+                  acc[user] = { approve: 0, request_changes: 0 };
+                }
+                if (review.state === 'APPROVED') {
+                  acc[user].approve += 1;
+                } else if (review.state === 'CHANGES_REQUESTED') {
+                  acc[user].request_changes += 1;
+                }
+              });
+              return acc;
+            }, {});
+
+            const sortedReviewCounts = Object.entries(reviewCounts).sort(([, a], [, b]) => {
+              const totalA = a.approve + a.request_changes;
+              const totalB = b.approve + b.request_changes;
+              return totalB - totalA;
+            });
+
+            console.log('Sorted Review Counts:', sortedReviewCounts);
+
+            core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
+
+      - name: Get Winner
+        id: get-winner
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sortedReviewCountsStr = process.env.sortedReviewCounts;
+
+            if (!sortedReviewCountsStr) {
+              throw new Error('sortedReviewCounts is empty or undefined');
+            }
+
+            const sortedReviewCounts = JSON.parse(sortedReviewCountsStr);
+
+            let winner = '';
+            let winReviews = '';
+            // Only show the first place
+            if (sortedReviewCounts.length > 0) {
+              const [user, counts] = sortedReviewCounts[0];
+              const total = counts.approve + counts.request_changes;
+              winner = user;
+              winReviews = total;
+            }
+
+            core.setOutput('winner', winner);
+            core.setOutput('winReviews', winReviews);
+        env:
+          sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
+
+      - name: Post Review Summary Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: code-review-summary
+          number: ${{ steps.pr-finder.outputs.pr }}
+          message: ${{ steps.get-winner.outputs.winner }} (${{ steps.get-winner.outputs.winReviews }} reviews)
+
+      - name: Send Review Summary to Slack
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATIONS_BOT_TOKEN }}
+        with:
+          channel-id: ${{ vars.MAIN_SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Our Code Review Champion of the Week!"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "👑 *${{ steps.get-winner.outputs.winner }}* (${{ steps.get-winner.outputs.winReviews }} reviews)"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                    }
+                  ]
+                }
+              ]
+            }
