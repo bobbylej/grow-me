@@ -31,14 +31,15 @@ jobs:
         with:
           script: |
             const now = new Date();
-            const targetDay = parseInt(process.env.CODE_REVIEW_LEADERBOARD_START_DAY, 10) || 5; // Default to Friday (5)
-            const targetHour = parseInt(process.env.CODE_REVIEW_LEADERBOARD_START_HOUR, 10) || 7; // Default to 7:00 AM UTC
+            const targetDay = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_DAY }}", 10) || 5; // Default to Friday (5)
+            const targetHour = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_HOUR }}", 10) || 7; // Default to 7:00 AM UTC
+            const targetMinute = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_MINUTE }}", 10) || 0; // Default to 0 minutes
 
             const dayOfWeek = now.getUTCDay();
             const daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
             const lastTargetDay = new Date(now);
             lastTargetDay.setUTCDate(now.getUTCDate() - daysSinceTargetDay);
-            lastTargetDay.setUTCHours(targetHour, 0, 0, 0); // Set time to target hour
+            lastTargetDay.setUTCHours(targetHour, targetMinute, 0, 0); // Set time to target hour and minute
 
             core.setOutput('lastTargetDay', lastTargetDay.toISOString());
 
@@ -113,11 +114,8 @@ jobs:
               return totalB - totalA;
             });
 
-            console.log('Sorted Review Counts:', sortedReviewCounts);
-
             core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
             core.setOutput('prCount', filteredPRs.length);
-
         env:
           lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
@@ -138,7 +136,13 @@ jobs:
 
             const sortedReviewCounts = JSON.parse(sortedReviewCountsStr);
 
-            let comment = `### Code Review Highlights from the last ${prCount} PRs (since last Friday at 7:00 AM UTC)\n\n`;
+            const lastTargetDayDate = new Date(process.env.lastTargetDay);
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const dayName = dayNames[lastTargetDayDate.getUTCDay()];
+            const hour = lastTargetDayDate.getUTCHours();
+            const minutes = lastTargetDayDate.getUTCMinutes().toString().padStart(2, '0'); // Ensure two-digit format
+
+            let comment = `### Code Review Highlights from the last ${prCount} PRs (since last ${dayName} at ${hour}:${minutes} AM UTC)\n\n`;
             comment += 'Only the first reviews in the Pull Request get counted 😱\nSo hurry up and review, because the early bird gets the code review glory! 🚀⏰🏆\n\n';
             comment += '| User | Total Reviews | Approvals | Changes Requested |\n';
             comment += '|------|---------------|-----------|-------------------|\n';
@@ -161,6 +165,7 @@ jobs:
         env:
           sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
           prCount: ${{ steps.count-reviews.outputs.prCount }}
+          lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
       - name: Post Review Summary Comment
         uses: marocchino/sticky-pull-request-comment@v2

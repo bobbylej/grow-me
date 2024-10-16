@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/code-review-leaderboard-winner.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * 5' # Runs every Friday at 7 AM UTC
+
 
 concurrency:
   group: code-review-leaderboard-winner
@@ -17,6 +20,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Calculate Last Target Day
+        id: calculate-target-day
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const targetDay = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_DAY }}", 10) || 5; // Default to Friday (5)
+            const targetHour = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_HOUR }}", 10) || 7; // Default to 7:00 AM UTC
+            const targetMinute = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_MINUTE }}", 10) || 0; // Default to 0 minutes
+
+            const dayOfWeek = now.getUTCDay();
+            const daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
+            const lastTargetDay = new Date(now);
+            lastTargetDay.setUTCDate(now.getUTCDate() - daysSinceTargetDay);
+            lastTargetDay.setUTCHours(targetHour, targetMinute, 0, 0); // Set time to target hour and minute
+
+            core.setOutput('lastTargetDay', lastTargetDay.toISOString());
 
       - name: Count Reviews
         id: count-reviews
@@ -64,15 +85,9 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
 
-            // Calculate date for last Friday at 7:00 AM UTC
-            const now = new Date();
-            const dayOfWeek = now.getUTCDay();
-            const daysSinceFriday = (dayOfWeek + 2) % 7 + 1; // Calculate days since last Friday
-            const lastFriday = new Date(now);
-            lastFriday.setUTCDate(now.getUTCDate() - daysSinceFriday);
-            lastFriday.setUTCHours(7, 0, 0, 0); // Set time to 7:00 AM UTC
+            const lastTargetDay = new Date(process.env.lastTargetDay); // Use the output from the previous step
 
-            const filteredPRs = await getFilteredPullRequests(owner, repo, lastFriday);
+            const filteredPRs = await getFilteredPullRequests(owner, repo, lastTargetDay);
 
             const reviewCounts = filteredPRs.reduce((acc, { reviews }) => {
               reviews.forEach(review => {
@@ -96,6 +111,8 @@ jobs:
             });
 
             core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
+        env:
+          lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
       - name: Get Winner
         id: get-winner
@@ -126,6 +143,7 @@ jobs:
           sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
 
       - name: Send Review Summary to Slack
+        if: ${{ steps.get-winner.outputs.winner != '' }}
         uses: slackapi/slack-github-action@v1.26.0
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATIONS_BOT_TOKEN }}
