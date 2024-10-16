@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs: 
-  count-code-reviews:
+  code-review-leaderboard:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -59,9 +59,10 @@ jobs:
               });
 
               // Filter pull requests opened or merged within the last week
-              const filteredPullRequests = pullRequests.filter(pr => {
-                return new Date(pr.created_at) >= startDate || (pr.merged_at && new Date(pr.merged_at) >= startDate);
-              });
+              //const filteredPullRequests = pullRequests.filter(pr => {
+              //  return new Date(pr.created_at) >= startDate || (pr.merged_at && new Date(pr.merged_at) >= startDate);
+              //});
+              const filteredPullRequests = pullRequests;
 
               const filteredPRs = [];
 
@@ -84,6 +85,32 @@ jobs:
               }
 
               return filteredPRs;
+            }
+
+            function calculateReviewDuration(filteredPRs) {
+              function countMedian(reviewDurations) {
+                if (reviewDurations.length === 0) return 0;
+                reviewDurations.sort((a, b) => a - b);
+                const half = Math.floor(reviewDurations.length / 2);
+                if (reviewDurations.length % 2) return reviewDurations[half];
+                return (reviewDurations[half - 1] + reviewDurations[half]) / 2.0;
+              }
+
+              function countMean(reviewDurations) {
+                if (reviewDurations.length === 0) return 0;
+                const sum = reviewDurations.reduce((sum, duration) => sum + duration, 0);
+                return sum / reviewDurations.length;
+              }
+
+              const reviewDurations = filteredPRs
+                .filter(({ pr }) => pr.merged_at)
+                .map(({ pr }) => {
+                  const openDate = new Date(pr.created_at);
+                  const mergeDate = new Date(pr.merged_at);
+                  return mergeDate - openDate;
+                });
+
+              return [countMedian(reviewDurations), countMean(reviewDurations)];
             }
 
             const owner = context.repo.owner;
@@ -114,8 +141,12 @@ jobs:
               return totalB - totalA;
             });
 
+            const [medianReviewDuration, meanReviewDuration] = calculateReviewDuration(filteredPRs);
+
             core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
             core.setOutput('prCount', filteredPRs.length);
+            core.setOutput('medianReviewDuration', medianReviewDuration);
+            core.setOutput('meanReviewDuration', meanReviewDuration);
         env:
           lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
@@ -126,9 +157,8 @@ jobs:
           script: |
             const sortedReviewCountsStr = process.env.sortedReviewCounts;
             const prCount = process.env.prCount;
-
-            console.log('sortedReviewCountsStr:', sortedReviewCountsStr);
-            console.log('prCount:', prCount);
+            const medianReviewDuration = process.env.medianReviewDuration;
+            const meanReviewDuration = process.env.meanReviewDuration;
 
             if (!sortedReviewCountsStr) {
               throw new Error('sortedReviewCounts is empty or undefined');
@@ -142,7 +172,20 @@ jobs:
             const hour = lastTargetDayDate.getUTCHours();
             const minutes = lastTargetDayDate.getUTCMinutes().toString().padStart(2, '0'); // Ensure two-digit format
 
+            function formatDuration(durationInMilliseconds) {
+              const totalMinutes = Math.round(durationInMilliseconds / (1000 * 60)); // Convert ms to minutes
+              const days = Math.floor(totalMinutes / (24 * 60));
+              const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+              const minutes = totalMinutes % 60;
+
+              return `${days > 0 ? `${days} days ` : ''}${hours > 0 || days > 0 ? `${hours} hours ` : ''}${minutes} minutes`;
+            }
+
+            const formattedMedianDuration = formatDuration(medianReviewDuration);
+            const formattedMeanDuration = formatDuration(meanReviewDuration);
+
             let comment = `### Code Review Highlights from the last ${prCount} PRs (since last ${dayName} at ${hour}:${minutes} AM UTC)\n\n`;
+            comment += `#### Time to merge Pull Request:  **${formattedMedianDuration}** (Median), **${formattedMeanDuration}** (Mean)\n`;
             comment += 'Only the first reviews in the Pull Request get counted 😱\nSo hurry up and review, because the early bird gets the code review glory! 🚀⏰🏆\n\n';
             comment += '| User | Total Reviews | Approvals | Changes Requested |\n';
             comment += '|------|---------------|-----------|-------------------|\n';
@@ -165,6 +208,8 @@ jobs:
         env:
           sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
           prCount: ${{ steps.count-reviews.outputs.prCount }}
+          medianReviewDuration: ${{ steps.count-reviews.outputs.medianReviewDuration }}
+          meanReviewDuration: ${{ steps.count-reviews.outputs.meanReviewDuration }}
           lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
       - name: Post Review Summary Comment

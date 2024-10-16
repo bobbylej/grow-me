@@ -142,7 +142,7 @@ jobs:
         env:
           sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
 
-      - name: Send Review Summary to Slack
+      - name: Announce Winner
         if: ${{ steps.get-winner.outputs.winner != '' }}
         uses: slackapi/slack-github-action@v1.26.0
         env:
