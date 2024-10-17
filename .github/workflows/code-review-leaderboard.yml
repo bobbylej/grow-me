@@ -1,0 +1,221 @@
+name: code-review-leaderboard
+
+on:
+  push:
+    paths:
+      - '.github/workflows/code-review-leaderboard.yml'
+  pull_request:
+    types: [opened]
+  pull_request_review:
+    types: [submitted]
+
+concurrency:
+  group: code-review-leaderboard
+  cancel-in-progress: true
+
+jobs: 
+  code-review-leaderboard:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Find PR associated with current commit
+        uses: jwalton/gh-find-current-pr@v1
+        id: pr-finder
+
+      - name: Calculate Last Target Day
+        id: calculate-target-day
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const targetDay = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_DAY }}", 10) || 5; // Default to Friday (5)
+            const targetHour = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_HOUR }}", 10) || 7; // Default to 7:00 AM UTC
+            const targetMinute = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_MINUTE }}", 10) || 0; // Default to 0 minutes
+
+            const dayOfWeek = now.getUTCDay();
+            const daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
+            const lastTargetDay = new Date(now);
+            lastTargetDay.setUTCDate(now.getUTCDate() - daysSinceTargetDay);
+            lastTargetDay.setUTCHours(targetHour, targetMinute, 0, 0); // Set time to target hour and minute
+
+            core.setOutput('lastTargetDay', lastTargetDay.toISOString());
+
+      - name: Count Reviews
+        id: count-reviews
+        uses: actions/github-script@v7
+        with:
+          script: |
+            async function getFilteredPullRequests(owner, repo, startDate) {
+              const { data: pullRequests } = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: 'all', // Fetch both open and closed pull requests
+                per_page: 100,
+                sort: 'created', // Sort by creation date
+                direction: 'desc', // Newest first
+              });
+
+              // Filter pull requests opened or merged within the last week
+              //const filteredPullRequests = pullRequests.filter(pr => {
+              //  return new Date(pr.created_at) >= startDate || (pr.merged_at && new Date(pr.merged_at) >= startDate);
+              //});
+              const filteredPullRequests = pullRequests;
+
+              const filteredPRs = [];
+
+              for (const pr of filteredPullRequests) {
+                // Fetch reviews for each pull request
+                const { data: reviews } = await github.rest.pulls.listReviews({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                });
+
+                // Sort reviews by submission date
+                reviews.sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+
+                // Check if the first review is approved or changes requested
+                const firstReview = reviews[0];
+                if (firstReview && (firstReview.state === 'APPROVED' || firstReview.state === 'CHANGES_REQUESTED')) {
+                  filteredPRs.push({ pr, reviews: [firstReview] });
+                }
+              }
+
+              return filteredPRs;
+            }
+
+            function calculateReviewDuration(filteredPRs) {
+              function countMedian(reviewDurations) {
+                if (reviewDurations.length === 0) return 0;
+                reviewDurations.sort((a, b) => a - b);
+                const half = Math.floor(reviewDurations.length / 2);
+                if (reviewDurations.length % 2) return reviewDurations[half];
+                return (reviewDurations[half - 1] + reviewDurations[half]) / 2.0;
+              }
+
+              function countMean(reviewDurations) {
+                if (reviewDurations.length === 0) return 0;
+                const sum = reviewDurations.reduce((sum, duration) => sum + duration, 0);
+                return sum / reviewDurations.length;
+              }
+
+              const reviewDurations = filteredPRs
+                .filter(({ pr }) => pr.merged_at)
+                .map(({ pr }) => {
+                  const openDate = new Date(pr.created_at);
+                  const mergeDate = new Date(pr.merged_at);
+                  return mergeDate - openDate;
+                });
+
+              return [countMedian(reviewDurations), countMean(reviewDurations)];
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const lastTargetDay = new Date(process.env.lastTargetDay); // Use the output from the previous step
+
+            const filteredPRs = await getFilteredPullRequests(owner, repo, lastTargetDay);
+
+            const reviewCounts = filteredPRs.reduce((acc, { reviews }) => {
+              reviews.forEach(review => {
+                const user = review.user.login;
+                if (!acc[user]) {
+                  acc[user] = { approve: 0, request_changes: 0 };
+                }
+                if (review.state === 'APPROVED') {
+                  acc[user].approve += 1;
+                } else if (review.state === 'CHANGES_REQUESTED') {
+                  acc[user].request_changes += 1;
+                }
+              });
+              return acc;
+            }, {});
+
+            const sortedReviewCounts = Object.entries(reviewCounts).sort(([, a], [, b]) => {
+              const totalA = a.approve + a.request_changes;
+              const totalB = b.approve + b.request_changes;
+              return totalB - totalA;
+            });
+
+            const [medianReviewDuration, meanReviewDuration] = calculateReviewDuration(filteredPRs);
+
+            core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
+            core.setOutput('prCount', filteredPRs.length);
+            core.setOutput('medianReviewDuration', medianReviewDuration);
+            core.setOutput('meanReviewDuration', meanReviewDuration);
+        env:
+          lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
+
+      - name: Generate Comment
+        id: generate-comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sortedReviewCountsStr = process.env.sortedReviewCounts;
+            const prCount = process.env.prCount;
+            const medianReviewDuration = process.env.medianReviewDuration;
+            const meanReviewDuration = process.env.meanReviewDuration;
+
+            if (!sortedReviewCountsStr) {
+              throw new Error('sortedReviewCounts is empty or undefined');
+            }
+
+            const sortedReviewCounts = JSON.parse(sortedReviewCountsStr);
+
+            const lastTargetDayDate = new Date(process.env.lastTargetDay);
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const dayName = dayNames[lastTargetDayDate.getUTCDay()];
+            const hour = lastTargetDayDate.getUTCHours();
+            const minutes = lastTargetDayDate.getUTCMinutes().toString().padStart(2, '0'); // Ensure two-digit format
+
+            function formatDuration(durationInMilliseconds) {
+              const totalMinutes = Math.round(durationInMilliseconds / (1000 * 60)); // Convert ms to minutes
+              const days = Math.floor(totalMinutes / (24 * 60));
+              const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+              const minutes = totalMinutes % 60;
+
+              return `${days > 0 ? `${days} days ` : ''}${hours > 0 || days > 0 ? `${hours} hours ` : ''}${minutes} minutes`;
+            }
+
+            const formattedMedianDuration = formatDuration(medianReviewDuration);
+            const formattedMeanDuration = formatDuration(meanReviewDuration);
+
+            let comment = `### Code Review Highlights from the last ${prCount} PRs (since last ${dayName} at ${hour}:${minutes} AM UTC)\n\n`;
+            comment += `#### Time to merge Pull Request:  **${formattedMedianDuration}** (Median), **${formattedMeanDuration}** (Mean)\n`;
+            comment += 'Only the first reviews in the Pull Request get counted 😱\nSo hurry up and review, because the early bird gets the code review glory! 🚀⏰🏆\n\n';
+            comment += '| User | Total Reviews | Approvals | Changes Requested |\n';
+            comment += '|------|---------------|-----------|-------------------|\n';
+
+            const emojiMap = {
+              1: '🎊', // First place
+              2: '🤩', // Second place
+              3: '👏', // Third place
+              default: '😜', // Other places
+            };
+
+            for (let i = 0; i < sortedReviewCounts.length; i++) {
+              const [user, counts] = sortedReviewCounts[i];
+              const total = counts.approve + counts.request_changes;
+              const emoji = emojiMap[i + 1] || emojiMap.default; // Get emoji based on rank
+              comment += `| ${emoji} **${user}** | ${total} | ${counts.approve} | ${counts.request_changes} |\n`;
+            }
+
+            core.setOutput('comment', comment);
+        env:
+          sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
+          prCount: ${{ steps.count-reviews.outputs.prCount }}
+          medianReviewDuration: ${{ steps.count-reviews.outputs.medianReviewDuration }}
+          meanReviewDuration: ${{ steps.count-reviews.outputs.meanReviewDuration }}
+          lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
+
+      - name: Post Review Summary Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: code-review-summary
+          number: ${{ steps.pr-finder.outputs.pr }}
+          message: ${{ steps.generate-comment.outputs.comment }}
