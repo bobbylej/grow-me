@@ -1,4 +1,4 @@
-name: code-review-leaderboard-winner
+name: count-code-reviews-winner
 
 on:
   push:
@@ -8,18 +8,17 @@ on:
   schedule:
     - cron: '0 7 * * 5' # Runs every Friday at 7 AM UTC
 
-
 concurrency:
-  group: code-review-leaderboard-winner
+  group: count-code-reviews-winner
   cancel-in-progress: true
 
 jobs:
-  code-review-leaderboard-winner:
+  count-code-reviews-friday:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Calculate Last Target Day
         id: calculate-target-day
@@ -32,7 +31,13 @@ jobs:
             const targetMinute = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_MINUTE }}", 10) || 0; // Default to 0 minutes
 
             const dayOfWeek = now.getUTCDay();
-            const daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
+            let daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
+
+            // Check if it's the same day but the target time is later than the current time
+            if (daysSinceTargetDay === 0 && (now.getUTCHours() < targetHour || (now.getUTCHours() === targetHour && now.getUTCMinutes() < targetMinute))) {
+              daysSinceTargetDay = 7;
+            }
+
             const lastTargetDay = new Date(now);
             lastTargetDay.setUTCDate(now.getUTCDate() - daysSinceTargetDay);
             lastTargetDay.setUTCHours(targetHour, targetMinute, 0, 0); // Set time to target hour and minute
@@ -91,7 +96,7 @@ jobs:
 
             const reviewCounts = filteredPRs.reduce((acc, { reviews }) => {
               reviews.forEach(review => {
-                const user = review.user.login;
+                const user = review.user.name || review.user.login;
                 if (!acc[user]) {
                   acc[user] = { approve: 0, request_changes: 0 };
                 }
@@ -114,7 +119,7 @@ jobs:
         env:
           lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
 
-      - name: Get Winner
+      - name: Get Top 3 Positions
         id: get-winner
         uses: actions/github-script@v7
         with:
@@ -127,66 +132,131 @@ jobs:
 
             const sortedReviewCounts = JSON.parse(sortedReviewCountsStr);
 
-            let winner = '';
-            let winReviews = '';
-            // Only show the first place
-            if (sortedReviewCounts.length > 0) {
-              const [user, counts] = sortedReviewCounts[0];
+            const positions = [];
+            let currentPosition = 1;
+            let currentIndex = 0;
+
+            while (currentPosition <= 3 && currentIndex < sortedReviewCounts.length) {
+              const [user, counts] = sortedReviewCounts[currentIndex];
               const total = counts.approve + counts.request_changes;
-              winner = user;
-              winReviews = total;
+              
+              // Find all users with the same total (ties)
+              const tiedUsers = [user];
+              let nextIndex = currentIndex + 1;
+              
+              while (nextIndex < sortedReviewCounts.length) {
+                const [nextUser, nextCounts] = sortedReviewCounts[nextIndex];
+                const nextTotal = nextCounts.approve + nextCounts.request_changes;
+                
+                if (nextTotal === total) {
+                  tiedUsers.push(nextUser);
+                  nextIndex++;
+                } else {
+                  break;
+                }
+              }
+
+              positions.push({
+                position: currentPosition,
+                users: tiedUsers,
+                totalReviews: total,
+                approve: counts.approve,
+                request_changes: counts.request_changes
+              });
+
+              currentPosition += tiedUsers.length;
+              currentIndex = nextIndex;
             }
+
+            // Set outputs for backward compatibility and new functionality
+            const firstPosition = positions[0];
+            const winner = firstPosition ? firstPosition.users.join(', ') : '';
+            const winReviews = firstPosition ? firstPosition.totalReviews : 0;
 
             core.setOutput('winner', winner);
             core.setOutput('winReviews', winReviews);
+            core.setOutput('positions', JSON.stringify(positions));
         env:
           sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
 
-      - name: Announce Winner
+      - name: Format Slack Message
+        if: ${{ steps.get-winner.outputs.winner != '' }}
+        id: format-slack-message
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const positionsStr = process.env.positions;
+            const positions = JSON.parse(positionsStr || '[]');
+
+            const getPositionEmoji = (position) => {
+              switch (position) {
+                case 1: return '👑';
+                case 2: return '🥈';
+                case 3: return '🥉';
+                default: return '🏆';
+              }
+            };
+
+            const formatPosition = (pos) => {
+              const emoji = getPositionEmoji(pos.position);
+              const users = pos.users.join(', ');
+              return `${emoji} *${users}* (${pos.totalReviews} reviews)`;
+            };
+
+            const blocks = [
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "Our Code Review Leaderboard of the Week!"
+                  }
+                ]
+              }
+            ];
+
+            // Add each position
+            positions.forEach(pos => {
+              blocks.push({
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": formatPosition(pos)
+                  }
+                ]
+              });
+            });
+
+            blocks.push({
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                }
+              ]
+            });
+
+            // Set the payload as output for the next step
+            core.setOutput('slackPayload', JSON.stringify({ blocks }));
+        env:
+          positions: ${{ steps.get-winner.outputs.positions }}
+
+      - name: Send Slack Message
         if: ${{ steps.get-winner.outputs.winner != '' }}
         uses: slackapi/slack-github-action@v1.26.0
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATIONS_BOT_TOKEN }}
         with:
           channel-id: ${{ vars.MAIN_SLACK_CHANNEL_ID }}
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "Our Code Review Champion of the Week!"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "👑 *${{ steps.get-winner.outputs.winner }}* (${{ steps.get-winner.outputs.winReviews }} reviews)"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
-                    }
-                  ]
-                }
-              ]
-            }
+          payload: ${{ steps.format-slack-message.outputs.slackPayload }}
