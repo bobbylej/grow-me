@@ -1,0 +1,262 @@
+name: count-code-reviews-winner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/code-review-leaderboard-winner.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * 5' # Runs every Friday at 7 AM UTC
+
+concurrency:
+  group: count-code-reviews-winner
+  cancel-in-progress: true
+
+jobs:
+  count-code-reviews-friday:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Calculate Last Target Day
+        id: calculate-target-day
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const targetDay = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_DAY }}", 10) || 5; // Default to Friday (5)
+            const targetHour = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_HOUR }}", 10) || 7; // Default to 7:00 AM UTC
+            const targetMinute = parseInt("${{ vars.CODE_REVIEW_LEADERBOARD_START_MINUTE }}", 10) || 0; // Default to 0 minutes
+
+            const dayOfWeek = now.getUTCDay();
+            let daysSinceTargetDay = (dayOfWeek - targetDay + 7) % 7; // Calculate days since target day
+
+            // Check if it's the same day but the target time is later than the current time
+            if (daysSinceTargetDay === 0 && (now.getUTCHours() < targetHour || (now.getUTCHours() === targetHour && now.getUTCMinutes() < targetMinute))) {
+              daysSinceTargetDay = 7;
+            }
+
+            const lastTargetDay = new Date(now);
+            lastTargetDay.setUTCDate(now.getUTCDate() - daysSinceTargetDay);
+            lastTargetDay.setUTCHours(targetHour, targetMinute, 0, 0); // Set time to target hour and minute
+
+            core.setOutput('lastTargetDay', lastTargetDay.toISOString());
+
+      - name: Count Reviews
+        id: count-reviews
+        uses: actions/github-script@v7
+        with:
+          script: |
+            async function getFilteredPullRequests(owner, repo, startDate) {
+              const { data: pullRequests } = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: 'all', // Fetch both open and closed pull requests
+                per_page: 100,
+                sort: 'created', // Sort by creation date
+                direction: 'desc', // Newest first
+              });
+
+              // Filter pull requests opened or merged within the last week
+              const filteredPullRequests = pullRequests.filter(pr => {
+                return new Date(pr.created_at) >= startDate || (pr.merged_at && new Date(pr.merged_at) >= startDate);
+              });
+
+              const filteredPRs = [];
+
+              for (const pr of filteredPullRequests) {
+                // Fetch reviews for each pull request
+                const { data: reviews } = await github.rest.pulls.listReviews({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                });
+
+                // Sort reviews by submission date
+                reviews.sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+
+                // Check if the first review is approved or changes requested
+                const firstReview = reviews[0];
+                if (firstReview && (firstReview.state === 'APPROVED' || firstReview.state === 'CHANGES_REQUESTED')) {
+                  filteredPRs.push({ pr, reviews: [firstReview] });
+                }
+              }
+
+              return filteredPRs;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const lastTargetDay = new Date(process.env.lastTargetDay); // Use the output from the previous step
+
+            const filteredPRs = await getFilteredPullRequests(owner, repo, lastTargetDay);
+
+            const reviewCounts = filteredPRs.reduce((acc, { reviews }) => {
+              reviews.forEach(review => {
+                const user = review.user.name || review.user.login;
+                if (!acc[user]) {
+                  acc[user] = { approve: 0, request_changes: 0 };
+                }
+                if (review.state === 'APPROVED') {
+                  acc[user].approve += 1;
+                } else if (review.state === 'CHANGES_REQUESTED') {
+                  acc[user].request_changes += 1;
+                }
+              });
+              return acc;
+            }, {});
+
+            const sortedReviewCounts = Object.entries(reviewCounts).sort(([, a], [, b]) => {
+              const totalA = a.approve + a.request_changes;
+              const totalB = b.approve + b.request_changes;
+              return totalB - totalA;
+            });
+
+            core.setOutput('sortedReviewCounts', JSON.stringify(sortedReviewCounts));
+        env:
+          lastTargetDay: ${{ steps.calculate-target-day.outputs.lastTargetDay }}
+
+      - name: Get Top 3 Positions
+        id: get-winner
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sortedReviewCountsStr = process.env.sortedReviewCounts;
+
+            if (!sortedReviewCountsStr) {
+              throw new Error('sortedReviewCounts is empty or undefined');
+            }
+
+            const sortedReviewCounts = JSON.parse(sortedReviewCountsStr);
+
+            const positions = [];
+            let currentPosition = 1;
+            let currentIndex = 0;
+
+            while (currentPosition <= 3 && currentIndex < sortedReviewCounts.length) {
+              const [user, counts] = sortedReviewCounts[currentIndex];
+              const total = counts.approve + counts.request_changes;
+              
+              // Find all users with the same total (ties)
+              const tiedUsers = [user];
+              let nextIndex = currentIndex + 1;
+              
+              while (nextIndex < sortedReviewCounts.length) {
+                const [nextUser, nextCounts] = sortedReviewCounts[nextIndex];
+                const nextTotal = nextCounts.approve + nextCounts.request_changes;
+                
+                if (nextTotal === total) {
+                  tiedUsers.push(nextUser);
+                  nextIndex++;
+                } else {
+                  break;
+                }
+              }
+
+              positions.push({
+                position: currentPosition,
+                users: tiedUsers,
+                totalReviews: total,
+                approve: counts.approve,
+                request_changes: counts.request_changes
+              });
+
+              currentPosition += tiedUsers.length;
+              currentIndex = nextIndex;
+            }
+
+            // Set outputs for backward compatibility and new functionality
+            const firstPosition = positions[0];
+            const winner = firstPosition ? firstPosition.users.join(', ') : '';
+            const winReviews = firstPosition ? firstPosition.totalReviews : 0;
+
+            core.setOutput('winner', winner);
+            core.setOutput('winReviews', winReviews);
+            core.setOutput('positions', JSON.stringify(positions));
+        env:
+          sortedReviewCounts: ${{ steps.count-reviews.outputs.sortedReviewCounts }}
+
+      - name: Format Slack Message
+        if: ${{ steps.get-winner.outputs.winner != '' }}
+        id: format-slack-message
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const positionsStr = process.env.positions;
+            const positions = JSON.parse(positionsStr || '[]');
+
+            const getPositionEmoji = (position) => {
+              switch (position) {
+                case 1: return '👑';
+                case 2: return '🥈';
+                case 3: return '🥉';
+                default: return '🏆';
+              }
+            };
+
+            const formatPosition = (pos) => {
+              const emoji = getPositionEmoji(pos.position);
+              const users = pos.users.join(', ');
+              return `${emoji} *${users}* (${pos.totalReviews} reviews)`;
+            };
+
+            const blocks = [
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "Our Code Review Leaderboard of the Week!"
+                  }
+                ]
+              }
+            ];
+
+            // Add each position
+            positions.forEach(pos => {
+              blocks.push({
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": formatPosition(pos)
+                  }
+                ]
+              });
+            });
+
+            blocks.push({
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊🎊"
+                }
+              ]
+            });
+
+            // Set the payload as output for the next step
+            core.setOutput('slackPayload', JSON.stringify({ blocks }));
+        env:
+          positions: ${{ steps.get-winner.outputs.positions }}
+
+      - name: Send Slack Message
+        if: ${{ steps.get-winner.outputs.winner != '' }}
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATIONS_BOT_TOKEN }}
+        with:
+          channel-id: ${{ vars.MAIN_SLACK_CHANNEL_ID }}
+          payload: ${{ steps.format-slack-message.outputs.slackPayload }}
